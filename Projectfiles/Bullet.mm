@@ -1,20 +1,19 @@
 //
-//  Cat.m
-//  My-User-Input-Project
+//  Bullet.m
+//  Thorgi
 //
-//  Created by Amy Tang on 10/31/13.
+//  Created by Amy Tang on 11/1/13.
 //  Copyright 2013 UC Berkeley. All rights reserved.
 //
 
-#import "Cat.h"
+#import "Bullet.h"
 
-
-@interface Cat (PrivateMethods)
+@interface Bullet (PrivateMethods)
 // declare private methods here
 @end
 
-@implementation Cat
-@synthesize health;
+@implementation Bullet
+@synthesize damage;
 
 -(id) init
 {
@@ -30,12 +29,12 @@
 	return self;
 }
 
--(id) initWithCatImage
+-(id) initWithBulletImage
 {
     // This calls CCSprite's init. Basically this init method does everything CCSprite's init method does and then more
-    if ((self = [super initWithFile:@"cat.png"]))
+    if ((self = [super initWithFile:@"fire.png"]))
     {
-        health = 2;
+        damage = 1;
         //properties work internally just like normal instance variables
     }
     return self;
@@ -44,7 +43,7 @@
 -(void) onEnter
 {
 	[super onEnter];
-    
+
 	// add init code here where you need to use the self.parent reference
 	// generally recommended to run node initialization here
 }
@@ -52,12 +51,12 @@
 -(void) cleanup
 {
 	[super cleanup];
-    
+
 	// any cleanup code goes here
 	
 	// specifically release/nil any references that could cause retain cycles
 	// since dealloc might not be called if this class retains another node that is
-    // either a sibling or in a different branch of the node hierarchy
+   // either a sibling or in a different branch of the node hierarchy
 }
 
 -(void) dealloc

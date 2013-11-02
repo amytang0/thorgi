@@ -8,6 +8,10 @@
 
 #import "Dog.h"
 
+#import "Box2D.h"
+
+const float PTM_RATIO = 32.0f;
+
 @interface Dog (PrivateMethods)
 // declare private methods here
 @end
@@ -21,6 +25,7 @@
 	if (self)
 	{
 		// add init code here (note: self.parent is still nil here!)
+       
 		
 		// uncomment if you want the update method to be executed every frame
 		//[self scheduleUpdate];
@@ -34,6 +39,9 @@
     if ((self = [super initWithFile:@"corgi.png"]))
     {
         health = 10;
+        
+        
+        
         //properties work internally just like normal instance variables
     }
     return self;

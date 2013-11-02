@@ -61,6 +61,7 @@
 		DCC1A3B013A94F1A005BD75D /* config.lua in Resources */ = {isa = PBXBuildFile; fileRef = DCC1A39513A94F1A005BD75D /* config.lua */; };
 		DCF95CD213A97EC500AE3B80 /* libcocos2d-mac.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DCF95CC913A97EC500AE3B80 /* libcocos2d-mac.a */; };
 		DCF95CD413A97EC500AE3B80 /* libkobold2d-mac.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DCF95CCB13A97EC500AE3B80 /* libkobold2d-mac.a */; };
+		F304E1491824A86F00783BD3 /* Bullet.mm in Sources */ = {isa = PBXBuildFile; fileRef = F304E1481824A86F00783BD3 /* Bullet.mm */; };
 		F3C94D421823590800D34960 /* background.png in Resources */ = {isa = PBXBuildFile; fileRef = F3C94D411823590800D34960 /* background.png */; };
 		F3C94D4618235C4E00D34960 /* corgi-hd.png in Resources */ = {isa = PBXBuildFile; fileRef = F3C94D4418235C4E00D34960 /* corgi-hd.png */; };
 		F3C94D4918235CBA00D34960 /* corgi.png in Resources */ = {isa = PBXBuildFile; fileRef = F3C94D4818235CBA00D34960 /* corgi.png */; };
@@ -70,6 +71,8 @@
 		F3C94D531824345100D34960 /* Dog.mm in Sources */ = {isa = PBXBuildFile; fileRef = F3C94D521824345000D34960 /* Dog.mm */; };
 		F3C94D5A182449A700D34960 /* StartMenuLayer.mm in Sources */ = {isa = PBXBuildFile; fileRef = F3C94D59182449A700D34960 /* StartMenuLayer.mm */; };
 		F3C94D5D182450C700D34960 /* ContactListener.mm in Sources */ = {isa = PBXBuildFile; fileRef = F3C94D5C182450C700D34960 /* ContactListener.mm */; };
+		F3D6D9851825881C00B7C77B /* PauseLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = F3D6D9841825881C00B7C77B /* PauseLayer.m */; };
+		F3E099591824E51D00F9AA2D /* GameOverLayer.mm in Sources */ = {isa = PBXBuildFile; fileRef = F3E099581824E51D00F9AA2D /* GameOverLayer.mm */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -130,6 +133,8 @@
 		DCF95CCB13A97EC500AE3B80 /* libkobold2d-mac.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = "libkobold2d-mac.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		DCFA90EF13B4F6F7009DD35A /* BuildSettings-Debug-iOS.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "BuildSettings-Debug-iOS.xcconfig"; sourceTree = "<group>"; };
 		DCFA90F013B4F811009DD35A /* BuildSettings-Release-iOS.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "BuildSettings-Release-iOS.xcconfig"; sourceTree = "<group>"; };
+		F304E1471824A86F00783BD3 /* Bullet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Bullet.h; sourceTree = "<group>"; };
+		F304E1481824A86F00783BD3 /* Bullet.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = Bullet.mm; sourceTree = "<group>"; };
 		F3C94D411823590800D34960 /* background.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = background.png; sourceTree = "<group>"; };
 		F3C94D4418235C4E00D34960 /* corgi-hd.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "corgi-hd.png"; sourceTree = "<group>"; };
 		F3C94D4818235CBA00D34960 /* corgi.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = corgi.png; sourceTree = "<group>"; };
@@ -143,6 +148,10 @@
 		F3C94D59182449A700D34960 /* StartMenuLayer.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = StartMenuLayer.mm; sourceTree = "<group>"; };
 		F3C94D5B182450C600D34960 /* ContactListener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContactListener.h; sourceTree = "<group>"; };
 		F3C94D5C182450C700D34960 /* ContactListener.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ContactListener.mm; sourceTree = "<group>"; };
+		F3D6D9831825881C00B7C77B /* PauseLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PauseLayer.h; sourceTree = "<group>"; };
+		F3D6D9841825881C00B7C77B /* PauseLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PauseLayer.m; sourceTree = "<group>"; };
+		F3E099571824E51D00F9AA2D /* GameOverLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GameOverLayer.h; sourceTree = "<group>"; };
+		F3E099581824E51D00F9AA2D /* GameOverLayer.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = GameOverLayer.mm; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -268,7 +277,11 @@
 			isa = PBXGroup;
 			children = (
 				F3C94D5B182450C600D34960 /* ContactListener.h */,
+				F3D6D9831825881C00B7C77B /* PauseLayer.h */,
+				F3D6D9841825881C00B7C77B /* PauseLayer.m */,
 				F3C94D5C182450C700D34960 /* ContactListener.mm */,
+				F3E099571824E51D00F9AA2D /* GameOverLayer.h */,
+				F3E099581824E51D00F9AA2D /* GameOverLayer.mm */,
 				DCC1A38F13A94F1A005BD75D /* GameLayer.h */,
 				DCC1A39013A94F1A005BD75D /* GameLayer.mm */,
 				F3C94D511824345000D34960 /* Dog.h */,
@@ -281,6 +294,8 @@
 				F3C94D4F1823734800D34960 /* Cat.mm */,
 				F3C94D58182449A600D34960 /* StartMenuLayer.h */,
 				F3C94D59182449A700D34960 /* StartMenuLayer.mm */,
+				F304E1471824A86F00783BD3 /* Bullet.h */,
+				F304E1481824A86F00783BD3 /* Bullet.mm */,
 			);
 			path = Projectfiles;
 			sourceTree = "<group>";
@@ -456,6 +471,9 @@
 				F3C94D531824345100D34960 /* Dog.mm in Sources */,
 				F3C94D5A182449A700D34960 /* StartMenuLayer.mm in Sources */,
 				F3C94D5D182450C700D34960 /* ContactListener.mm in Sources */,
+				F304E1491824A86F00783BD3 /* Bullet.mm in Sources */,
+				F3E099591824E51D00F9AA2D /* GameOverLayer.mm in Sources */,
+				F3D6D9851825881C00B7C77B /* PauseLayer.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

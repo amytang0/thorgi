@@ -8,12 +8,14 @@
 
 #import "GameLayer.h"
 
-
+#import "Bullet.h"
 #import "Cat.h"
 #import "Dog.h"
+#import "GameOverLayer.h"
 #import "SimpleAudioEngine.h"
 
 #define MAX_SPEED 15.0
+#define BOARD_LENGTH 500
 const float PTM_RATIO = 32.0f;
 
 NSMutableArray *enemies;
@@ -28,6 +30,13 @@ CGRect secondrect;
 -(void) createBullets:(CGPoint)location;
 -(void) populateWithCats;
 -(void) initWorld;
+-(CGPoint) toPixels:(b2Vec2)vec;
+-(void) updateWorld;
+- (void)createTarget:(NSString*)imageName
+          atPosition:(CGPoint)position
+            rotation:(CGFloat)rotation
+            isStatic:(BOOL)isStatic;
+-(void) endGame;
 @end
 
 @implementation GameLayer
@@ -44,22 +53,40 @@ CGRect secondrect;
         bulletsLocations = [[NSMutableArray alloc] init];
         enemies = [[NSMutableArray alloc] init];
 		
-		//glClearColor(0.698f, 0.745f, 0.561f, 1.0f);
         glClearColor(.210f, .210f, .299f, 1.0f);
 		CCDirector* director = [CCDirector sharedDirector];
 		CGPoint screenCenter = director.screenCenter;
 
 		//[self addLabels];
 
-		dog = [[Dog alloc] initWithDogImage];
-		dog.position = screenCenter;
-		[self addChild:dog z:0];
+        // Add dog.
+		dogSprite = [[Dog alloc] initWithDogImage];
+        dogSprite.position = screenCenter;
+		[self addChild:dogSprite z:0];
         
-       
+        b2BodyDef bodyDef;
+        bodyDef.type = b2_dynamicBody; 
+        bodyDef.position.Set((dogSprite.position.x+dogSprite.contentSize.width/2.0f)/PTM_RATIO,(dogSprite.position.y+dogSprite.contentSize.height/2.0f)/PTM_RATIO);
+        bodyDef.userData = (__bridge void*) dogSprite;
+        b2Body *body = world->CreateBody(&bodyDef);
+        
+        b2FixtureDef boxDef;
+        
+        b2PolygonShape box;
+        box.SetAsBox(dogSprite.contentSize.width/2.0f/PTM_RATIO,
+                     dogSprite.contentSize.height/2.0f/PTM_RATIO);
+        //contentSize is used to determine the dimensions of the sprite
+        boxDef.shape = &box;
+         
+        boxDef.density = 100.0f;
+        boxDef.friction = 100.0f;
+        boxDef.restitution = 0.1f;
+        body->CreateFixture(&boxDef);
+        dogBody = body;
       
 		[self scheduleUpdate];
-		[self schedule:@selector(changeInputType:) interval:8.0f];
-		[self schedule:@selector(postUpdateInputTests:)];
+		//[self schedule:@selector(changeInputType:) interval:8.0f];
+		//[self schedule:@selector(postUpdateInputTests:)];
 		
 		// initialize KKInput
 		KKInput* input = [KKInput sharedInput];
@@ -85,31 +112,35 @@ CGRect secondrect;
     //create an object that will check for collisions
     contactListener = new ContactListener();
     world->SetContactListener(contactListener);
+    
     CGSize screenSize = [CCDirector sharedDirector].winSize;
     
     
     b2Vec2 lowerLeftCorner =b2Vec2(0,0);
-    b2Vec2 lowerRightCorner = b2Vec2(screenSize.width/PTM_RATIO,0);
-    b2Vec2 upperLeftCorner = b2Vec2(0,screenSize.height/PTM_RATIO);
-    b2Vec2 upperRightCorner = b2Vec2(screenSize.width/PTM_RATIO,screenSize.height/PTM_RATIO);
+    b2Vec2 lowerRightCorner = b2Vec2(BOARD_LENGTH/PTM_RATIO,0);
+    b2Vec2 upperLeftCorner = b2Vec2(0,BOARD_LENGTH/PTM_RATIO);
+    b2Vec2 upperRightCorner = b2Vec2(BOARD_LENGTH/PTM_RATIO,BOARD_LENGTH/PTM_RATIO);
     
     // Define the static container body, which will provide the collisions at screen borders.
     b2BodyDef screenBorderDef;
     screenBorderDef.position.Set(0, 0);
     screenBorderBody = world->CreateBody(&screenBorderDef);
+    
     b2EdgeShape screenBorderShape;
+    b2FixtureDef screenDef;
+    screenDef.shape = &screenBorderShape;
     
     screenBorderShape.Set(lowerLeftCorner, lowerRightCorner);
-    screenBorderBody->CreateFixture(&screenBorderShape, 0);
+    screenBorderBody->CreateFixture(&screenDef);
     
     screenBorderShape.Set(lowerRightCorner, upperRightCorner);
-    screenBorderBody->CreateFixture(&screenBorderShape, 0);
+    screenBorderBody->CreateFixture(&screenDef);
     
     screenBorderShape.Set(upperRightCorner, upperLeftCorner);
-    screenBorderBody->CreateFixture(&screenBorderShape, 0);
+    screenBorderBody->CreateFixture(&screenDef);
     
     screenBorderShape.Set(upperLeftCorner, lowerLeftCorner);
-    screenBorderBody->CreateFixture(&screenBorderShape, 0);
+    screenBorderBody->CreateFixture(&screenDef);
 }
 
 -(void) populateWithCats
@@ -117,22 +148,58 @@ CGRect secondrect;
     CCDirector* director = [CCDirector sharedDirector];
 	CGSize screenSize = director.screenSize;
     
-    Cat *cat = [[Cat alloc] initWithCatImage];
     int x = arc4random()%((int)screenSize.width);
     int y = arc4random()%((int)screenSize.height);
+    secondrect = [dogSprite textureRect];
     
-    secondrect = [dog textureRect];
-
-    while (fabsf(x - dog.position.x) <= secondrect.size.width+10 &&
-           fabsf(y - dog.position.y) <= secondrect.size.height+10 ) {
-         x = arc4random()%((int)screenSize.width);
-         y = arc4random()%((int)screenSize.height);
+    while (fabsf(x - dogSprite.position.x) <= secondrect.size.width+10 &&
+           fabsf(y - dogSprite.position.y) <= secondrect.size.height+10 ) {
+        x = arc4random()%((int)screenSize.width);
+        y = arc4random()%((int)screenSize.height);
     }
-    cat.position = CGPointMake(x,y);
-    [enemies addObject:cat];
-    [self addChild:cat z:7];
+    
+    [self createTarget:@"cat.png" atPosition:CGPointMake(x,y) rotation:0.0f isStatic:NO];
     
 }
+
+
+- (void)createTarget:(NSString*)imageName
+          atPosition:(CGPoint)position
+            rotation:(CGFloat)rotation
+            isStatic:(BOOL)isStatic
+{
+   
+   //Create the sprite. 
+    Cat* sprite;
+    sprite = [[Cat alloc] initWithCatImage];
+    [self addChild:sprite z:1];
+    
+    //Create the bodyDef
+    b2BodyDef bodyDef;
+    bodyDef.type = isStatic?b2_staticBody:b2_dynamicBody; //this is a shorthand/abbreviated if-statement
+    bodyDef.position.Set((position.x+sprite.contentSize.width/2.0f)/PTM_RATIO,(position.y+sprite.contentSize.height/2.0f)/PTM_RATIO);
+    bodyDef.angle = CC_DEGREES_TO_RADIANS(rotation);
+    bodyDef.userData = (__bridge void*) sprite;
+    b2Body *body = world->CreateBody(&bodyDef);
+    
+    // Create the bounding box shape.
+    b2PolygonShape box;
+    box.SetAsBox(sprite.contentSize.width/2.0f/PTM_RATIO,
+                 sprite.contentSize.height/2.0f/PTM_RATIO);
+    //contentSize is used to determine the dimensions of the sprite
+    
+    b2FixtureDef boxDef;
+    boxDef.shape = &box;
+    //boxDef.isSensor = true;
+    boxDef.friction = 25.4f;
+    boxDef.userData = (void*)1;
+    boxDef.density = 20.0f;
+    body->CreateFixture(&boxDef);
+    [enemies addObject:[NSValue valueWithPointer:body]];
+    
+    
+}
+
 
 
 -(void) moveDogByPollingKeyboard
@@ -140,7 +207,7 @@ CGRect secondrect;
 	const float kDogSpeed = 3.0f;
 
 	KKInput* input = [KKInput sharedInput];
-	CGPoint dogPosition = dog.position;
+	CGPoint dogPosition = dogSprite.position;
 	
 	if ([input isKeyDown:KKKeyCode_UpArrow] ||
 		[input isKeyDown:KKKeyCode_W])
@@ -169,20 +236,20 @@ CGRect secondrect;
 		dogPosition = [input mouseLocation];
 	}	
 
-	dog.position = dogPosition;
+	dogSprite.position = dogPosition;
 
 	if ([input isKeyDown:KKKeyCode_Slash])
 	{
-		dog.scale += 0.03f;
+		dogSprite.scale += 0.03f;
 	}
 	else if ([input isKeyDown:KKKeyCode_Semicolon])
 	{
-		dog.scale -= 0.03f;
+		dogSprite.scale -= 0.03f;
 	}
 	
 	if ([input isKeyDownThisFrame:KKKeyCode_Quote])
 	{
-		dog.scale = 1.0f;
+		dogSprite.scale = 1.0f;
 	}
 }
 
@@ -254,20 +321,21 @@ CGRect secondrect;
 	}
 	
 	// drag & drop ship initiated by long-press gesture
-	dog.color = ccWHITE;
-	dog.scale = 1.0f;
 	if (input.gestureLongPressBegan)
 	{
         
         CGPoint eventualStop = input.gestureLongPressLocation;
-        eventualStop.x = max(min(.08*(input.gestureLongPressLocation.x - dog.position.x),MAX_SPEED), -1*MAX_SPEED);
-        eventualStop.y = max(min(.08*(input.gestureLongPressLocation.y - dog.position.y),MAX_SPEED), -1*MAX_SPEED);
+        
+        eventualStop.x = max(min(.08*(input.gestureLongPressLocation.x - dogSprite.position.x),MAX_SPEED), -1*MAX_SPEED);
+        eventualStop.y = max(min(.08*(input.gestureLongPressLocation.y - dogSprite.position.y),MAX_SPEED), -1*MAX_SPEED);
         //eventualStop.x = .05*(input.gestureLongPressLocation.x - ship.position.x);
         //eventualStop.y = .05*(input.gestureLongPressLocation.y - ship.position.y);
-		dog.position = ccpAdd( dog.position, eventualStop); 
+		//dog.position = ccpAdd( dog.position, eventualStop); 
         
-		dog.color = ccGREEN;
-		dog.scale = 1.25f;
+		//dog.color = ccGREEN;
+		//dog.scale = 1.25f;
+        dogBody->SetLinearVelocity( b2Vec2( eventualStop.x, eventualStop.y )); 
+        dogBody->SetLinearDamping(1.0f);
      
 	}
 	
@@ -277,46 +345,22 @@ CGRect secondrect;
         
         // This makes sure that sprite follows drag.
         CGPoint eventualStop = input.gesturePanLocation;
-        eventualStop.x = max(min(.05*(input.gesturePanLocation.x - dog.position.x),MAX_SPEED), -1*MAX_SPEED);
-         eventualStop.y = max(min(.05*(input.gesturePanLocation.y - dog.position.y),MAX_SPEED), -1*MAX_SPEED);
+           
+        eventualStop.x = max(min(.05*(input.gesturePanLocation.x - dogSprite.position.x),MAX_SPEED), -1*MAX_SPEED);
+         eventualStop.y = max(min(.05*(input.gesturePanLocation.y - dogSprite.position.y),MAX_SPEED), -1*MAX_SPEED);
+        
+        dogBody->SetLinearVelocity( b2Vec2( eventualStop.x, eventualStop.y )); 
+        
+        
         //eventualStop.y = .05*(input.gesturePanLocation.y - ship.position.y);
-        dog.position = ccpAdd(dog.position, eventualStop);
+        
+        //dog.position = ccpAdd(dog.position, eventualStop);
         //CCLOG(@"shipPosition: %.0f, %.0f", eventualStop.x, eventualStop.y);
         
     }
 	
 }
 
-
--(void) wrapShipAtScreenBorders
-{
-	CCDirector* director = [CCDirector sharedDirector];
-	CGSize screenSize = director.screenSize;
-	
-	CGPoint dogPosition = dog.position;
-
-	if (dogPosition.x < 0)
-	{
-		dogPosition.x += screenSize.width;
-	}
-	else if (dogPosition.x >= screenSize.width)
-	{
-		dogPosition.x -= screenSize.width;
-	}
-	
-	if (dogPosition.y < 0)
-	{
-		dogPosition.y += screenSize.height;
-	}
-	else if (dogPosition.y >= screenSize.height)
-	{
-		dogPosition.y -= screenSize.height;
-	}
-	
-	dog.position = dogPosition;
-	//LOG_EXPR(ship.texture);
-	//LOG_EXPR([ship boundingBox]);
-}
 
 
 -(void) particleFXFollowsMouse
@@ -376,95 +420,107 @@ CGRect secondrect;
 		[self particleFXFollowsMouse];
 	}
 	
-    // TODO: Hopefully replace with camera following you around map
-	[self wrapShipAtScreenBorders];
-
-    NSMutableIndexSet *indexesToDelete = [NSMutableIndexSet indexSet];
-    
-    //Move the projectiles to the tap point
-    for(NSInteger i = 0; i < [bullets count]; i++)
-    {
-        
-        CCSprite *projectile = [bullets objectAtIndex:i];
-        CGPoint projPos = projectile.position;
-        CGPoint point = [ [bulletsLocations objectAtIndex:i] CGPointValue];  
-        //CCLOG(@"projectile: %@ ; point: %@", NSStringFromCGPoint(projPos), NSStringFromCGPoint(point));
-        CGPoint step = CGPointMake(0, 0);
-        
-        //CCLOG(@"%f %f %f %f",projPos.x ,point.x , projPos.y, point.y);
-                
-        // Add indexes of bullets to be removed.
-        // Bullets are candidates if they reached outside the screen.
-        CGRect screenBounds = [[UIScreen mainScreen] bounds];
-        if (projPos.x <= 0 || projPos.y <= 0 || 
-            projPos.x >= screenBounds.size.height || projPos.y >= screenBounds.size.width
-             ) {
-            [indexesToDelete addIndex:i];
-            [self removeChild:projectile cleanup:true];
-           //  CCLOG(@"points are outside");
-    
-        } else {
-        //Move bullets if they haven't.
-        step.x = .05*(point.x);
-        step.y = .05*(point.y);
-         //   step.x = .05*(point.x - dog.position.x);
-          //  step.y = .05*(point.y - dog.position.y);
-        projectile.position = ccpAdd( projectile.position, step); 
-        }
-
-    }
-    
-    // Finally safely remove bullets and their locations.
-    [bulletsLocations removeObjectsAtIndexes:indexesToDelete];
-    [bullets removeObjectsAtIndexes:indexesToDelete];
-    
-    
-    //If there are bullets and blocks in existence, check if they are colliding
-    if([bullets count] > 0 && [enemies count] > 0)
-    {
-        CCLOG(@"is detecting collisions");
-        [self detectCollisions];
-    }
-     
-    /*
     // Update world 1 step
-    float timeStep = 0.03f;
+    float timeStep = 1.0f/60.0f;
     int32 velocityIterations = 8;
-    int32 positionIterations = 1;
+    int32 positionIterations = 2;
     world->Step(timeStep, velocityIterations, positionIterations);
     
+    /*
     //Bullet is moving.
     for(NSInteger i = 0; i < [bullets count]; i++)
     {
         
         bulletBody = (b2Body*)[[bullets objectAtIndex:i] pointerValue]; //get next bullet in the list
          CGPoint translation = [[bulletsLocations objectAtIndex:i] CGPointValue];  
-        bulletBody->SetTransform(b2Vec2(.05*translation.x/PTM_RATIO, (.05*translation.y)/PTM_RATIO), 0.0f);
+        //bulletBody->SetTransform(b2Vec2(.25*translation.x, (.25*translation.y)), 0.0f);
         //SetTransform sets the position and rotation of the bulletBody; the syntax is SetTransform( (b2Vec2) position, (float) rotation)
         
         bulletBody->SetActive(true);
-
-        
-        b2Vec2 position = bulletBody->GetPosition();
-        
-        CGPoint myPosition = self.position;
-        CGSize screenSize = [CCDirector sharedDirector].winSize;
-        
-        // Move the camera.
-        if (position.x > screenSize.width / 2.0f / PTM_RATIO)
-            //if the bullet is past the edge of the screen
-        {
-            //self.position refers to the window's position - subtracting from self.position moves the screen to the right
-            //meaning that the screen position is negative as it moves
-            //only shift the screen a maximum of one screen size to the right
-            myPosition.x = -MIN(screenSize.width * 2.0f - screenSize.width, position.x * PTM_RATIO - screenSize.width / 2.0f);
-            self.position = myPosition;
-            
-        }
-    }
+}
      */
+    [self updateWorld];
     
   
+}
+
+-(void) updateWorld
+{
+    /*
+    CCLOG(@"a!!!!!!!!!!!");
+    for (b2Body* body = world->GetBodyList(); body != nil; body = body->GetNext()) {
+         CCSprite* sprite = (__bridge CCSprite*)body->GetUserData();
+    CCLOG(@"body: %@, %d", NSStringFromCGPoint(sprite.position), sprite.tag);
+   }
+    CCLOG(@"b!!!!!!!!!!!");
+     */
+    //get all the bodies in the world
+    for (b2Body* body = world->GetBodyList(); body != nil; body = body->GetNext())
+    {
+               
+        
+        //get the sprite associated with the body
+        CCSprite* sprite = (__bridge CCSprite*)body->GetUserData();
+        
+        if (![sprite isKindOfClass:[Bullet class]]){
+            body->SetLinearVelocity(0.97f*body->GetLinearVelocity());
+            body->SetAngularVelocity(0);
+        }
+        
+        if (sprite != NULL && sprite.tag==2)
+        {
+            if ([sprite isKindOfClass:[Cat class]])
+            {
+                CCLOG(@"IS CAT");
+                if( ((Cat*)sprite).health==1 )
+                {
+                    [self removeChild:sprite cleanup:NO];
+                    world->DestroyBody(body);
+                }
+                else
+                {
+                    ((Cat*)sprite).health--;
+                }
+            }
+            else if ([sprite isKindOfClass:[Dog class]]) {
+                CCLOG(@"IS DOG");
+                if( ((Dog*)sprite).health==1 ) // Dog is dead
+                {
+                    [self removeChild:sprite cleanup:NO];
+                    world->DestroyBody(body);
+                    [self endGame];
+                }
+                else
+                {
+                    ((Dog*)sprite).health--;
+                    sprite.color= ccWHITE;
+                }
+                
+            }
+            else
+            {
+                [self removeChild:sprite cleanup:NO];
+                world->DestroyBody(body);
+            }
+            sprite.tag = 1;
+        }
+        else if (sprite != NULL)
+        {
+            // update the sprite's position to where their physics bodies are
+            sprite.position = [self toPixels:body->GetPosition()];
+            if ([sprite isKindOfClass:[Dog class]]) {
+                //dogSprite = sprite;
+            }
+                //float angle = body->GetAngle();
+            //sprite.rotation = CC_RADIANS_TO_DEGREES(angle) * -1;
+        }
+    }
+    
+ }
+
+-(void) endGame{
+    
+  // [[CCDirector sharedDirector] replaceScene: (CCScene*)[[GameOverLayer alloc] init]];
 }
 
 -(void) postUpdateInputTests:(ccTime)delta
@@ -525,137 +581,82 @@ CGRect secondrect;
 //Create the bullets, add them to the list of bullets so they can be referred to later
 - (void)createBullets:(CGPoint)location
 {
-    CCSprite *bulletSprite = [CCSprite spriteWithFile:@"fire.png"];
-    bulletSprite.position = dog.position;
+   
+    Bullet *bulletSprite = [[Bullet alloc] initWithBulletImage];
+    bulletSprite.position = dogSprite.position;
     [self addChild:bulletSprite z:9];
     //[bullets addObject:bulletSprite];
-    NSValue *value = [NSValue valueWithCGPoint:ccpSub(location, dog.position)];
+    NSValue *value = [NSValue valueWithCGPoint:ccpSub(location, dogSprite.position)];
     [bulletsLocations addObject:value];
-    [bullets addObject:bulletSprite];
+    //[bullets addObject:bulletSprite];
  
-    /*
+    
     b2BodyDef bulletBodyDef;
     bulletBodyDef.type = b2_dynamicBody;
     bulletBodyDef.bullet = true; //this tells Box2D to check for collisions more often - sets "bullet" mode on
-    bulletBodyDef.position.Set(dog.position.x,dog.position.y);
+    bulletBodyDef.position.Set(dogSprite.position.x/PTM_RATIO,dogSprite.position.y/PTM_RATIO);
     bulletBodyDef.userData = (__bridge void*)bulletSprite;
     b2Body *bullet = world->CreateBody(&bulletBodyDef);
     bullet->SetActive(false); //an inactive body does not collide with other bodies
     
     b2CircleShape circle;
-    circle.m_radius = 12.0/PTM_RATIO; //you can figure the dimensions out by looking at flyingpenguin.png in image editing software
+    circle.m_radius = bulletSprite.size.width/PTM_RATIO; //you can figure the dimensions out by looking at flyingpenguin.png in image editing software
     
     b2FixtureDef ballShapeDef;
     ballShapeDef.shape = &circle;
     ballShapeDef.density = 0.8f;
     ballShapeDef.restitution = 0.0f; //set the "bounciness" of a body (0 = no bounce, 1 = complete (elastic) bounce)
     ballShapeDef.friction = 0.99f;
+    ballShapeDef.isSensor = true;
     //try changing these and see what happens!
     bullet->CreateFixture(&ballShapeDef);
     
     [bullets addObject:[NSValue valueWithPointer:bullet]];
-    
-    */
-    
+    bullet->SetLinearVelocity( b2Vec2( .08*ccpSub(location, dogSprite.position).x, .08*ccpSub(location, dogSprite.position).y) ); 
+    bullet->SetActive(true);
     
 
     //CCLOG(@"original: %@",value);
 }
 
-//Check through all the bullets and blocks and see if they intersect
--(void) detectCollisions
+-(void)setUpMenu
 {
+    CCMenuItemImage * menuItem1 = [CCMenuItemImage itemWithNormalImage:@"menubutton.png"
+                                                         selectedImage: @"menubutton_selected.png"
+                                                                target:self
+                                                              selector:@selector(muteMusic:)];
+    CCMenuItem *item = [CCMenuItemFont itemFromString:@"Menu" target:self selector:@selector(goToLevelSelect:)]; 
     
-    NSMutableIndexSet *bulletIndexesToDelete = [NSMutableIndexSet indexSet];
-    NSMutableIndexSet *enemyIndexesToDelete = [NSMutableIndexSet indexSet];
-    for(int i = 0; i < [bullets count]; i++)
-    {
-        for(int j = 0; j < [enemies count]; j++)
-        {
-            if([bullets count]>0)
-            {
-                NSInteger bulletI = i;
-                NSInteger enemyI = j;
-                
-                enemy = [enemies objectAtIndex:enemyI];
-                CCSprite *projectile = [bullets objectAtIndex:bulletI];
-                
-                CCLOG(@"%@ %@", enemy, projectile);
-                
-                firstrect = [projectile textureRect];
-                secondrect = [enemy textureRect];
-                //check if their x coordinates match
-               // CCLOG(@"proectilePos: %@ ;enemypos:%@",projectile.position, enemy.position);
-                CCLOG(@"first: %d, second: %d", i, j);
-               
-                CGPoint projPos = projectile.position;
-                CGPoint enemyPos = enemy.position;
-                //CCLOG(@"proectilePos %d: %@" ,i, NSStringFromCGPoint(projPos));
-                //CCLOG(@"enemy % d: %@", j, NSStringFromCGPoint(enemyPos));
-                //CCLOG(@"%f %f", projPos.x, projPos.y);
-                //CCLOG(@"enemy %f %f", enemyPos.x, enemyPos.y);
-                //CCLOG(@"%f %f", secondrect.size.width, secondrect.size.height);
-
-                if( fabsf(projPos.x - enemyPos.x) <= secondrect.size.width/2 &&
-                    fabsf(projPos.y - enemyPos.y) <= secondrect.size.height/2)
-                {
-                  //  CCLOG(@"projectile hit enemy");
-
-              
-                    if([enemy isKindOfClass:[Cat class]]) {
-                        
-                        //the program doesn't know that the block is actually a Cat object; we must cast it to a cat
-                        if (((Cat*)enemy).health==1)
-                        {
-                            [self removeChild:enemy cleanup:YES];
-                            [self removeChild:projectile cleanup:YES];
-                            [enemyIndexesToDelete addIndex:enemyI];
-                        }
-                        else
-                        {
-                            ((Cat*)enemy).health--;
-                            [self removeChild:projectile cleanup:YES];
-                        }
-                    } else {
-                        [self removeChild:enemy cleanup:YES];
-                        [self removeChild:projectile cleanup:YES];
-                        [enemyIndexesToDelete addIndex:enemyI];
-                        
-                    }
-                    [bulletIndexesToDelete addIndex:bulletI];
-                    [[SimpleAudioEngine sharedEngine] playEffect:@"explo2.wav"];
-                
-                }
-            }
-            
-        }
-        
-    }
+    CCMenuItemImage * menuItem2 = [CCMenuItemImage itemWithNormalImage:@"mutesoundbutton.png"
+                                                         selectedImage: @"mutesoundbutton_selected.png"
+                                                                target:self
+                                                              selector:@selector(muteSound:)]; 
     
-    // Remove bullets and enemies
-    [bullets removeObjectsAtIndexes:bulletIndexesToDelete];
-    [bulletsLocations removeObjectsAtIndexes:bulletIndexesToDelete];
-    [enemies removeObjectsAtIndexes:enemyIndexesToDelete];
+    
+    // Create a menu and add your menu items to it
+    CCMenu * myMenu = [CCMenu menuWithItems:menuItem1, item, menuItem2,nil];
+    
+    // Arrange the menu items Horizontally
+    [myMenu alignItemsHorizontally];
+    
+    // add the menu to your scene
+    [self addChild:myMenu];
+
 }
 
--(void) detectDogHit
-{
-    for(int enemyI = 0; enemyI < [enemies count]; enemyI++) {
-        enemy = [enemies objectAtIndex:enemyI];
-        secondrect = [dog textureRect];
-        
-        if( fabsf(dog.position.x - enemy.position.x) <= secondrect.size.width/2 &&
-           fabsf(dog.position.y - enemy.position.y) <= secondrect.size.height/2)
-        {
-            dog.health--;
-        }
 
-    }
+// convenience method to convert a b2Vec2 to a CGPoint
+-(CGPoint) toPixels:(b2Vec2)vec
+{
+	return ccpMult(CGPointMake(vec.x, vec.y), PTM_RATIO);
 }
+
 
 -(void) dealloc
-{
+{   
+    //delete world;
     
+   // world = NULL;   
 #ifndef KK_ARC_ENABLED
 	[super dealloc];
 #endif

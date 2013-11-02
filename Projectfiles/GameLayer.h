@@ -28,17 +28,24 @@ typedef enum
     ContactListener *contactListener;
     b2Body *screenBorderBody;
     
-	Dog* dog;
+    Dog *dogSprite;
+	b2Body* dogBody;
 	CCParticleSystem* particleFX;
 	InputTypes inputType;
     
     b2Body *bulletBody;
     
+    
     NSMutableArray *bullets;
     NSMutableArray *bulletsLocations;
-    NSMutableArray *tauntingFrames;
-        CCAction *taunt;
+    
+    CCMenu *menu;
+    
+
+    
+
 }
 - (void)createBullets;
+extern const float PTM_RATIO;
 
 @end
