@@ -33,13 +33,19 @@ void ContactListener::BeginContact(b2Contact* contact)
         }
                
         if (([spriteA isKindOfClass:[Cat class]] && [spriteB isKindOfClass:[Dog class]]) ) {
-             ((Dog*)spriteB).health--; 
+           // CCLOG(@"Dog hit!1");
+           //  ((Dog*)spriteB).health--; 
             spriteB.color = ccGREEN;
+            ((__bridge CCSprite*) contact->GetFixtureA()->GetBody()->GetUserData()).tag=2;
+            spriteA.color = ccRED;
              ((__bridge CCSprite*) contact->GetFixtureB()->GetBody()->GetUserData()).tag=2;
         } else if (([spriteB isKindOfClass:[Cat class]] && [spriteA isKindOfClass:[Dog class]])) {
-            ((Dog*)spriteA).health--;  
+            // CCLOG(@"Dog hit!2");
+           // ((Dog*)spriteA).health--;  
             spriteA.color = ccBLUE;
             ((__bridge CCSprite*) contact->GetFixtureA()->GetBody()->GetUserData()).tag=2;
+            spriteB.color = ccRED;
+            ((__bridge CCSprite*) contact->GetFixtureB()->GetBody()->GetUserData()).tag=2;
         }
 
         
@@ -94,7 +100,8 @@ void ContactListener::PreSolve(b2Contact* contact,
 	{
         //	spriteA.color = ccWHITE;
         //	spriteB.color = ccWHITE;
-        if (([spriteA isKindOfClass:[Cat class]] && [spriteB isKindOfClass:[Cat class]]) ) {
+        if (([spriteA isKindOfClass:[Cat class]] && [spriteB isKindOfClass:[Cat class]]) )
+        {
             contact->SetEnabled(false);
         }
         

@@ -8,6 +8,7 @@
 
 #import "StartMenuLayer.h"
 #import "GameLayer.h"
+#import "GameOverLayer.h"
 
 @interface StartMenuLayer (PrivateMethods)
 // declare private methods here
@@ -44,8 +45,18 @@
         CCMenuItemImage *menuPlayButton = [CCMenuItemImage itemWithNormalImage:@"button.png" selectedImage:@"button.png" target:self selector:@selector(playGame:)];
         menuPlayButton.tag = 1; 
         
+        CCLabelTTF *level1label = [CCLabelTTF labelWithString:@"Level 1" fontName:@"Georgia-Bold" fontSize:25];
+        CCLabelTTF *level2label = [CCLabelTTF labelWithString:@"Level 2" fontName:@"Georgia-Bold" fontSize:25];
+        
+        CCMenuItemLabel *menuLevel1Button  = [CCMenuItemLabel itemWithLabel:level1label target:self selector:@selector(playGame:)];
+        menuLevel1Button.tag = 1; 
+        
+        CCMenuItemLabel *menuLevel2Button  = [CCMenuItemLabel itemWithLabel:level2label target:self selector:@selector(playGame:)];
+        menuLevel2Button.tag = 2; 
+        
+        
         // Create a menu and add your menu items to it
-        CCMenu * myMenu = [CCMenu menuWithItems:menuPlayButton, nil];
+        CCMenu * myMenu = [CCMenu menuWithItems:menuPlayButton, menuLevel1Button, menuLevel2Button, nil];
         
         // Arrange the menu items vertically
         [myMenu alignItemsHorizontally];
@@ -63,7 +74,12 @@
 
 -(void) playGame:(CCMenuItem *)sender 
 {
-    [[CCDirector sharedDirector] replaceScene: (CCScene*)[[GameLayer alloc] init]];
+    if (sender.tag == 2) {
+        [[CCDirector sharedDirector] replaceScene: (CCScene*)[[GameOverLayer alloc] init]];
+        
+    } else {
+        [[CCDirector sharedDirector] replaceScene: (CCScene*)[[GameLayer alloc] init]];
+    }
     NSLog(@"Play the game");
     
 }

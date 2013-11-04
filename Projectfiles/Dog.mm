@@ -36,9 +36,10 @@ const float PTM_RATIO = 32.0f;
 -(id) initWithDogImage
 {
     // This calls CCSprite's init. Basically this init method does everything CCSprite's init method does and then more
-    if ((self = [super initWithFile:@"corgi.png"]))
+    //if ((self = [super initWithFile:@"corgi.png"]))
+    if ((self = [super initWithFile:@"ship.png"]))
     {
-        health = 10;
+        health = 1;
         
         
         

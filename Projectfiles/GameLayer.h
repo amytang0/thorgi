@@ -11,16 +11,6 @@
 #import "ContactListener.h"
 #import "Dog.h"
 
-typedef enum 
-{
-	kAccelerometerValuesRaw,
-	kAccelerometerValuesSmoothed,
-	kAccelerometerValuesInstantaneous,
-	kGyroscopeRotationRate,
-	kDeviceMotion,
-	
-	kInputTypes_End,
-} InputTypes;
 
 @interface GameLayer : CCLayer
 {
@@ -31,7 +21,6 @@ typedef enum
     Dog *dogSprite;
 	b2Body* dogBody;
 	CCParticleSystem* particleFX;
-	InputTypes inputType;
     
     b2Body *bulletBody;
     
@@ -41,11 +30,9 @@ typedef enum
     
     CCMenu *menu;
     
-
-    
-
 }
-- (void)createBullets;
++(id) scene;
+
 extern const float PTM_RATIO;
 
 @end

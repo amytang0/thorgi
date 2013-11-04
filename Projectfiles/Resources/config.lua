@@ -17,10 +17,14 @@ local config =
 	KKStartupConfig = 
 	{
 		-- load first scene from a class with this name, or from a Lua script with this name with .lua appended
-		FirstSceneClassName = "GameLayer",
+		FirstSceneClassName = "StartMenuLayer",
+
+        -- set the director type, and the fallback in case the first isn't available
+        DirectorType = DirectorType.DisplayLink,
+        DirectorTypeFallback = DirectorType.NSTimer,
 
 		MaxFrameRate = 60,
-		DisplayFPS = YES,
+		DisplayFPS = NO,
 
 		EnableUserInteraction = YES,
 		EnableMultiTouch = YES,

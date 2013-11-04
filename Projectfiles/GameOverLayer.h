@@ -14,5 +14,6 @@
 @private
 }
 +(id) scene;
-
+-(void) showStartScreen:(CCMenuItem *)sender;
 @end
+
