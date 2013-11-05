@@ -10,10 +10,19 @@
 #import "Box2D.h"
 #import "ContactListener.h"
 #import "Dog.h"
+#import "HUDLayer.h"
 
+enum {
+    SpriteStateNormal,
+    SpriteStateHit,
+    SpriteStateInvincible
+};
+typedef NSInteger SpriteState;
 
 @interface GameLayer : CCLayer
 {
+    HUDLayer * hud;
+    
     b2World* world;
     ContactListener *contactListener;
     b2Body *screenBorderBody;
@@ -29,10 +38,12 @@
     NSMutableArray *bulletsLocations;
     
     CCMenu *menu;
+    CCMenuItem *scoreItem;
     int score;
     
 }
 +(id) scene;
+- (id)initWithHUD:(HUDLayer *)hudLayer;
 
 extern const float PTM_RATIO;
 

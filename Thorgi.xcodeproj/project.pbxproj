@@ -66,6 +66,8 @@
 		F32D33AB1828B92B00F1B4BF /* dogofthundertext.png in Resources */ = {isa = PBXBuildFile; fileRef = F32D33AA1828B92B00F1B4BF /* dogofthundertext.png */; };
 		F32D33B11828BE0400F1B4BF /* thorgi.png in Resources */ = {isa = PBXBuildFile; fileRef = F32D33B01828BE0400F1B4BF /* thorgi.png */; };
 		F32D33B31828CCDB00F1B4BF /* thorgi-med.png in Resources */ = {isa = PBXBuildFile; fileRef = F32D33B21828CCDB00F1B4BF /* thorgi-med.png */; };
+		F32D33B618299B7800F1B4BF /* HUDLayer.mm in Sources */ = {isa = PBXBuildFile; fileRef = F32D33B518299B7800F1B4BF /* HUDLayer.mm */; };
+		F32D33B81829B4BD00F1B4BF /* heart.png in Resources */ = {isa = PBXBuildFile; fileRef = F32D33B71829B4BD00F1B4BF /* heart.png */; };
 		F339E3CC1826285F004DFE79 /* button.png in Resources */ = {isa = PBXBuildFile; fileRef = F339E3CB1826285F004DFE79 /* button.png */; };
 		F339E3D118263D50004DFE79 /* menu-background.png in Resources */ = {isa = PBXBuildFile; fileRef = F339E3D018263D50004DFE79 /* menu-background.png */; };
 		F3C94D421823590800D34960 /* background.png in Resources */ = {isa = PBXBuildFile; fileRef = F3C94D411823590800D34960 /* background.png */; };
@@ -143,6 +145,9 @@
 		F32D33AA1828B92B00F1B4BF /* dogofthundertext.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = dogofthundertext.png; sourceTree = "<group>"; };
 		F32D33B01828BE0400F1B4BF /* thorgi.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = thorgi.png; sourceTree = "<group>"; };
 		F32D33B21828CCDB00F1B4BF /* thorgi-med.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "thorgi-med.png"; path = "../../thorgi-med.png"; sourceTree = "<group>"; };
+		F32D33B418299B7800F1B4BF /* HUDLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HUDLayer.h; sourceTree = "<group>"; };
+		F32D33B518299B7800F1B4BF /* HUDLayer.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = HUDLayer.mm; sourceTree = "<group>"; };
+		F32D33B71829B4BD00F1B4BF /* heart.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = heart.png; sourceTree = "<group>"; };
 		F339E3CB1826285F004DFE79 /* button.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = button.png; path = "../../../PeevedPenguins/Projectfiles/Resources/Menu Pack/button.png"; sourceTree = "<group>"; };
 		F339E3D018263D50004DFE79 /* menu-background.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "menu-background.png"; sourceTree = "<group>"; };
 		F3C94D411823590800D34960 /* background.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = background.png; sourceTree = "<group>"; };
@@ -294,6 +299,8 @@
 				F3D6D9841825881C00B7C77B /* PauseLayer.mm */,
 				F3F5FCD8182662A1009910F9 /* GameLayer.h */,
 				F3F5FCD9182662A1009910F9 /* GameLayer.mm */,
+				F32D33B418299B7800F1B4BF /* HUDLayer.h */,
+				F32D33B518299B7800F1B4BF /* HUDLayer.mm */,
 				F3C94D511824345000D34960 /* Dog.h */,
 				F3C94D521824345000D34960 /* Dog.mm */,
 				DCC1A38D13A94F1A005BD75D /* AppDelegate.h */,
@@ -313,6 +320,7 @@
 		DCC1A39413A94F1A005BD75D /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				F32D33B71829B4BD00F1B4BF /* heart.png */,
 				F32D33A51828AF2000F1B4BF /* Characters */,
 				F32D33A01828AF0E00F1B4BF /* Logos */,
 				F339E3D018263D50004DFE79 /* menu-background.png */,
@@ -471,6 +479,7 @@
 				F32D33AB1828B92B00F1B4BF /* dogofthundertext.png in Resources */,
 				F32D33B11828BE0400F1B4BF /* thorgi.png in Resources */,
 				F32D33B31828CCDB00F1B4BF /* thorgi-med.png in Resources */,
+				F32D33B81829B4BD00F1B4BF /* heart.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -510,6 +519,7 @@
 				F3E099591824E51D00F9AA2D /* GameOverLayer.mm in Sources */,
 				F3D6D9851825881C00B7C77B /* PauseLayer.mm in Sources */,
 				F3F5FCDA182662A1009910F9 /* GameLayer.mm in Sources */,
+				F32D33B618299B7800F1B4BF /* HUDLayer.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

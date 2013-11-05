@@ -7,6 +7,7 @@
 
 #import "ContactListener.h"
 #import "cocos2d.h"
+#import "GameLayer.h"
 
 #import "Bullet.h"
 #import "Cat.h"
@@ -24,48 +25,36 @@ void ContactListener::BeginContact(b2Contact* contact)
 	{
         if (([spriteA isKindOfClass:[Cat class]] && [spriteB isKindOfClass:[Bullet class]]) ||
             ([spriteB isKindOfClass:[Cat class]] && [spriteA isKindOfClass:[Bullet class]])) {
-                ((__bridge CCSprite*) contact->GetFixtureA()->GetBody()->GetUserData()).tag=2;
-                ((__bridge CCSprite*) contact->GetFixtureB()->GetBody()->GetUserData()).tag=2;
+                ((__bridge CCSprite*) contact->GetFixtureA()->GetBody()->GetUserData()).tag=SpriteStateHit;
+                ((__bridge CCSprite*) contact->GetFixtureB()->GetBody()->GetUserData()).tag=SpriteStateHit;
                 spriteA.color = ccRED;
                 spriteB.color = ccRED;
-                
-
-            CCLOG(@"BULLET DETECED");
         }
-               
+        
+        if (spriteA.tag == SpriteStateInvincible || spriteB.tag == SpriteStateInvincible) {
+            CCLOG(@"begincontact invinc");
+            return;
+        }
+
+        
         if (([spriteA isKindOfClass:[Cat class]] && [spriteB isKindOfClass:[Dog class]]) ) {
            // CCLOG(@"Dog hit!1");
            //  ((Dog*)spriteB).health--; 
             spriteB.color = ccGREEN;
-            ((__bridge CCSprite*) contact->GetFixtureA()->GetBody()->GetUserData()).tag=2;
+            ((__bridge CCSprite*) contact->GetFixtureA()->GetBody()->GetUserData()).tag=SpriteStateHit;
             spriteA.color = ccRED;
-             ((__bridge CCSprite*) contact->GetFixtureB()->GetBody()->GetUserData()).tag=2;
+             ((__bridge CCSprite*) contact->GetFixtureB()->GetBody()->GetUserData()).tag=SpriteStateHit;
         } else if (([spriteB isKindOfClass:[Cat class]] && [spriteA isKindOfClass:[Dog class]])) {
             // CCLOG(@"Dog hit!2");
            // ((Dog*)spriteA).health--;  
             spriteA.color = ccBLUE;
-            ((__bridge CCSprite*) contact->GetFixtureA()->GetBody()->GetUserData()).tag=2;
+            ((__bridge CCSprite*) contact->GetFixtureA()->GetBody()->GetUserData()).tag=SpriteStateHit;
             spriteB.color = ccRED;
-            ((__bridge CCSprite*) contact->GetFixtureB()->GetBody()->GetUserData()).tag=2;
+            ((__bridge CCSprite*) contact->GetFixtureB()->GetBody()->GetUserData()).tag=SpriteStateHit;
         }
-
-        
-        
         
 	}
     
-	/*
-	if (spriteA != NULL && spriteB != NULL)
-	{
-		spriteA.color = ccRED;
-		spriteB.color = ccRED;
-        if (([spriteA isKindOfClass:[Cat class]] && [spriteB isKindOfClass:[Bullet class]]) ||
-            ([spriteB isKindOfClass:[Cat class]] && [spriteA isKindOfClass:[Bullet class]])) {
-          ((__bridge CCSprite*) contact->GetFixtureA()->GetBody()->GetUserData()).tag=2;
-          ((__bridge CCSprite*) contact->GetFixtureB()->GetBody()->GetUserData()).tag=2;
-        }
-	}
-     */
 }
 
 void ContactListener::EndContact(b2Contact* contact)
@@ -103,6 +92,10 @@ void ContactListener::PreSolve(b2Contact* contact,
         //	spriteB.color = ccWHITE;
         if (([spriteA isKindOfClass:[Cat class]] && [spriteB isKindOfClass:[Cat class]]) )
         {
+            contact->SetEnabled(false);
+        }
+        else if (spriteA.tag == SpriteStateInvincible || spriteB.tag == SpriteStateInvincible) {
+            CCLOG(@"presolved invincible");
             contact->SetEnabled(false);
         }
         

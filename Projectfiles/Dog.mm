@@ -16,6 +16,8 @@ const float PTM_RATIO = 32.0f;
 // declare private methods here
 @end
 
+#define HEALTH 5
+
 @implementation Dog
 @synthesize health;
 
@@ -39,7 +41,7 @@ const float PTM_RATIO = 32.0f;
     if ((self = [super initWithFile:@"thorgi.png"]))
     //if ((self = [super initWithFile:@"ship.png"]))
     {
-        health = 10;
+        health = HEALTH;
         
         
         

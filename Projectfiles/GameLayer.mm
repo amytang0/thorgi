@@ -17,9 +17,11 @@
 #import "SimpleAudioEngine.h"
 
 
-#define MAX_SPEED 15.0
+#define MAX_SPEED 15.0f
 #define BOARD_LENGTH 500
-#define BULLET_SPEED 15.0
+#define BULLET_SPEED 15.0f
+#define INVINCIBILITY 2.0f
+
 const float PTM_RATIO = 32.0f;
 //#define PTM_RATIO 32.0f
 
@@ -42,7 +44,7 @@ CGRect secondrect;
             rotation:(CGFloat)rotation
             isStatic:(BOOL)isStatic;
 -(void) endGame;
--(void) setUpMenu;
+//-(void) setUpMenu;
 @end
 
 @implementation GameLayer
@@ -51,18 +53,23 @@ CGRect secondrect;
 {
 	// 'scene' is an autorelease object.
 	CCScene *scene = [CCScene node];
+     HUDLayer *hud = [HUDLayer node];
+    [scene addChild:hud z:1];
 	// 'layer' is an autorelease object.
-	GameLayer *layer = [GameLayer node];
+	GameLayer *layer = [[GameLayer alloc] initWithHUD:hud];
 	// add layer as a child to scene
 	[scene addChild: layer];
 	// return the scene
 	return scene;
 }
 
--(id) init
+// Replace beginning of init with the following
+- (id)initWithHUD:(HUDLayer *)hudLayer
 {
-	if ((self = [super init]))
-	{
+    if ((self = [super init])) {
+        self->hud = hudLayer;
+        [self addChild:hud z:100];
+
         [self initWorld];
         
         
@@ -86,7 +93,7 @@ CGRect secondrect;
         
         [self scheduleUpdate];
         
-       // [self setUpMenu];
+        //[self setUpMenu];
         
         // [self performSelector:@selector(endGame) withObject:nil afterDelay:1.2f];
     }
@@ -324,8 +331,16 @@ CGRect secondrect;
     
     [self updateWorld];
     [self moveCats];
+    [self updateHUD];
     
-  
+}
+
+-(void) updateHUD
+{
+    //NSString *scoreString = [NSString stringWithFormat:@"Score: %d",score];
+    //[hud setScoreString:scoreString];
+    [hud setScore:score];
+    [hud setLives:dogSprite.health];
 }
 
 -(void) moveCats
@@ -338,6 +353,7 @@ CGRect secondrect;
             b2Vec2 velocity = b2Vec2(dogSprite.position.x-sprite.position.x,dogSprite.position.y- sprite.position.y);
             velocity.Normalize();
             body->SetLinearVelocity(((Cat*)sprite).speed*velocity);
+            
             //body->SetLinearVelocity(0.97f*body->GetLinearVelocity());
             body->SetAngularVelocity(0);
         }
@@ -356,7 +372,7 @@ CGRect secondrect;
             body->SetAngularVelocity(0);
         }
         
-        if (sprite != NULL && sprite.tag==2)
+        if (sprite != NULL && sprite.tag==SpriteStateHit)
         {
             if ([sprite isKindOfClass:[Cat class]])
             {
@@ -376,6 +392,7 @@ CGRect secondrect;
                 //CCLOG(@"IS DOG");
                 if( ((Dog*)sprite).health==1 ) // Dog is dead
                 {
+                    ((Dog*)sprite).health--;
                     [self createSmallExplosionAt:sprite.position];
                     [self removeChild:sprite cleanup:NO];
                     world->DestroyBody(body);
@@ -386,8 +403,13 @@ CGRect secondrect;
                 }
                 else
                 {
+                    
+                    [self beginInvincibility];
                     ((Dog*)sprite).health--;
-                    sprite.color= ccWHITE;
+                    sprite.tag = SpriteStateInvincible;
+                    [self performSelector:@selector(endInvincibility) withObject:nil afterDelay:INVINCIBILITY];
+                    return;
+
                 }
                 dogBody->SetLinearVelocity(b2Vec2(0.1f,0.1f));
             }
@@ -396,7 +418,7 @@ CGRect secondrect;
                 [self removeChild:sprite cleanup:NO];
                 world->DestroyBody(body);
             }
-            sprite.tag = 1;
+            sprite.tag = SpriteStateNormal;
         }
         else if (sprite != NULL)
         {
@@ -406,6 +428,20 @@ CGRect secondrect;
     }
     
  }
+
+-(void) beginInvincibility
+{
+    dogSprite.color = ccGRAY;
+   // dogBody->SetActive(NO);
+    dogSprite.tag = SpriteStateInvincible;
+}
+
+-(void) endInvincibility
+{
+    dogSprite.color= ccWHITE;
+  //  dogBody->SetActive(YES);
+    dogSprite.tag = SpriteStateNormal;
+}
 
 -(void) endGame{
     
@@ -464,6 +500,7 @@ CGRect secondrect;
 
 
 
+/*
 // TODO:Currently KKInput swallows up all touch inputs. Find out how to get around this
 // Also move this menu to the top of screen rather than middle
 -(void)setUpMenu
@@ -472,19 +509,28 @@ CGRect secondrect;
                                                          selectedImage: @"button.png"
                                                                 target:self
                                                               selector:@selector(handleMenuPress:)];
-    CCMenuItem *item = [CCMenuItemFont itemFromString:@"Menu" target:self selector:@selector(handleMenuPress:)]; 
+    CCMenuItem *item = [CCMenuItemFont itemFromString:@"Menu" target:self selector:@selector(handleMenuPress:)];
     
+    NSString *scoreString = [NSString stringWithFormat:@"Score: %d",score];
+    scoreItem = [CCMenuItemFont itemFromString:scoreString target:self selector:@selector(handleMenuPress:)];
+    
+    CGSize screenSize = [CCDirector sharedDirector].winSize;
+    int width = (int)screenSize.width;
+    int height = (int)screenSize.height;
        
     // Create a menu and add your menu items to it
-    menu = [CCMenu menuWithItems:menuItem1, item,nil];
+    menu = [CCMenu menuWithItems:menuItem1, item, scoreItem,nil];
     menu.isTouchEnabled = YES;
+   
+    menu.position = ccp(width/2,height- scoreItem.rect.size.height/3*2);
     // Arrange the menu items Horizontally
     [menu alignItemsHorizontally];
     
     // add the menu to your scene
     [self addChild:menu];
-
 }
+*/
+
 
 -(void) handleMenuPress: (CCMenuItem *) item
 {
