@@ -29,6 +29,7 @@
     NSMutableArray *bulletsLocations;
     
     CCMenu *menu;
+    int score;
     
 }
 +(id) scene;

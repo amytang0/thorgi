@@ -16,5 +16,6 @@
 }
 
 @property int health;
+@property int points;
 -(id) initWithCatImage;
 @end

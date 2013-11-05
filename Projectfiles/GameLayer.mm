@@ -70,6 +70,7 @@ CGRect secondrect;
         bullets = [[NSMutableArray alloc] init];
         bulletsLocations = [[NSMutableArray alloc] init];
         enemies = [[NSMutableArray alloc] init];
+        score = 0;
 		
         glClearColor(.210f, .210f, .299f, 1.0f);
 
@@ -276,8 +277,8 @@ CGRect secondrect;
         // This makes sure that sprite follows drag.
         CGPoint eventualStop = input.gesturePanLocation;
         CGSize size = dogSprite.textureRect.size;
-        if (fabsf(eventualStop.x - dogSprite.position.x) <= size.width &&
-            fabs(eventualStop.y - dogSprite.position.y) <= size.height) {
+        if (fabsf(eventualStop.x - dogSprite.position.x) <= size.width/2+10 &&
+            fabs(eventualStop.y - dogSprite.position.y) <= size.height/2+10) {
             
             eventualStop.x = max(min(.95*(input.gesturePanLocation.x - dogSprite.position.x),MAX_SPEED), -1*MAX_SPEED);
             eventualStop.y = max(min(.95*(input.gesturePanLocation.y - dogSprite.position.y),MAX_SPEED), -1*MAX_SPEED);
@@ -343,6 +344,7 @@ CGRect secondrect;
                 //CCLOG(@"IS CAT");
                 if( ((Cat*)sprite).health==1 )
                 {
+                    score += ((Cat*)sprite).points;
                     [self removeChild:sprite cleanup:NO];
                     world->DestroyBody(body);
                 }
@@ -359,6 +361,7 @@ CGRect secondrect;
                     [self removeChild:sprite cleanup:NO];
                     world->DestroyBody(body);
                     //[self endGame];
+                    [KKInput sharedInput].userInteractionEnabled = NO;
                     [self performSelector:@selector(endGame) withObject:nil afterDelay:1.2f];
                     return;
                 }
@@ -390,6 +393,8 @@ CGRect secondrect;
     // This is a hack that prevents KKInput from swallowing every fuckign touch.
     // God I hate this documentation.
     KKInput* input = [KKInput sharedInput];
+    
+    input.userInteractionEnabled = YES;
     UITapGestureRecognizer* tapGestureRecognizer;
     tapGestureRecognizer = input.tapGestureRecognizer;
     tapGestureRecognizer.cancelsTouchesInView = NO;

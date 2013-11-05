@@ -28,6 +28,7 @@ void ContactListener::BeginContact(b2Contact* contact)
                 ((__bridge CCSprite*) contact->GetFixtureB()->GetBody()->GetUserData()).tag=2;
                 spriteA.color = ccRED;
                 spriteB.color = ccRED;
+                
 
             CCLOG(@"BULLET DETECED");
         }

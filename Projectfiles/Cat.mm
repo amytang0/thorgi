@@ -14,7 +14,7 @@
 @end
 
 @implementation Cat
-@synthesize health;
+@synthesize health, points;
 
 -(id) init
 {
@@ -36,6 +36,7 @@
     if ((self = [super initWithFile:@"cat.png"]))
     {
         health = 2;
+        points = 2;
         //properties work internally just like normal instance variables
     }
     return self;

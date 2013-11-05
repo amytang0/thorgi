@@ -36,15 +36,29 @@
 	self = [super init];
 	if (self)
 	{
+        CGRect appframe= [[UIScreen mainScreen] applicationFrame];
         
-        CCSprite *sprite = [CCSprite spriteWithFile:@"menu-background.png"];
+        CCSprite *sprite = [CCSprite spriteWithFile:@"thorgitext.png"];
+        CGSize size = sprite.textureRect.size;
+        int padding = 30;
+        sprite.scale = (1.0f*appframe.size.height-padding)/(1.0f*MAX(size.width, size.height));
+        sprite.position = ccp(padding/2, appframe.size.width/2.0f);
         sprite.anchorPoint = CGPointZero;
+        CCLOG(@"POSITION: %3.0f %3.0f", sprite.position.x, sprite.position.y);
+        [self addChild:sprite z:-1];
+        
+        sprite = [CCSprite spriteWithFile:@"dogofthundertext.png"];
+        sprite.scale = (1.0f*appframe.size.height-padding)/(1.0f*MAX(size.width, size.height));
+        sprite.position = ccp(sprite.scale*padding/2, appframe.size.width/2.0f - size.height + 10);
+        sprite.anchorPoint = CGPointZero;
+        //sprite.anchorPoint = CGPointZero;
         [self addChild:sprite z:-1];
         
         
         CCMenuItemImage *menuPlayButton = [CCMenuItemImage itemWithNormalImage:@"button.png" selectedImage:@"button.png" target:self selector:@selector(playGame:)];
         menuPlayButton.tag = 1; 
         
+        /*
         CCLabelTTF *level1label = [CCLabelTTF labelWithString:@"Level 1" fontName:@"Georgia-Bold" fontSize:25];
         CCLabelTTF *level2label = [CCLabelTTF labelWithString:@"Level 2" fontName:@"Georgia-Bold" fontSize:25];
         
@@ -53,14 +67,15 @@
         
         CCMenuItemLabel *menuLevel2Button  = [CCMenuItemLabel itemWithLabel:level2label target:self selector:@selector(playGame:)];
         menuLevel2Button.tag = 2; 
-        
+        */
         
         // Create a menu and add your menu items to it
-        CCMenu * myMenu = [CCMenu menuWithItems:menuPlayButton, menuLevel1Button, menuLevel2Button, nil];
+        //CCMenu * myMenu = [CCMenu menuWithItems:menuPlayButton, menuLevel1Button, menuLevel2Button, nil];
+        CCMenu *myMenu = [CCMenu menuWithItems:menuPlayButton, nil];
         
         // Arrange the menu items vertically
         [myMenu alignItemsHorizontally];
-        myMenu.position = ccp(230, 90);
+        myMenu.position = ccp(appframe.size.height/2, 60);
         
         // add the menu to your scene
         [self addChild:myMenu];

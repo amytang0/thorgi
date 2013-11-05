@@ -60,12 +60,15 @@
 		DCF95CD213A97EC500AE3B80 /* libcocos2d-mac.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DCF95CC913A97EC500AE3B80 /* libcocos2d-mac.a */; };
 		DCF95CD413A97EC500AE3B80 /* libkobold2d-mac.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DCF95CCB13A97EC500AE3B80 /* libkobold2d-mac.a */; };
 		F304E1491824A86F00783BD3 /* Bullet.mm in Sources */ = {isa = PBXBuildFile; fileRef = F304E1481824A86F00783BD3 /* Bullet.mm */; };
-		F32E2E921828356D00F979CF /* corgi.png in Resources */ = {isa = PBXBuildFile; fileRef = F32E2E911828356D00F979CF /* corgi.png */; };
+		F32D33A31828AF0E00F1B4BF /* dogofthunder.png in Resources */ = {isa = PBXBuildFile; fileRef = F32D33A11828AF0E00F1B4BF /* dogofthunder.png */; };
+		F32D33A41828AF0E00F1B4BF /* thorgitext.png in Resources */ = {isa = PBXBuildFile; fileRef = F32D33A21828AF0E00F1B4BF /* thorgitext.png */; };
+		F32D33A81828AF2000F1B4BF /* cat.png in Resources */ = {isa = PBXBuildFile; fileRef = F32D33A61828AF2000F1B4BF /* cat.png */; };
+		F32D33AB1828B92B00F1B4BF /* dogofthundertext.png in Resources */ = {isa = PBXBuildFile; fileRef = F32D33AA1828B92B00F1B4BF /* dogofthundertext.png */; };
+		F32D33B11828BE0400F1B4BF /* thorgi.png in Resources */ = {isa = PBXBuildFile; fileRef = F32D33B01828BE0400F1B4BF /* thorgi.png */; };
 		F339E3CC1826285F004DFE79 /* button.png in Resources */ = {isa = PBXBuildFile; fileRef = F339E3CB1826285F004DFE79 /* button.png */; };
 		F339E3D118263D50004DFE79 /* menu-background.png in Resources */ = {isa = PBXBuildFile; fileRef = F339E3D018263D50004DFE79 /* menu-background.png */; };
 		F3C94D421823590800D34960 /* background.png in Resources */ = {isa = PBXBuildFile; fileRef = F3C94D411823590800D34960 /* background.png */; };
 		F3C94D4B1823668E00D34960 /* background2.png in Resources */ = {isa = PBXBuildFile; fileRef = F3C94D4A1823668D00D34960 /* background2.png */; };
-		F3C94D4D1823704000D34960 /* cat.png in Resources */ = {isa = PBXBuildFile; fileRef = F3C94D4C1823704000D34960 /* cat.png */; };
 		F3C94D501823734800D34960 /* Cat.mm in Sources */ = {isa = PBXBuildFile; fileRef = F3C94D4F1823734800D34960 /* Cat.mm */; };
 		F3C94D531824345100D34960 /* Dog.mm in Sources */ = {isa = PBXBuildFile; fileRef = F3C94D521824345000D34960 /* Dog.mm */; };
 		F3C94D5A182449A700D34960 /* StartMenuLayer.mm in Sources */ = {isa = PBXBuildFile; fileRef = F3C94D59182449A700D34960 /* StartMenuLayer.mm */; };
@@ -133,12 +136,15 @@
 		DCFA90F013B4F811009DD35A /* BuildSettings-Release-iOS.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "BuildSettings-Release-iOS.xcconfig"; sourceTree = "<group>"; };
 		F304E1471824A86F00783BD3 /* Bullet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Bullet.h; sourceTree = "<group>"; };
 		F304E1481824A86F00783BD3 /* Bullet.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = Bullet.mm; sourceTree = "<group>"; };
-		F32E2E911828356D00F979CF /* corgi.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = corgi.png; sourceTree = "<group>"; };
+		F32D33A11828AF0E00F1B4BF /* dogofthunder.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = dogofthunder.png; sourceTree = "<group>"; };
+		F32D33A21828AF0E00F1B4BF /* thorgitext.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = thorgitext.png; sourceTree = "<group>"; };
+		F32D33A61828AF2000F1B4BF /* cat.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = cat.png; sourceTree = "<group>"; };
+		F32D33AA1828B92B00F1B4BF /* dogofthundertext.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = dogofthundertext.png; sourceTree = "<group>"; };
+		F32D33B01828BE0400F1B4BF /* thorgi.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = thorgi.png; sourceTree = "<group>"; };
 		F339E3CB1826285F004DFE79 /* button.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = button.png; path = "../../../PeevedPenguins/Projectfiles/Resources/Menu Pack/button.png"; sourceTree = "<group>"; };
 		F339E3D018263D50004DFE79 /* menu-background.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "menu-background.png"; sourceTree = "<group>"; };
 		F3C94D411823590800D34960 /* background.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = background.png; sourceTree = "<group>"; };
 		F3C94D4A1823668D00D34960 /* background2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = background2.png; sourceTree = "<group>"; };
-		F3C94D4C1823704000D34960 /* cat.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = cat.png; sourceTree = "<group>"; };
 		F3C94D4E1823734800D34960 /* Cat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Cat.h; sourceTree = "<group>"; };
 		F3C94D4F1823734800D34960 /* Cat.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = Cat.mm; sourceTree = "<group>"; };
 		F3C94D511824345000D34960 /* Dog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Dog.h; sourceTree = "<group>"; };
@@ -305,10 +311,10 @@
 		DCC1A39413A94F1A005BD75D /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				F32E2E911828356D00F979CF /* corgi.png */,
+				F32D33A51828AF2000F1B4BF /* Characters */,
+				F32D33A01828AF0E00F1B4BF /* Logos */,
 				F339E3D018263D50004DFE79 /* menu-background.png */,
 				F339E3CB1826285F004DFE79 /* button.png */,
-				F3C94D4C1823704000D34960 /* cat.png */,
 				F3C94D4A1823668D00D34960 /* background2.png */,
 				F3C94D411823590800D34960 /* background.png */,
 				DCC1A39513A94F1A005BD75D /* config.lua */,
@@ -342,6 +348,26 @@
 				DC9C33E813B5024400931BF2 /* BuildSettings-Mac.xcconfig */,
 			);
 			path = BuildSettings;
+			sourceTree = "<group>";
+		};
+		F32D33A01828AF0E00F1B4BF /* Logos */ = {
+			isa = PBXGroup;
+			children = (
+				F32D33A11828AF0E00F1B4BF /* dogofthunder.png */,
+				F32D33AA1828B92B00F1B4BF /* dogofthundertext.png */,
+				F32D33A21828AF0E00F1B4BF /* thorgitext.png */,
+			);
+			path = Logos;
+			sourceTree = "<group>";
+		};
+		F32D33A51828AF2000F1B4BF /* Characters */ = {
+			isa = PBXGroup;
+			children = (
+				F32D33B01828BE0400F1B4BF /* thorgi.png */,
+				F32D33A61828AF2000F1B4BF /* cat.png */,
+			);
+			name = Characters;
+			path = Logos/Characters;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -387,7 +413,7 @@
 		DCC1A0D813A94EC0005BD75D /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0420;
+				LastUpgradeCheck = 0460;
 			};
 			buildConfigurationList = DCC1A0DB13A94EC0005BD75D /* Build configuration list for PBXProject "Thorgi" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -434,10 +460,13 @@
 				DC2721BD160CB0B200D88944 /* Default-568h@2x.png in Resources */,
 				F3C94D421823590800D34960 /* background.png in Resources */,
 				F3C94D4B1823668E00D34960 /* background2.png in Resources */,
-				F3C94D4D1823704000D34960 /* cat.png in Resources */,
 				F339E3CC1826285F004DFE79 /* button.png in Resources */,
 				F339E3D118263D50004DFE79 /* menu-background.png in Resources */,
-				F32E2E921828356D00F979CF /* corgi.png in Resources */,
+				F32D33A31828AF0E00F1B4BF /* dogofthunder.png in Resources */,
+				F32D33A41828AF0E00F1B4BF /* thorgitext.png in Resources */,
+				F32D33A81828AF2000F1B4BF /* cat.png in Resources */,
+				F32D33AB1828B92B00F1B4BF /* dogofthundertext.png in Resources */,
+				F32D33B11828BE0400F1B4BF /* thorgi.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -560,6 +589,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = DC9C33E713B5024400931BF2 /* BuildSettings-Debug-Mac.xcconfig */;
 			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
 				PRODUCT_NAME = "Thorgi-Mac";
 			};
 			name = Debug;
@@ -568,6 +598,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = DC9C33E913B5024400931BF2 /* BuildSettings-Release-Mac.xcconfig */;
 			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
 				PRODUCT_NAME = "Thorgi-Mac";
 			};
 			name = Release;
