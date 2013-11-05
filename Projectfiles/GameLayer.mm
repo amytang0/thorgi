@@ -75,9 +75,6 @@ CGRect secondrect;
         glClearColor(.210f, .210f, .299f, 1.0f);
 
         [self initDog];
-        
-        [self populateWithCats];
-        
 		
 		// initialize KKInput
 		KKInput* input = [KKInput sharedInput];
@@ -185,15 +182,20 @@ CGRect secondrect;
 {
     CCDirector* director = [CCDirector sharedDirector];
 	CGSize screenSize = director.screenSize;
+    int width = (int)screenSize.width;
+    int height = (int)screenSize.height;
     
-    int x = arc4random()%((int)screenSize.width);
-    int y = arc4random()%((int)screenSize.height);
+    // Use this one once big board is implemented.
+    //int width,height = BOARD_LENGTH;
+    
+    int x = arc4random()%(width);
+    int y = arc4random()%(height);
     secondrect = [dogSprite textureRect];
     
-    while (fabsf(x - dogSprite.position.x) <= secondrect.size.width+15 &&
-           fabsf(y - dogSprite.position.y) <= secondrect.size.height+15 ) {
-        x = arc4random()%((int)screenSize.width);
-        y = arc4random()%((int)screenSize.height);
+    while (fabsf(x - (dogSprite.position.x - secondrect.size.width/2)) <= secondrect.size.width+75 &&
+           fabsf(y - (dogSprite.position.y- secondrect.size.height/2)) <= secondrect.size.height+45 ) {
+        x = arc4random()%(width);
+        y = arc4random()%(height);
     }
     
     [self createTarget:@"cat.png" atPosition:CGPointMake(x,y) rotation:0.0f isStatic:NO];
@@ -280,16 +282,16 @@ CGRect secondrect;
         if (fabsf(eventualStop.x - dogSprite.position.x) <= size.width/2+10 &&
             fabs(eventualStop.y - dogSprite.position.y) <= size.height/2+10) {
             
-            eventualStop.x = max(min(.95*(input.gesturePanLocation.x - dogSprite.position.x),MAX_SPEED), -1*MAX_SPEED);
-            eventualStop.y = max(min(.95*(input.gesturePanLocation.y - dogSprite.position.y),MAX_SPEED), -1*MAX_SPEED);
+            //eventualStop.x = max(min(.95*(input.gesturePanLocation.x - dogSprite.position.x),MAX_SPEED), -1*MAX_SPEED);
+            //eventualStop.y = max(min(.95*(input.gesturePanLocation.y - dogSprite.position.y),MAX_SPEED), -1*MAX_SPEED);
+            eventualStop.x = .90*(input.gesturePanLocation.x - dogSprite.position.x);
+            eventualStop.y = .90*(input.gesturePanLocation.y - dogSprite.position.y);
             
             dogBody->SetLinearVelocity( b2Vec2( eventualStop.x, eventualStop.y ));
             dogBody->SetLinearDamping(3.0f);
         }
        
     }
-
-
 
 	
 }
@@ -299,7 +301,7 @@ CGRect secondrect;
 {
      
     // 1% chance to spawn a cat
-    if ((arc4random()%100) == 0)
+    if ((arc4random()%100) < 1)
       [self populateWithCats];
 	
 	CCDirector* director = [CCDirector sharedDirector];
@@ -321,8 +323,25 @@ CGRect secondrect;
     world->Step(timeStep, velocityIterations, positionIterations);
     
     [self updateWorld];
+    [self moveCats];
     
   
+}
+
+-(void) moveCats
+{
+    for (b2Body* body = world->GetBodyList(); body != nil; body = body->GetNext())
+    {
+        CCSprite* sprite = (__bridge CCSprite*)body->GetUserData();
+        
+        if ([sprite isKindOfClass:[Cat class]]){
+            b2Vec2 velocity = b2Vec2(dogSprite.position.x-sprite.position.x,dogSprite.position.y- sprite.position.y);
+            velocity.Normalize();
+            body->SetLinearVelocity(((Cat*)sprite).speed*velocity);
+            //body->SetLinearVelocity(0.97f*body->GetLinearVelocity());
+            body->SetAngularVelocity(0);
+        }
+    }
 }
 
 -(void) updateWorld

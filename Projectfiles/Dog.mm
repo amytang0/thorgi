@@ -39,7 +39,7 @@ const float PTM_RATIO = 32.0f;
     if ((self = [super initWithFile:@"thorgi.png"]))
     //if ((self = [super initWithFile:@"ship.png"]))
     {
-        health = 1;
+        health = 10;
         
         
         

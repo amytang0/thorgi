@@ -55,7 +55,7 @@
         [self addChild:sprite z:-1];
         
         
-        CCMenuItemImage *menuPlayButton = [CCMenuItemImage itemWithNormalImage:@"button.png" selectedImage:@"button.png" target:self selector:@selector(playGame:)];
+        CCMenuItemImage *menuPlayButton = [CCMenuItemImage itemWithNormalImage:@"thorgi-med.png" selectedImage:@"button.png" target:self selector:@selector(playGame:)];
         menuPlayButton.tag = 1; 
         
         /*
@@ -75,7 +75,7 @@
         
         // Arrange the menu items vertically
         [myMenu alignItemsHorizontally];
-        myMenu.position = ccp(appframe.size.height/2, 60);
+        myMenu.position = ccp(appframe.size.height/2, 65);
         
         // add the menu to your scene
         [self addChild:myMenu];

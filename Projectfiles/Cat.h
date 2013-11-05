@@ -16,6 +16,6 @@
 }
 
 @property int health;
-@property int points;
+@property int points, speed;
 -(id) initWithCatImage;
 @end

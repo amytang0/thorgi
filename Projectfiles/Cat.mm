@@ -14,7 +14,7 @@
 @end
 
 @implementation Cat
-@synthesize health, points;
+@synthesize health, points, speed;
 
 -(id) init
 {
@@ -37,6 +37,7 @@
     {
         health = 2;
         points = 2;
+        speed = 1;
         //properties work internally just like normal instance variables
     }
     return self;

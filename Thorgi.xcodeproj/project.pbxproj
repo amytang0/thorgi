@@ -65,6 +65,7 @@
 		F32D33A81828AF2000F1B4BF /* cat.png in Resources */ = {isa = PBXBuildFile; fileRef = F32D33A61828AF2000F1B4BF /* cat.png */; };
 		F32D33AB1828B92B00F1B4BF /* dogofthundertext.png in Resources */ = {isa = PBXBuildFile; fileRef = F32D33AA1828B92B00F1B4BF /* dogofthundertext.png */; };
 		F32D33B11828BE0400F1B4BF /* thorgi.png in Resources */ = {isa = PBXBuildFile; fileRef = F32D33B01828BE0400F1B4BF /* thorgi.png */; };
+		F32D33B31828CCDB00F1B4BF /* thorgi-med.png in Resources */ = {isa = PBXBuildFile; fileRef = F32D33B21828CCDB00F1B4BF /* thorgi-med.png */; };
 		F339E3CC1826285F004DFE79 /* button.png in Resources */ = {isa = PBXBuildFile; fileRef = F339E3CB1826285F004DFE79 /* button.png */; };
 		F339E3D118263D50004DFE79 /* menu-background.png in Resources */ = {isa = PBXBuildFile; fileRef = F339E3D018263D50004DFE79 /* menu-background.png */; };
 		F3C94D421823590800D34960 /* background.png in Resources */ = {isa = PBXBuildFile; fileRef = F3C94D411823590800D34960 /* background.png */; };
@@ -141,6 +142,7 @@
 		F32D33A61828AF2000F1B4BF /* cat.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = cat.png; sourceTree = "<group>"; };
 		F32D33AA1828B92B00F1B4BF /* dogofthundertext.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = dogofthundertext.png; sourceTree = "<group>"; };
 		F32D33B01828BE0400F1B4BF /* thorgi.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = thorgi.png; sourceTree = "<group>"; };
+		F32D33B21828CCDB00F1B4BF /* thorgi-med.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "thorgi-med.png"; path = "../../thorgi-med.png"; sourceTree = "<group>"; };
 		F339E3CB1826285F004DFE79 /* button.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = button.png; path = "../../../PeevedPenguins/Projectfiles/Resources/Menu Pack/button.png"; sourceTree = "<group>"; };
 		F339E3D018263D50004DFE79 /* menu-background.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "menu-background.png"; sourceTree = "<group>"; };
 		F3C94D411823590800D34960 /* background.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = background.png; sourceTree = "<group>"; };
@@ -363,6 +365,7 @@
 		F32D33A51828AF2000F1B4BF /* Characters */ = {
 			isa = PBXGroup;
 			children = (
+				F32D33B21828CCDB00F1B4BF /* thorgi-med.png */,
 				F32D33B01828BE0400F1B4BF /* thorgi.png */,
 				F32D33A61828AF2000F1B4BF /* cat.png */,
 			);
@@ -467,6 +470,7 @@
 				F32D33A81828AF2000F1B4BF /* cat.png in Resources */,
 				F32D33AB1828B92B00F1B4BF /* dogofthundertext.png in Resources */,
 				F32D33B11828BE0400F1B4BF /* thorgi.png in Resources */,
+				F32D33B31828CCDB00F1B4BF /* thorgi-med.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
