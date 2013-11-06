@@ -8,7 +8,7 @@
 
 #import "kobold2d.h"
 
-@interface HUDLayer : CCLayer
+@interface HUDLayer : CCLayerColor
 {
 @protected
 @private
@@ -16,4 +16,5 @@
 -(void) setScoreString:(NSString *)string;
 -(void)setScore:(int) score;
 -(void) setLives:(int) health;
+-(void) handleTouch: (CGPoint)touch;
 @end

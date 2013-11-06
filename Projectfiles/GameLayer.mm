@@ -54,11 +54,11 @@ CGRect secondrect;
 	// 'scene' is an autorelease object.
 	CCScene *scene = [CCScene node];
      HUDLayer *hud = [HUDLayer node];
-    [scene addChild:hud z:1];
+    [scene addChild:hud z:10];
 	// 'layer' is an autorelease object.
 	GameLayer *layer = [[GameLayer alloc] initWithHUD:hud];
 	// add layer as a child to scene
-	[scene addChild: layer];
+	[scene addChild: layer z:0];
 	// return the scene
 	return scene;
 }
@@ -68,8 +68,7 @@ CGRect secondrect;
 {
     if ((self = [super init])) {
         // Add the HUD layer on top.
-        self->hud = hudLayer;
-        [self addChild:hud z:100];
+        [self initHud: hudLayer];
 
         [self initWorld];
         //[self initSpriteSheets];
@@ -100,6 +99,16 @@ CGRect secondrect;
     }
 
 	return self;
+}
+
+-(void) initHud: (HUDLayer*)hudLayer
+{
+    CGSize winSize = [CCDirector sharedDirector].winSize;
+    self->hud = hudLayer;
+   // self->hud.position=ccp(0,winSize.height-2*hudLayer.size.height);
+    self->hud.position=ccp(0,winSize.height-40);
+
+    [self addChild:hud z:100];
 }
 
 -(void) initSpriteSheets
@@ -156,8 +165,8 @@ CGRect secondrect;
 {
     CGRect appframe= [[UIScreen mainScreen] applicationFrame];
     
-    NSLog(@"mainScreen applicationFrame: %.0f, %.0f, %3.0f, %3.0f", 
-          appframe.origin.x, appframe.origin.y, appframe.size.width, appframe.size.height);
+   // NSLog(@"mainScreen applicationFrame: %.0f, %.0f, %3.0f, %3.0f",
+   //       appframe.origin.x, appframe.origin.y, appframe.size.width, appframe.size.height);
     
     //CCLOG(@"centersize: %@", centerSize);
     CGPoint center = ccp(appframe.size.width/2.0f, appframe.size.height/2.0f);
@@ -274,11 +283,17 @@ CGRect secondrect;
 -(void) gestureRecognition
 {
 	KKInput* input = [KKInput sharedInput];
-    if ([input isAnyTouchOnNode:menu touchPhase:KKTouchPhaseBegan])
+    
+    if ([input isAnyTouchOnNode:hud touchPhase:KKTouchPhaseBegan])
     {
         // code for when user touched infoButton sprite goes here ...
         CCLOG(@"Pressed menu!!!!");
+        CGPoint tapped =[input gestureTapLocation];
+         [self stopTakingKKInput];
+        [hud handleTouch: tapped];
+       
         return;
+        
     }
     
 	if (input.gestureTapRecognizedThisFrame)
@@ -363,18 +378,20 @@ CGRect secondrect;
             Cat* cat = (Cat*)sprite;
             b2Vec2 velocity = b2Vec2(dogSprite.position.x-sprite.position.x,dogSprite.position.y- sprite.position.y);
             velocity.Normalize();
-            CGFloat rads = atan2(velocity.y,velocity.x)+M_PI;
-            CCLOG(@"Cat;s position %@, %f", NSStringFromCGPoint(cat.position), rads);
+            //CGFloat rads = atan2(velocity.y,velocity.x)+M_PI;
+            //CCLOG(@"Cat;s position %@, %f", NSStringFromCGPoint(cat.position), rads);
             
             body->SetLinearVelocity(((Cat*)sprite).speed*velocity);
            // CCLOG(@"dir: %@",[self getDirectionFromVelocity:body->GetLinearVelocity()] );
             
+            /*
             // If they're too close to 45 degree stuff, just let them proceed in the same direction.
             // prevents jitteriness. may have an issue in th very beginning.
             if (fabsf(rads) - M_PI_4 <= M_PI_4/3 ||
                 fabsf(rads) - M_PI_4*3 <= M_PI_4/3) {
                 return;
             }
+             */
                 
             [cat setWalkDirection:[self getDirectionFromVelocity:body->GetLinearVelocity()]];
             
@@ -485,8 +502,8 @@ CGRect secondrect;
     dogSprite.tag = SpriteStateNormal;
 }
 
--(void) endGame{
-    
+-(void) stopTakingKKInput
+{
     // This is a hack that prevents KKInput from swallowing every fuckign touch.
     // God I hate this documentation.
     KKInput* input = [KKInput sharedInput];
@@ -495,6 +512,13 @@ CGRect secondrect;
     UITapGestureRecognizer* tapGestureRecognizer;
     tapGestureRecognizer = input.tapGestureRecognizer;
     tapGestureRecognizer.cancelsTouchesInView = NO;
+}
+
+-(void) endGame{
+    
+    // This is a hack that prevents KKInput from swallowing every fuckign touch.
+    // God I hate this documentation.
+    [self stopTakingKKInput];
     
     [[CCDirector sharedDirector] replaceScene:[CCTransitionCrossFade transitionWithDuration:0.7f  scene:((CCScene*)[[GameOverLayer alloc] init]) ]];
 }

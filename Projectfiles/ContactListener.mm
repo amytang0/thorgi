@@ -32,7 +32,7 @@ void ContactListener::BeginContact(b2Contact* contact)
         }
         
         if (spriteA.tag == SpriteStateInvincible || spriteB.tag == SpriteStateInvincible) {
-            CCLOG(@"begincontact invinc");
+            //CCLOG(@"begincontact invinc");
             return;
         }
 
@@ -95,7 +95,7 @@ void ContactListener::PreSolve(b2Contact* contact,
             contact->SetEnabled(false);
         }
         else if (spriteA.tag == SpriteStateInvincible || spriteB.tag == SpriteStateInvincible) {
-            CCLOG(@"presolved invincible");
+            //CCLOG(@"presolved invincible");
             contact->SetEnabled(false);
         }
         

@@ -9,11 +9,15 @@
 #import "HUDLayer.h"
 
 #import "GameLayer.h"
+#import "PauseLayer.h"
+#import "GameOverLayer.h"
 
 #define PADDING_TOP 20.0f
+#define HEIGHT 20.0f
 
 CCLabelTTF *scoreString;
 CCLabelTTF *livesString;
+CCLabelTTF *menuButton;
   NSMutableArray *hearts;
 
 @interface HUDLayer (PrivateMethods)
@@ -25,36 +29,59 @@ CCLabelTTF *livesString;
 
 -(id) init
 {
-	self = [super init];
+	self = [super initWithColor:ccc4(255,255,255,5)];
 	if (self)
 	{
+
         CCLOG(@"HUDLAYER INIT");
         hearts = [[NSMutableArray alloc] init];
         
         CGSize winSize = [CCDirector sharedDirector].winSize;
+        
+        [self setContentSize:CGSizeMake(winSize.width,HEIGHT*2)];
+        
         if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
             scoreString = [CCLabelTTF labelWithString:@"WOOOP" fontName:@"Arial" fontSize:22.0f];
         } else {
             scoreString = [CCLabelTTF labelWithString:@"WOOOP!!" fontName:@"Arial" fontSize:16.0f];
         }
-        scoreString.position = ccp(winSize.width* 0.5, winSize.height - PADDING_TOP);
+        //scoreString.position = ccp(winSize.width* 0.5, winSize.height - PADDING_TOP);
+        scoreString.position = ccp(winSize.width* 0.5, HEIGHT);
+
         [self addChild:scoreString];
         
-        CCLabelTTF *menu = [CCLabelTTF labelWithString:@"menu" fontName:@"Arial" fontSize:16.0f];
-        menu.position =  ccp(winSize.width* 0.9, winSize.height - PADDING_TOP);
-        [self addChild:menu];
+        
+        menuButton = [CCLabelTTF labelWithString:@"menu" fontName:@"Arial" fontSize:16.0f];
+        menuButton.position =  ccp(winSize.width* 0.9, HEIGHT);
+        [self addChild:menuButton];
+         
         /*
         livesString = [CCLabelTTF labelWithString:@"WOOOP" fontName:@"Arial" fontSize:16.0f];
         livesString.position = ccp(winSize.width*.15, winSize.height * .9);
         [self addChild:livesString];
          */
        // [self addChild:hearts];
-
         
         
     }
     
 	return self;
+}
+
+-(void) handleTouch: (CGPoint)touch
+{
+    CGRect rect = menuButton.boundingBox;
+
+    CCLOG(@"TOUCH RECEIVED ON MENU IS %@", NSStringFromCGPoint(touch));
+    CCLOG(@"menu is %@", NSStringFromCGPoint(menuButton.boundingBoxCenter));
+    //if (CGRectContainsPoint(rect, touch)){
+    if (fabsf(menuButton.boundingBoxCenter.x - touch.x) <= rect.size.width/2 +10 &&
+        fabsf(menuButton.boundingBoxCenter.y+self.position.y - touch.y) <= rect.size.height/2 +10 )
+    {
+           //[[CCDirector sharedDirector] replaceScene: (CCScene*)[[PauseLayer alloc] init]];
+        [[CCDirector sharedDirector] replaceScene: (CCScene*)[[GameOverLayer alloc] init]];
+
+    }
 }
 
 -(void)setScoreString:(NSString *)string {
@@ -77,7 +104,8 @@ CCLabelTTF *livesString;
     
 
     CGSize winSize = [CCDirector sharedDirector].winSize;
-    CGPoint position = ccp(winSize.width*.05, winSize.height - PADDING_TOP);
+   // CGPoint position = ccp(winSize.width*.05, winSize.height - PADDING_TOP);
+    CGPoint position = ccp(winSize.width*.05, HEIGHT);
     for (int i = 0; i < health; i++){
         CCSprite *heart = [CCSprite spriteWithFile:@"heart.png"];
         heart.position = position;

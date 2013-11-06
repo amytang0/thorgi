@@ -44,7 +44,7 @@
         sprite.scale = (1.0f*appframe.size.height-padding)/(1.0f*MAX(size.width, size.height));
         sprite.position = ccp(padding/2, appframe.size.width/2.0f);
         sprite.anchorPoint = CGPointZero;
-        CCLOG(@"POSITION: %3.0f %3.0f", sprite.position.x, sprite.position.y);
+        //CCLOG(@"POSITION: %3.0f %3.0f", sprite.position.x, sprite.position.y);
         [self addChild:sprite z:-1];
         
         sprite = [CCSprite spriteWithFile:@"dogofthundertext.png"];
@@ -78,13 +78,9 @@
 
 -(void) playGame:(CCMenuItem *)sender 
 {
-    if (sender.tag == 2) {
-        [[CCDirector sharedDirector] replaceScene: (CCScene*)[[GameOverLayer alloc] init]];
-        
-    } else {
-        HUDLayer *hud = [HUDLayer node];
+           HUDLayer *hud = [HUDLayer node];
         [[CCDirector sharedDirector] replaceScene: (CCScene*)[[GameLayer alloc] initWithHUD:hud]];
-    }
+    
     NSLog(@"Play the game");
     
 }
