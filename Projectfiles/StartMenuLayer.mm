@@ -69,6 +69,7 @@
         // add the menu to your scene
         [self addChild:myMenu];
         
+        self.isTouchEnabled = YES;
 		
         // uncomment if you want the update method to be executed every frame
 		//[self scheduleUpdate];

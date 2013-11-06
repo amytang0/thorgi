@@ -8,18 +8,31 @@
 
 #import "PauseLayer.h"
 
+CCMenu * myMenu;
+
 @interface PauseLayer (PrivateMethods)
 // declare private methods here
 @end
 
 @implementation PauseLayer
 
++(id) scene
+{
+	// 'scene' is an autorelease object.
+	CCScene *scene = [CCScene node];
+	PauseLayer *layer = [[PauseLayer alloc] init];
+	// add layer as a child to scene
+	[scene addChild: layer z:0];
+	// return the scene
+	return scene;
+}
+
 -(id) init
 {
 	self = [super init];
 	if (self)
 	{
-		
+		/*
         // Create some menu items
         CCMenuItemImage * menuItem1 = [CCMenuItemImage itemWithNormalImage:@"resumebutton.png"
                                                              selectedImage: @"resumebutton_selected.png"
@@ -45,11 +58,16 @@
         CCMenuItemImage * menuItem5 = [CCMenuItemImage itemWithNormalImage:@"mutesoundbutton.png"
                                                              selectedImage: @"mutesoundbutton_selected.png"
                                                                     target:self
-                                                                  selector:@selector(muteSound:)]; 
+                                                                  selector:@selector(muteSound:)];
+        */
         
-        
+        CCMenuItemFont *menuItem1 = [CCMenuItemFont itemWithString:@"resume"];
+           CCMenuItemFont *menuItem2 = [CCMenuItemFont itemWithString:@"restart"];
+           CCMenuItemFont *menuItem3 = [CCMenuItemFont itemWithString:@"rmusic"];
+           CCMenuItemFont *menuItem4 = [CCMenuItemFont itemWithString:@"mutemasdfae"];
+           CCMenuItemFont *menuItem5 = [CCMenuItemFont itemWithString:@"mutee"];
         // Create a menu and add your menu items to it
-        CCMenu * myMenu = [CCMenu menuWithItems:menuItem1, menuItem2, menuItem3, menuItem4, menuItem5, nil];
+        myMenu = [CCMenu menuWithItems:menuItem1, menuItem2, menuItem3, menuItem4, menuItem5, nil];
         
         // Arrange the menu items Horizontally
         [myMenu alignItemsHorizontally];
@@ -57,17 +75,29 @@
         // add the menu to your scene
         [self addChild:myMenu];
 
+        KKInput *input = [KKInput sharedInput];
 		
         // uncomment if you want the update method to be executed every frame
 		//[self scheduleUpdate];
+        self.isTouchEnabled = YES;
 	}
 	return self;
 }
 
+-(void) update:(ccTime)delta
+{
+    KKInput* input = [KKInput sharedInput];
+    
+    if ([input isAnyTouchOnNode:myMenu touchPhase:KKTouchPhaseBegan])
+    {
+        CCLOG(@"DETECTED TOUCH!");
+    }
+}
 
-- (void) resume: (CCMenuItem  *) menuItem 
+- (void) resume: (CCMenuItem  *) menuItem
 {
 	NSLog(@"The first menu was called RESUME");
+    [[CCDirector sharedDirector] popScene];
 }
 - (void) restart: (CCMenuItem  *) menuItem 
 {
@@ -115,9 +145,5 @@
 	NSLog(@"dealloc: %@", self);
 }
 
-// scheduled update method
--(void) update:(ccTime)delta
-{
-}
 
 @end

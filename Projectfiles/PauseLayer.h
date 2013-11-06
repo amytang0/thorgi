@@ -13,5 +13,5 @@
 @protected
 @private
 }
-
++(id) scene;
 @end

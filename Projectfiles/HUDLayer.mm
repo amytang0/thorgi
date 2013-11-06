@@ -62,13 +62,45 @@ CCLabelTTF *menuButton;
          */
        // [self addChild:hearts];
         
-        
+        self.isTouchEnabled = YES;
     }
     
 	return self;
 }
+/*
+- (BOOL)ccTouchBegan:(UITouch *)touch withEvent:(UIEvent *)event {
+   
+      CCLOG(@"DETECTED TOUCH on hudlayer!");
+    
+}
+*/
 
--(void) handleTouch: (CGPoint)touch
+- (void)ccTouchesBegan:(NSSet*)touches withEvent:(UIEvent*)event
+{
+    UITouch* touch = [touches anyObject];
+       CCLOG(@"DETECTED TOUCH on hudlayer!");
+     // CGPoint touchLocation = [touch locationInView:self.view];
+    CGPoint touchStart = [[CCDirector sharedDirector] convertToGL:[touch locationInView:[touch view]]];
+    
+    // convert touch location to layer space
+    touchStart = [self convertToNodeSpace:touchStart];
+    [self handleMenuButton:touchStart];
+    
+}
+ 
+
+-(void) update:(ccTime)delta
+{
+    KKInput* input = [KKInput sharedInput];
+    
+    if ([input isAnyTouchOnNode:menuButton touchPhase:KKTouchPhaseBegan])
+    {
+        CCLOG(@"DETECTED TOUCH ON MENUBUTTON!");
+    }
+}
+
+
+-(void) handleMenuButton: (CGPoint)touch
 {
     CGRect rect = menuButton.boundingBox;
 
@@ -76,9 +108,9 @@ CCLabelTTF *menuButton;
     CCLOG(@"menu is %@", NSStringFromCGPoint(menuButton.boundingBoxCenter));
     //if (CGRectContainsPoint(rect, touch)){
     if (fabsf(menuButton.boundingBoxCenter.x - touch.x) <= rect.size.width/2 +10 &&
-        fabsf(menuButton.boundingBoxCenter.y+self.position.y - touch.y) <= rect.size.height/2 +10 )
+        fabsf(menuButton.boundingBoxCenter.y - touch.y) <= rect.size.height/2 +10 )
     {
-           //[[CCDirector sharedDirector] replaceScene: (CCScene*)[[PauseLayer alloc] init]];
+       //    [[CCDirector sharedDirector] pushScene: (CCScene*)[[PauseLayer alloc] init]];
         [[CCDirector sharedDirector] replaceScene: (CCScene*)[[GameOverLayer alloc] init]];
 
     }
@@ -150,9 +182,6 @@ CCLabelTTF *menuButton;
 	NSLog(@"dealloc: %@", self);
 }
 
-// scheduled update method
--(void) update:(ccTime)delta
-{
-}
+
 
 @end

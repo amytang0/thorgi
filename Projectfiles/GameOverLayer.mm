@@ -48,8 +48,17 @@
         [self addChild:myMenu];
 		// uncomment if you want the update method to be executed every frame
 		//[self scheduleUpdate];
+        self.isTouchEnabled = YES;
 	}
 	return self;
+}
+
+
+- (void)ccTouchesBegan:(NSSet*)touches withEvent:(UIEvent*)event
+{
+    UITouch* touch = [touches anyObject];
+    CCLOG(@"DETECTED TOUCH on gameOverlayer!");
+    
 }
 
 -(void) showStartScreen:(CCMenuItem *)sender{

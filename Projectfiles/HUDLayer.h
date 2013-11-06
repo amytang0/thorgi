@@ -16,5 +16,4 @@
 -(void) setScoreString:(NSString *)string;
 -(void)setScore:(int) score;
 -(void) setLives:(int) health;
--(void) handleTouch: (CGPoint)touch;
 @end

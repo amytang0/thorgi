@@ -91,6 +91,8 @@ CGRect secondrect;
 		input.gesturePanEnabled = input.gesturesAvailable;
         //input.gestureSwipeEnabled = input.gesturesAvailable;
         
+        self.isTouchEnabled = YES;
+        
         [self scheduleUpdate];
         
         //[self setUpMenu];
@@ -284,17 +286,19 @@ CGRect secondrect;
 {
 	KKInput* input = [KKInput sharedInput];
     
+    
     if ([input isAnyTouchOnNode:hud touchPhase:KKTouchPhaseBegan])
     {
         // code for when user touched infoButton sprite goes here ...
         CCLOG(@"Pressed menu!!!!");
-        CGPoint tapped =[input gestureTapLocation];
+      //  CGPoint tapped =[input gestureTapLocation];
          [self stopTakingKKInput];
-        [hud handleTouch: tapped];
+      //  [hud handleTouch: tapped];
        
         return;
         
     }
+     
     
 	if (input.gestureTapRecognizedThisFrame)
 	{
