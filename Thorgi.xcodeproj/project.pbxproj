@@ -68,6 +68,9 @@
 		F32D33B31828CCDB00F1B4BF /* thorgi-med.png in Resources */ = {isa = PBXBuildFile; fileRef = F32D33B21828CCDB00F1B4BF /* thorgi-med.png */; };
 		F32D33B618299B7800F1B4BF /* HUDLayer.mm in Sources */ = {isa = PBXBuildFile; fileRef = F32D33B518299B7800F1B4BF /* HUDLayer.mm */; };
 		F32D33B81829B4BD00F1B4BF /* heart.png in Resources */ = {isa = PBXBuildFile; fileRef = F32D33B71829B4BD00F1B4BF /* heart.png */; };
+		F3356720182A1D1A001E9A7A /* spottedcatsprite.plist in Resources */ = {isa = PBXBuildFile; fileRef = F335671D182A1D1A001E9A7A /* spottedcatsprite.plist */; };
+		F3356721182A1D1A001E9A7A /* spottedcatsprite.png in Resources */ = {isa = PBXBuildFile; fileRef = F335671E182A1D1A001E9A7A /* spottedcatsprite.png */; };
+		F3356722182A1D1A001E9A7A /* spottedcatsprite.tps in Resources */ = {isa = PBXBuildFile; fileRef = F335671F182A1D1A001E9A7A /* spottedcatsprite.tps */; };
 		F339E3CC1826285F004DFE79 /* button.png in Resources */ = {isa = PBXBuildFile; fileRef = F339E3CB1826285F004DFE79 /* button.png */; };
 		F339E3D118263D50004DFE79 /* menu-background.png in Resources */ = {isa = PBXBuildFile; fileRef = F339E3D018263D50004DFE79 /* menu-background.png */; };
 		F3C94D421823590800D34960 /* background.png in Resources */ = {isa = PBXBuildFile; fileRef = F3C94D411823590800D34960 /* background.png */; };
@@ -148,6 +151,9 @@
 		F32D33B418299B7800F1B4BF /* HUDLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HUDLayer.h; sourceTree = "<group>"; };
 		F32D33B518299B7800F1B4BF /* HUDLayer.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = HUDLayer.mm; sourceTree = "<group>"; };
 		F32D33B71829B4BD00F1B4BF /* heart.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = heart.png; sourceTree = "<group>"; };
+		F335671D182A1D1A001E9A7A /* spottedcatsprite.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = spottedcatsprite.plist; sourceTree = "<group>"; };
+		F335671E182A1D1A001E9A7A /* spottedcatsprite.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = spottedcatsprite.png; sourceTree = "<group>"; };
+		F335671F182A1D1A001E9A7A /* spottedcatsprite.tps */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = spottedcatsprite.tps; sourceTree = "<group>"; };
 		F339E3CB1826285F004DFE79 /* button.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = button.png; path = "../../../PeevedPenguins/Projectfiles/Resources/Menu Pack/button.png"; sourceTree = "<group>"; };
 		F339E3D018263D50004DFE79 /* menu-background.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "menu-background.png"; sourceTree = "<group>"; };
 		F3C94D411823590800D34960 /* background.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = background.png; sourceTree = "<group>"; };
@@ -320,6 +326,9 @@
 		DCC1A39413A94F1A005BD75D /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				F335671D182A1D1A001E9A7A /* spottedcatsprite.plist */,
+				F335671E182A1D1A001E9A7A /* spottedcatsprite.png */,
+				F335671F182A1D1A001E9A7A /* spottedcatsprite.tps */,
 				F32D33B71829B4BD00F1B4BF /* heart.png */,
 				F32D33A51828AF2000F1B4BF /* Characters */,
 				F32D33A01828AF0E00F1B4BF /* Logos */,
@@ -480,6 +489,9 @@
 				F32D33B11828BE0400F1B4BF /* thorgi.png in Resources */,
 				F32D33B31828CCDB00F1B4BF /* thorgi-med.png in Resources */,
 				F32D33B81829B4BD00F1B4BF /* heart.png in Resources */,
+				F3356720182A1D1A001E9A7A /* spottedcatsprite.plist in Resources */,
+				F3356721182A1D1A001E9A7A /* spottedcatsprite.png in Resources */,
+				F3356722182A1D1A001E9A7A /* spottedcatsprite.tps in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

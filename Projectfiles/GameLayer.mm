@@ -39,7 +39,7 @@ CGRect secondrect;
 -(void) initDog;
 -(CGPoint) toPixels:(b2Vec2)vec;
 -(void) updateWorld;
-- (void)createTarget:(NSString*)imageName
+- (void)createCat:(NSString*)imageName
           atPosition:(CGPoint)position
             rotation:(CGFloat)rotation
             isStatic:(BOOL)isStatic;
@@ -67,11 +67,12 @@ CGRect secondrect;
 - (id)initWithHUD:(HUDLayer *)hudLayer
 {
     if ((self = [super init])) {
+        // Add the HUD layer on top.
         self->hud = hudLayer;
         [self addChild:hud z:100];
 
         [self initWorld];
-        
+        //[self initSpriteSheets];
         
 		CCLOG(@"%@ init", NSStringFromClass([self class]));
         bullets = [[NSMutableArray alloc] init];
@@ -99,6 +100,13 @@ CGRect secondrect;
     }
 
 	return self;
+}
+
+-(void) initSpriteSheets
+{
+    [[CCSpriteFrameCache sharedSpriteFrameCache] addSpriteFramesWithFile:@"spottedcatsprite.plist"];
+    CCSpriteBatchNode *spriteSheet = [CCSpriteBatchNode batchNodeWithFile:@"spottedcatsprite.png"];
+    [self addChild:spriteSheet];
 }
 
 
@@ -205,20 +213,22 @@ CGRect secondrect;
         y = arc4random()%(height);
     }
     
-    [self createTarget:@"cat.png" atPosition:CGPointMake(x,y) rotation:0.0f isStatic:NO];
+    [self createCat:@"cat.png" atPosition:CGPointMake(x,y) rotation:0.0f isStatic:NO];
     
 }
 
 
-- (void)createTarget:(NSString*)imageName
+- (void)createCat:(NSString*)imageName
           atPosition:(CGPoint)position
             rotation:(CGFloat)rotation
             isStatic:(BOOL)isStatic
 {
-   
-   //Create the sprite. 
+  
+    
+   //Create the sprite.
     Cat* sprite;
-    sprite = [[Cat alloc] initWithCatImage];
+    //sprite = [[Cat alloc] initWithCatImage];
+    sprite =[[Cat alloc] initWithAnimatedCat];
     [self addChild:sprite z:1];
     
     //Create the bodyDef
@@ -350,13 +360,43 @@ CGRect secondrect;
         CCSprite* sprite = (__bridge CCSprite*)body->GetUserData();
         
         if ([sprite isKindOfClass:[Cat class]]){
+            Cat* cat = (Cat*)sprite;
             b2Vec2 velocity = b2Vec2(dogSprite.position.x-sprite.position.x,dogSprite.position.y- sprite.position.y);
             velocity.Normalize();
+            CGFloat rads = atan2(velocity.y,velocity.x)+M_PI;
+            CCLOG(@"Cat;s position %@, %f", NSStringFromCGPoint(cat.position), rads);
+            
             body->SetLinearVelocity(((Cat*)sprite).speed*velocity);
+           // CCLOG(@"dir: %@",[self getDirectionFromVelocity:body->GetLinearVelocity()] );
+            
+            // If they're too close to 45 degree stuff, just let them proceed in the same direction.
+            // prevents jitteriness. may have an issue in th very beginning.
+            if (fabsf(rads) - M_PI_4 <= M_PI_4/3 ||
+                fabsf(rads) - M_PI_4*3 <= M_PI_4/3) {
+                return;
+            }
+                
+            [cat setWalkDirection:[self getDirectionFromVelocity:body->GetLinearVelocity()]];
             
             //body->SetLinearVelocity(0.97f*body->GetLinearVelocity());
             body->SetAngularVelocity(0);
         }
+    }
+}
+
+-(NSString*) getDirectionFromVelocity: (b2Vec2)velocity
+{
+   // CGFloat rads = atan2(velocity.x,velocity.y)+ M_PI*2;
+    CGFloat rads = atan2(velocity.y,velocity.x)+M_PI;
+    if (rads > M_PI_4 && rads < M_PI_4*3) {
+        
+        return @"front";
+    } else if (rads >= M_PI*3/4.0f && rads <= M_PI*5/4.0f) {
+        return @"right";
+    } else if (rads > M_PI*5/4.0f && rads < M_PI*7/4.0f){
+        return @"back";
+    } else {
+        return @"left";
     }
 }
 
@@ -424,6 +464,8 @@ CGRect secondrect;
         {
             // update the sprite's position to where their physics bodies are
             sprite.position = [self toPixels:body->GetPosition()];
+           // if ([sprite isKindOfClass:[Cat class]])
+            //    CCLOG(@"IS CAT!!!!");
         }
     }
     

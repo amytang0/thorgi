@@ -8,7 +8,6 @@
 
 #import "kobold2d.h"
 
-
 @interface Cat : CCSprite
 {
 @protected
@@ -17,5 +16,9 @@
 
 @property int health;
 @property int points, speed;
+@property NSString *direction;
 -(id) initWithCatImage;
+-(id) initWithAnimatedCat;
+-(void) setWalkDirection: (NSString*)d;
+
 @end
