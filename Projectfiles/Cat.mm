@@ -53,12 +53,12 @@
         health = 2;
         points = 2;
         speed = 1;
-        direction = @"front";
+        direction = @"left";
         NSMutableArray *frontWalkAnimFrames = [NSMutableArray array];
         for (int i=1; i<=3; i++) {
             [frontWalkAnimFrames addObject:
              [[CCSpriteFrameCache sharedSpriteFrameCache] spriteFrameByName:
-              [NSString stringWithFormat:@"frontcat%d.png",i]]];
+              [NSString stringWithFormat:@"%@cat%d.png",direction,i]]];
         }
         
         CCAnimation *walkAnim = [CCAnimation

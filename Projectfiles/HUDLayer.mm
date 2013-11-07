@@ -27,6 +27,7 @@ CCLabelTTF *menuButton;
 
 @implementation HUDLayer
 
+
 -(id) init
 {
 	self = [super initWithColor:ccc4(255,255,255,5)];
@@ -38,7 +39,7 @@ CCLabelTTF *menuButton;
         
         CGSize winSize = [CCDirector sharedDirector].winSize;
         
-        [self setContentSize:CGSizeMake(winSize.width,HEIGHT*2)];
+        //[self setContentSize:CGSizeMake(winSize.width,HEIGHT*2)];
         
         if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
             scoreString = [CCLabelTTF labelWithString:@"WOOOP" fontName:@"Arial" fontSize:22.0f];
@@ -75,6 +76,17 @@ CCLabelTTF *menuButton;
 }
 */
 
+// scheduled update method
+-(void) update:(ccTime)delta
+{
+    KKInput *input = [KKInput sharedInput];
+    
+    if ([input isAnyTouchOnNode:self touchPhase:KKTouchPhaseBegan])
+    {
+        CCLOG(@"yay");
+    }
+}
+
 - (void)ccTouchesBegan:(NSSet*)touches withEvent:(UIEvent*)event
 {
     UITouch* touch = [touches anyObject];
@@ -88,16 +100,6 @@ CCLabelTTF *menuButton;
     
 }
  
-
--(void) update:(ccTime)delta
-{
-    KKInput* input = [KKInput sharedInput];
-    
-    if ([input isAnyTouchOnNode:menuButton touchPhase:KKTouchPhaseBegan])
-    {
-        CCLOG(@"DETECTED TOUCH ON MENUBUTTON!");
-    }
-}
 
 
 -(void) handleMenuButton: (CGPoint)touch
@@ -116,6 +118,10 @@ CCLabelTTF *menuButton;
     }
 }
 
+-(void) handleTouch:(CGPoint)tap
+{
+    
+}
 -(void)setScoreString:(NSString *)string {
     scoreString.string = string;
 }

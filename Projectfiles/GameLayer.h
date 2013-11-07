@@ -35,8 +35,8 @@ typedef NSInteger SpriteState;
     b2Body *bulletBody;
     
     
-    NSMutableArray *bullets;
-    NSMutableArray *bulletsLocations;
+    //NSMutableArray *bullets;
+    //NSMutableArray *bulletsLocations;
     
     CCMenu *menu;
     CCMenuItem *scoreItem;
@@ -49,3 +49,5 @@ typedef NSInteger SpriteState;
 extern const float PTM_RATIO;
 
 @end
+
+

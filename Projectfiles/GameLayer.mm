@@ -15,11 +15,12 @@
 #import "Cat.h"
 #import "Dog.h"
 #import "GameOverLayer.h"
+#import "HUDLayer.h"
 #import "SimpleAudioEngine.h"
 
 
 #define MAX_SPEED 15.0f
-#define BOARD_LENGTH 500
+#define BOARD_LENGTH 1000
 #define BULLET_SPEED 15.0f
 #define INVINCIBILITY 2.0f
 #define MAX_CATS 30
@@ -27,10 +28,10 @@
 const float PTM_RATIO = 32.0f;
 //#define PTM_RATIO 32.0f
 
-NSMutableArray *enemies;
-CCSprite *enemy;
-CGRect firstrect;
-CGRect secondrect;
+//NSMutableArray *enemies;
+//CCSprite *enemy;
+//CGRect firstrect;
+//CGRect secondrect;
 
 @interface GameLayer (PrivateMethods)
 -(void) changeInputType:(ccTime)delta;
@@ -55,7 +56,8 @@ CGRect secondrect;
 {
 	// 'scene' is an autorelease object.
 	CCScene *scene = [CCScene node];
-     HUDLayer *hud = [HUDLayer node];
+     //HUDLayer *hud = [HUDLayer node];
+    HUDLayer *hud = [[HUDLayer alloc]init];
     [scene addChild:hud z:10];
 	// 'layer' is an autorelease object.
 	GameLayer *layer = [[GameLayer alloc] initWithHUD:hud];
@@ -73,19 +75,23 @@ CGRect secondrect;
         
         // Add the HUD layer on top.
         [self initHud: hudLayer];
-
+        //hud = hudLayer;
+        
         [self initWorld];
         //[self initSpriteSheets];
-        //[self enableBox2dDebugDrawing];
-        
+               
         [self initSpriteSheets];
         
         [self initSoundsAndMusic];
         
+        CCSprite *bg = [[CCSprite alloc] initWithFile:@"background.png"];
+        bg.scale=10;
+        [self addChild:bg z:-10];
+        
 		CCLOG(@"%@ init", NSStringFromClass([self class]));
-        bullets = [[NSMutableArray alloc] init];
-        bulletsLocations = [[NSMutableArray alloc] init];
-        enemies = [[NSMutableArray alloc] init];
+        //bullets = [[NSMutableArray alloc] init];
+        //bulletsLocations = [[NSMutableArray alloc] init];
+        //enemies = [[NSMutableArray alloc] init];
         score = 0;
 		
         glClearColor(.210f, .210f, .299f, 1.0f);
@@ -109,7 +115,14 @@ CGRect secondrect;
        // for(int i=0; i < MAX_CATS; i++)
        // [self populateWithCats];
         
-        // [self performSelector:@selector(endGame) withObject:nil afterDelay:1.2f];
+        //Has camera follow
+        // CGRect rect = CGRectMake(0, 0, BOARD_LENGTH, BOARD_LENGTH);
+        //  [self runAction:[CCFollow actionWithTarget:dogSprite worldBoundary:rect]];
+        [self runAction:[CCFollow actionWithTarget:dogSprite]];
+        //[self->hud runAction:[CCFollow actionWithTarget:self]];
+        
+        [self enableBox2dDebugDrawing];
+
     }
 
 	return self;
@@ -132,7 +145,9 @@ CGRect secondrect;
     self->hud = hudLayer;
    // self->hud.position=ccp(0,winSize.height-2*hudLayer.size.height);
     self->hud.position=ccp(0,winSize.height-40);
-
+    //self->hud.position = ccp(-winSize.height/2, winSize.height);
+   // self->hud.position = ccp(0,0);
+  //  [self->hud runAction:[CCFollow actionWithTarget:dogSprite]];
     [self addChild:hud z:100];
 }
 
@@ -185,6 +200,7 @@ CGRect secondrect;
     screenBorderShape.Set(upperLeftCorner, lowerLeftCorner);
     screenBorderBody->CreateFixture(&screenDef);
     
+
 
 }
 
@@ -243,13 +259,39 @@ CGRect secondrect;
     int x = arc4random()%(width);
     int y = arc4random()%(height);
     
-    while (fabsf(x - dogSprite.boundingBoxCenter.x) <= 150 &&
-           fabsf(y - dogSprite.boundingBoxCenter.y) <= dogSprite.textureRect.size.height+90 ) {
-        x = arc4random()%(width);
-        y = arc4random()%(height);
+    //Puts this at the edges
+    if(x%4 == 0) {
+        x = width;
+    } else if (x%4 == 1){
+        y = height;
+    } else if (x%3 == 2) {
+        x = 0;
+    } else {
+        y = 0;
     }
     
-    [self createCat:@"cat.png" atPosition:CGPointMake(x,y) rotation:0.0f isStatic:NO];
+    //Makes sure this is within board space
+    CGPoint p = [self getScreenPosition:CGPointMake(x,y)];
+    CCLOG(@"POINT: %@", NSStringFromCGPoint(p));
+    if (p.x >= width) p.x = BOARD_LENGTH-dogSprite.textureRect.size.width;
+    if (p.y >= height) p.y = BOARD_LENGTH-dogSprite.textureRect.size.height;
+    if (p.x < 0) p.x = 5;
+    if (p.y < 0) p.y = 5;
+    
+    CGPoint dogPos = [self getScreenPosition:dogSprite.boundingBoxCenter];
+    
+    //Makes sure it doesn't hit dog immediately
+    while (fabsf(p.x - dogPos.x) <= 150 &&
+           fabsf(p.y - dogPos.y) <= dogSprite.textureRect.size.height+90 ) {
+        p.x = arc4random()%(width);
+        p.y = arc4random()%(height);
+        p = [self getScreenPosition:CGPointMake(p.x,p.y)];
+    }
+   
+    
+    
+    
+    [self createCat:@"cat.png" atPosition:p rotation:0.0f isStatic:NO];
     
 }
 
@@ -289,7 +331,7 @@ CGRect secondrect;
     boxDef.density = 20.0f;
     body->CreateFixture(&boxDef);
     body->SetFixedRotation(YES);
-    [enemies addObject:[NSValue valueWithPointer:body]];
+    //[enemies addObject:[NSValue valueWithPointer:body]];
     //[self addChild:[NSValue valueWithPointer:body]];
     
     
@@ -324,11 +366,17 @@ CGRect secondrect;
     [self addChild:explosion];
 }
 
+-(CGPoint) getScreenPosition:(CGPoint)point
+{
+    point.x -= self.position.x;
+    point.y -= self.position.y;
+    return point;
+}
 
 -(void) gestureRecognition
 {
 	KKInput* input = [KKInput sharedInput];
-    
+    //CCLOG(@"detected touch on gamelayer");
     
     if ([input isAnyTouchOnNode:hud touchPhase:KKTouchPhaseBegan])
     {
@@ -345,16 +393,25 @@ CGRect secondrect;
     
 	if (input.gestureTapRecognizedThisFrame)
 	{
-		//[self createSmallExplosionAt:input.gestureTapLocation];
-        [self createBullets:input.gestureTapLocation];
+        //[self createBullets:input.gestureTapLocation];
+       // CCLOG(@"tapLoc: %@, %@", NSStringFromCGPoint(input.gestureTapLocation),NSStringFromCGPoint( dogSprite.position));
+        //CGPoint point = ccpAdd(input.gestureTapLocation, dogSprite.position);
+       // CGPoint point = [[CCDirector sharedDirector] convertToGL:input.gestureTapLocation];
+       
+        CGPoint point = [self getScreenPosition:input.gestureTapLocation];
+      //  CCLOG(@"tapLoc: %@", NSStringFromCGPoint(point));
+      
+        [self createBullets:point];
+        
 	}
 	
     
 	if (input.gesturePanBegan )
 	{
         
-		//CCLOG(@"translation: %.0f, %.0f, velocity: %.1f, %.1f", input.gesturePanTranslation.x, input.gesturePanTranslation.y, input.gesturePanVelocity.x, input.gesturePanVelocity.y);
+		//CCLOG(@"gesturetranslation: %.0f, %.0f, velocity: %.1f, %.1f", input.gesturePanTranslation.x, input.gesturePanTranslation.y, input.gesturePanVelocity.x, input.gesturePanVelocity.y);
         
+        /*
         // This makes sure that sprite follows drag.
         CGPoint eventualStop = input.gesturePanLocation;
         CGSize size = dogSprite.textureRect.size;
@@ -369,6 +426,30 @@ CGRect secondrect;
             dogBody->SetLinearVelocity( b2Vec2( eventualStop.x, eventualStop.y ));
             dogBody->SetLinearDamping(3.0f);
         }
+         
+         */
+        
+        float speed = pow(input.gesturePanVelocity.x, 2) + pow(input.gesturePanVelocity.y, 2);
+        speed = pow(speed, .5);
+        //CCLOG(@"speed %f", speed);
+      
+        //CCLOG(@"panVelocity %@", NSStringFromCGPoint(input.gesturePanVelocity));
+        CGPoint pan = [self getScreenPosition:input.gesturePanLocation];
+        CGPoint eventualStop = pan;
+        eventualStop.x = .90*(pan.x - dogSprite.position.x);
+        eventualStop.y = .90*(pan.y - dogSprite.position.y);
+        b2Vec2 vector = b2Vec2( eventualStop.x, eventualStop.y );
+        vector.Normalize();
+        vector*=(.5*speed + .5*10);
+        
+        dogBody->SetLinearVelocity( vector);
+       
+        /*b2Vec2 velocity = b2Vec2(input.gesturePanVelocity.x, -1*input.gesturePanVelocity.y);
+        //velocity.Normalize();
+        //velocity*=10;
+        dogBody->SetLinearVelocity( velocity);
+         */
+        dogBody->SetLinearDamping(3.0f);
        
     }
 
@@ -391,7 +472,7 @@ CGRect secondrect;
 		
 		if ([KKInput sharedInput].anyTouchEndedThisFrame)
 		{
-			CCLOG(@"anyTouchEndedThisFrame!!!!!");
+			//CCLOG(@"anyTouchEndedThisFrame!!!!!");
 		}
 	}
 		
@@ -405,12 +486,15 @@ CGRect secondrect;
     [self moveCats];
     [self updateHUD];
     
+    
 }
 
 -(void) updateHUD
 {
     //NSString *scoreString = [NSString stringWithFormat:@"Score: %d",score];
     //[hud setScoreString:scoreString];
+    CGSize winSize = [CCDirector sharedDirector].winSize;
+    hud.position = [self getScreenPosition:ccp(0,winSize.height-40)];
     [hud setScore:score];
     [hud setLives:dogSprite.health];
 }
@@ -424,10 +508,10 @@ CGRect secondrect;
             Cat* cat = (Cat*)sprite;
             b2Vec2 velocity = b2Vec2(dogSprite.boundingBoxCenter.x-sprite.boundingBoxCenter.x,dogSprite.boundingBoxCenter.y- sprite.boundingBoxCenter.y);
             velocity.Normalize();
-            b2Vec2 oldVelocity = body->GetLinearVelocity();
+            //b2Vec2 oldVelocity = body->GetLinearVelocity();
             //oldVelocity.Normalize();
-            CGFloat oldAngle = [self getAngleFromVelocity:oldVelocity];
-            CGFloat newAngle = [self getAngleFromVelocity:velocity];
+            //CGFloat oldAngle = [self getAngleFromVelocity:oldVelocity];
+            //CGFloat newAngle = [self getAngleFromVelocity:velocity];
                                
             body->SetLinearVelocity(((Cat*)sprite).speed*velocity);
             
@@ -578,6 +662,7 @@ CGRect secondrect;
         else if (sprite != NULL)
         {
             // update the sprite's position to where their physics bodies are
+        
             sprite.position = [self toPixels:body->GetPosition()];
            // if ([sprite isKindOfClass:[Cat class]])
             //    CCLOG(@"IS CAT!!!!");
@@ -630,7 +715,7 @@ CGRect secondrect;
     [self addChild:bulletSprite z:9];
     //[bullets addObject:bulletSprite];
     NSValue *value = [NSValue valueWithCGPoint:ccpSub(location, dogSprite.position)];
-    [bulletsLocations addObject:value];
+    //[bulletsLocations addObject:value];
  
     b2BodyDef bulletBodyDef;
     bulletBodyDef.type = b2_dynamicBody;
@@ -652,7 +737,7 @@ CGRect secondrect;
     //try changing these and see what happens!
     bullet->CreateFixture(&ballShapeDef);
     
-    [bullets addObject:[NSValue valueWithPointer:bullet]];
+    //[bullets addObject:[NSValue valueWithPointer:bullet]];
     CGPoint translation = ccpSub(location, dogSprite.position);
     b2Vec2 direction = b2Vec2( translation.x, translation.y);
     direction.Normalize();
