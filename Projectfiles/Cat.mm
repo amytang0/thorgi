@@ -16,7 +16,7 @@
 @implementation Cat
 @synthesize health, points, speed;
 @synthesize direction;
-CCAction *moveAction;
+@synthesize moveAction;
 
 -(id) init
 {
@@ -47,9 +47,7 @@ CCAction *moveAction;
 
 -(id) initWithAnimatedCat
 {
-    [[CCSpriteFrameCache sharedSpriteFrameCache] addSpriteFramesWithFile:@"spottedcatsprite.plist"];
-    CCSpriteBatchNode *spriteSheet = [CCSpriteBatchNode batchNodeWithFile:@"spottedcatsprite.png"];
-    [self addChild:spriteSheet];
+
     
     if ((self = [super initWithSpriteFrameName:@"frontcat1.png"])) {
         health = 2;
@@ -77,29 +75,6 @@ CCAction *moveAction;
     
     }
     return self;
-}
-
--(void) setWalkDirection: (NSString*)d
-{
-    if ([self.direction isEqualToString:d]) {
-        return;
-    }
-    [self stopAction:moveAction];
-    
-    NSMutableArray *walkAnimFrames = [NSMutableArray array];
-    for (int i = 1; i <= 3; i++){
-      NSString *fileName = [NSString stringWithFormat:@"%@cat%d.png",d,i];
-        [walkAnimFrames addObject:
-         [[CCSpriteFrameCache sharedSpriteFrameCache] spriteFrameByName:
-        fileName]];
-    }
-    CCAnimation *walkAnim = [CCAnimation
-                             animationWithSpriteFrames:walkAnimFrames delay:0.1f];
-    moveAction = [CCRepeatForever actionWithAction:
-                            [CCAnimate actionWithAnimation:walkAnim]];
-    [self runAction:moveAction];
-    self.direction = d;
-
 }
 
 -(void) onEnter

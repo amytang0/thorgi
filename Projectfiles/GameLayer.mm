@@ -7,6 +7,7 @@
 #include <stdlib.h>
 
 #import "GameLayer.h"
+#import "Box2DDebugLayer.h"
 
 #import "cocos2d.h"
 
@@ -21,6 +22,7 @@
 #define BOARD_LENGTH 500
 #define BULLET_SPEED 15.0f
 #define INVINCIBILITY 2.0f
+#define MAX_CATS 30
 
 const float PTM_RATIO = 32.0f;
 //#define PTM_RATIO 32.0f
@@ -67,11 +69,18 @@ CGRect secondrect;
 - (id)initWithHUD:(HUDLayer *)hudLayer
 {
     if ((self = [super init])) {
+        
+        
         // Add the HUD layer on top.
         [self initHud: hudLayer];
 
         [self initWorld];
         //[self initSpriteSheets];
+        //[self enableBox2dDebugDrawing];
+        
+        [self initSpriteSheets];
+        
+        [self initSoundsAndMusic];
         
 		CCLOG(@"%@ init", NSStringFromClass([self class]));
         bullets = [[NSMutableArray alloc] init];
@@ -97,10 +106,24 @@ CGRect secondrect;
         
         //[self setUpMenu];
         
+       // for(int i=0; i < MAX_CATS; i++)
+       // [self populateWithCats];
+        
         // [self performSelector:@selector(endGame) withObject:nil afterDelay:1.2f];
     }
 
 	return self;
+}
+
+
+-(void) initSoundsAndMusic
+{
+    SimpleAudioEngine *engine = [SimpleAudioEngine sharedEngine];
+    [engine preloadBackgroundMusic:@"StarshipThorgi.wav"];
+    [engine playBackgroundMusic:@"StarshipThorgi.wav" loop:YES];
+    [engine setBackgroundMusicVolume:0.5f];
+    [engine preloadEffect:@"pew.wav"];
+    [engine preloadEffect:@"Pow.caf"];
 }
 
 -(void) initHud: (HUDLayer*)hudLayer
@@ -161,6 +184,8 @@ CGRect secondrect;
     
     screenBorderShape.Set(upperLeftCorner, lowerLeftCorner);
     screenBorderBody->CreateFixture(&screenDef);
+    
+
 }
 
 -(void) initDog
@@ -201,6 +226,7 @@ CGRect secondrect;
     boxDef.friction = 100.0f;
     boxDef.restitution = 0.1f;
     dogBody->CreateFixture(&boxDef);
+    dogBody->SetFixedRotation(YES);
 }
 
 
@@ -216,10 +242,9 @@ CGRect secondrect;
     
     int x = arc4random()%(width);
     int y = arc4random()%(height);
-    secondrect = [dogSprite textureRect];
     
-    while (fabsf(x - (dogSprite.position.x - secondrect.size.width/2)) <= secondrect.size.width+75 &&
-           fabsf(y - (dogSprite.position.y- secondrect.size.height/2)) <= secondrect.size.height+45 ) {
+    while (fabsf(x - dogSprite.boundingBoxCenter.x) <= 150 &&
+           fabsf(y - dogSprite.boundingBoxCenter.y) <= dogSprite.textureRect.size.height+90 ) {
         x = arc4random()%(width);
         y = arc4random()%(height);
     }
@@ -263,10 +288,26 @@ CGRect secondrect;
     boxDef.userData = (void*)1;
     boxDef.density = 20.0f;
     body->CreateFixture(&boxDef);
+    body->SetFixedRotation(YES);
     [enemies addObject:[NSValue valueWithPointer:body]];
+    //[self addChild:[NSValue valueWithPointer:body]];
     
     
 }
+
+-(void) createExplosionAt:(CGPoint)location
+{
+	CCParticleExplosion* explosion = [[CCParticleExplosion alloc] initWithTotalParticles:100];
+#ifndef KK_ARC_ENABLED
+	[explosion autorelease];
+#endif
+	explosion.autoRemoveOnFinish = YES;
+	explosion.blendAdditive = YES;
+	explosion.position = location;
+	explosion.speed *= 4;
+	[self addChild:explosion];
+}
+
 
 -(void) createSmallExplosionAt:(CGPoint)location
 {
@@ -277,8 +318,10 @@ CGRect secondrect;
 	explosion.autoRemoveOnFinish = YES;
 	explosion.blendAdditive = YES;
 	explosion.position = location;
-	explosion.speed *= 4;
-	[self addChild:explosion];
+    explosion.life = 0.01f;
+    ccColor4F color = ccc4f(0, .2f, .8f, 1);
+    explosion.startColor = color;
+    [self addChild:explosion];
 }
 
 
@@ -377,48 +420,97 @@ CGRect secondrect;
     for (b2Body* body = world->GetBodyList(); body != nil; body = body->GetNext())
     {
         CCSprite* sprite = (__bridge CCSprite*)body->GetUserData();
-        
         if ([sprite isKindOfClass:[Cat class]]){
             Cat* cat = (Cat*)sprite;
-            b2Vec2 velocity = b2Vec2(dogSprite.position.x-sprite.position.x,dogSprite.position.y- sprite.position.y);
+            b2Vec2 velocity = b2Vec2(dogSprite.boundingBoxCenter.x-sprite.boundingBoxCenter.x,dogSprite.boundingBoxCenter.y- sprite.boundingBoxCenter.y);
             velocity.Normalize();
-            //CGFloat rads = atan2(velocity.y,velocity.x)+M_PI;
-            //CCLOG(@"Cat;s position %@, %f", NSStringFromCGPoint(cat.position), rads);
-            
+            b2Vec2 oldVelocity = body->GetLinearVelocity();
+            //oldVelocity.Normalize();
+            CGFloat oldAngle = [self getAngleFromVelocity:oldVelocity];
+            CGFloat newAngle = [self getAngleFromVelocity:velocity];
+                               
             body->SetLinearVelocity(((Cat*)sprite).speed*velocity);
-           // CCLOG(@"dir: %@",[self getDirectionFromVelocity:body->GetLinearVelocity()] );
             
-            /*
-            // If they're too close to 45 degree stuff, just let them proceed in the same direction.
-            // prevents jitteriness. may have an issue in th very beginning.
-            if (fabsf(rads) - M_PI_4 <= M_PI_4/3 ||
-                fabsf(rads) - M_PI_4*3 <= M_PI_4/3) {
-                return;
-            }
-             */
-                
-            [cat setWalkDirection:[self getDirectionFromVelocity:body->GetLinearVelocity()]];
             
-            //body->SetLinearVelocity(0.97f*body->GetLinearVelocity());
+            [self setWalkDirection:[self getDirectionFromVelocity:body->GetLinearVelocity()] sprite:cat];
+            
             body->SetAngularVelocity(0);
         }
     }
 }
 
+-(void) setWalkDirection: (NSString*)d sprite:(Cat*)cat
+{
+    
+    //CCLOG(@"%@ moving in direction %@, from old dire: %@", self, d, self.direction);
+    
+     if ([cat.direction isEqualToString:d]) {
+     return;
+     }
+     
+    [cat stopAction:cat.moveAction];
+    
+    NSMutableArray *walkAnimFrames = [NSMutableArray array];
+    
+    for (int i = 1; i <= 3; i++){
+        
+        NSString *fileName = [NSString stringWithFormat:@"%@cat%d.png",d,i];
+        [walkAnimFrames addObject:
+         [[CCSpriteFrameCache sharedSpriteFrameCache] spriteFrameByName:
+          fileName]];
+        
+    }
+    CCAnimation *walkAnim = [CCAnimation
+                             animationWithSpriteFrames:walkAnimFrames delay:0.1f];
+    cat.moveAction = [CCRepeatForever actionWithAction:
+                  [CCAnimate actionWithAnimation:walkAnim]];
+    [cat runAction:cat.moveAction];
+    cat.direction = d;
+    
+}
+
+
+
+
+
+-(CGFloat) getAngleFromVelocity: (b2Vec2)velocity
+{
+    CGFloat angle = atan2(velocity.y,velocity.x)*180.0f/M_PI;
+    if (angle < 0) angle+=360;
+    return angle;
+}
+
 -(NSString*) getDirectionFromVelocity: (b2Vec2)velocity
 {
-   // CGFloat rads = atan2(velocity.x,velocity.y)+ M_PI*2;
-    CGFloat rads = atan2(velocity.y,velocity.x)+M_PI;
-    if (rads > M_PI_4 && rads < M_PI_4*3) {
+   // CGFloat angle = atan2(velocity.y,velocity.x)*180.0f/M_PI;
+    CGFloat angle = [self getAngleFromVelocity:velocity];
+    
+    if (angle > 45 && angle < 135) {
         
-        return @"front";
-    } else if (rads >= M_PI*3/4.0f && rads <= M_PI*5/4.0f) {
-        return @"right";
-    } else if (rads > M_PI*5/4.0f && rads < M_PI*7/4.0f){
         return @"back";
-    } else {
+    } else if (angle >= 135 && angle <= 225) {
         return @"left";
+    } else if (angle > 225 && angle < 360){
+        return @"front";
+    } else {
+        return @"right";
     }
+}
+
+-(NSString*) getDirectionFromPositions: (CGPoint)cat
+{
+    CGFloat x = dogSprite.boundingBoxCenter.x - cat.x;
+    CGFloat y = dogSprite.boundingBoxCenter.y - cat.y;
+    
+    CCLOG(@"%f, %f", x,y);
+    if (x > 0 && fabsf(x)>=fabsf(y))
+        return @"right";
+    else if (x <= 0 && fabsf(x)>=fabsf(y))
+        return @"left";
+    else if (y > 0)
+        return @"back";
+    else
+        return @"front";
 }
 
 -(void) updateWorld
@@ -437,12 +529,14 @@ CGRect secondrect;
         {
             if ([sprite isKindOfClass:[Cat class]])
             {
+                //TODO: Put collision sound here
                 //CCLOG(@"IS CAT");
                 if( ((Cat*)sprite).health==1 )
                 {
                     score += ((Cat*)sprite).points;
                     [self removeChild:sprite cleanup:NO];
                     world->DestroyBody(body);
+                    [self createSmallExplosionAt:sprite.position];
                 }
                 else
                 {
@@ -454,7 +548,7 @@ CGRect secondrect;
                 if( ((Dog*)sprite).health==1 ) // Dog is dead
                 {
                     ((Dog*)sprite).health--;
-                    [self createSmallExplosionAt:sprite.position];
+                    [self createExplosionAt:sprite.position];
                     [self removeChild:sprite cleanup:NO];
                     world->DestroyBody(body);
                     //[self endGame];
@@ -523,7 +617,7 @@ CGRect secondrect;
     // This is a hack that prevents KKInput from swallowing every fuckign touch.
     // God I hate this documentation.
     [self stopTakingKKInput];
-    
+     [[SimpleAudioEngine sharedEngine] stopBackgroundMusic];
     [[CCDirector sharedDirector] replaceScene:[CCTransitionCrossFade transitionWithDuration:0.7f  scene:((CCScene*)[[GameOverLayer alloc] init]) ]];
 }
 
@@ -564,6 +658,8 @@ CGRect secondrect;
     direction.Normalize();
     bullet->SetLinearVelocity( BULLET_SPEED*direction ); 
     bullet->SetActive(true);
+    
+    [[SimpleAudioEngine sharedEngine] playEffect:@"pew.wav"];
     
 }
 
@@ -619,6 +715,46 @@ CGRect secondrect;
 #ifndef KK_ARC_ENABLED
 	[super dealloc];
 #endif
+}
+
+
+-(void) enableBox2dDebugDrawing
+{
+	// Using John Wordsworth's Box2DDebugLayer class now
+	// The advantage is that it draws the debug information over the normal cocos2d graphics,
+	// so you'll still see the textures of each object.
+	const BOOL useBox2DDebugLayer = YES;
+    
+	
+	float debugDrawScaleFactor = 1.0f;
+#if KK_PLATFORM_IOS
+	debugDrawScaleFactor = [[CCDirector sharedDirector] contentScaleFactor];
+#endif
+	debugDrawScaleFactor *= PTM_RATIO;
+    
+	UInt32 debugDrawFlags = 0;
+	debugDrawFlags += b2Draw::e_shapeBit;
+	debugDrawFlags += b2Draw::e_jointBit;
+	//debugDrawFlags += b2Draw::e_aabbBit;
+	//debugDrawFlags += b2Draw::e_pairBit;
+	//debugDrawFlags += b2Draw::e_centerOfMassBit;
+    
+	if (useBox2DDebugLayer)
+	{
+		Box2DDebugLayer* debugLayer = [Box2DDebugLayer debugLayerWithWorld:world
+																  ptmRatio:PTM_RATIO
+																	 flags:debugDrawFlags];
+		[self addChild:debugLayer z:100];
+	}
+	else
+	{
+		GLESDebugDraw* debugDraw = new GLESDebugDraw(debugDrawScaleFactor);
+		if (debugDraw)
+		{
+			debugDraw->SetFlags(debugDrawFlags);
+			world->SetDebugDraw(debugDraw);
+		}
+	}
 }
 
 @end

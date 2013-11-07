@@ -8,7 +8,17 @@
 
 #import "PauseLayer.h"
 
-CCMenu * myMenu;
+#import "GameLayer.h"
+#import "HUDLayer.h"
+
+#import "SimpleAudioEngine.h"
+
+CCLabelTTF *resume;
+CCLabelTTF *restart;
+CCLabelTTF *mutemusic;
+CCLabelTTF *mutesound;
+
+#define FONT_SIZE 20.0f
 
 @interface PauseLayer (PrivateMethods)
 // declare private methods here
@@ -60,39 +70,97 @@ CCMenu * myMenu;
                                                                     target:self
                                                                   selector:@selector(muteSound:)];
         */
+        CGSize winSize = [CCDirector sharedDirector].winSize;
+        CGPoint pos = ccp(winSize.width* 0.1, winSize.height/2);
+        resume = [CCLabelTTF labelWithString:@"resume" fontName:@"Arial" fontSize:FONT_SIZE];
+        resume.position = pos;
+        [self addChild:resume];
+        pos = [self incrementPos:pos];
         
-        CCMenuItemFont *menuItem1 = [CCMenuItemFont itemWithString:@"resume"];
-           CCMenuItemFont *menuItem2 = [CCMenuItemFont itemWithString:@"restart"];
-           CCMenuItemFont *menuItem3 = [CCMenuItemFont itemWithString:@"rmusic"];
-           CCMenuItemFont *menuItem4 = [CCMenuItemFont itemWithString:@"mutemasdfae"];
-           CCMenuItemFont *menuItem5 = [CCMenuItemFont itemWithString:@"mutee"];
-        // Create a menu and add your menu items to it
-        myMenu = [CCMenu menuWithItems:menuItem1, menuItem2, menuItem3, menuItem4, menuItem5, nil];
+        restart = [CCLabelTTF labelWithString:@"restart" fontName:@"Arial" fontSize:FONT_SIZE];
+        restart.position = pos;
+        [self addChild:restart];
+        pos = [self incrementPos:pos];
         
-        // Arrange the menu items Horizontally
-        [myMenu alignItemsHorizontally];
+        mutemusic = [CCLabelTTF labelWithString:@"mute music" fontName:@"Arial" fontSize:FONT_SIZE];
+        mutemusic.position = pos;
+        if (![[SimpleAudioEngine sharedEngine] isBackgroundMusicPlaying]) {
+            mutemusic.color = ccGRAY;
+        }
+        [self addChild:mutemusic];
+        pos = [self incrementPos:pos];
+    
+        mutesound = [CCLabelTTF labelWithString:@"mute sound" fontName:@"Arial" fontSize:FONT_SIZE];
+        mutesound.position = pos;
+        [self addChild:mutesound];
+        pos = [self incrementPos:pos];
         
-        // add the menu to your scene
-        [self addChild:myMenu];
-
-        KKInput *input = [KKInput sharedInput];
-		
-        // uncomment if you want the update method to be executed every frame
-		//[self scheduleUpdate];
         self.isTouchEnabled = YES;
 	}
 	return self;
 }
 
--(void) update:(ccTime)delta
+-(CGPoint) incrementPos:(CGPoint)pos
 {
-    KKInput* input = [KKInput sharedInput];
-    
-    if ([input isAnyTouchOnNode:myMenu touchPhase:KKTouchPhaseBegan])
-    {
-        CCLOG(@"DETECTED TOUCH!");
-    }
+    CGSize winSize = [CCDirector sharedDirector].winSize;
+    return ccpAdd(pos, ccp(winSize.width*.25,0));
 }
+
+
+- (void)ccTouchesBegan:(NSSet*)touches withEvent:(UIEvent*)event
+{
+    UITouch* touch = [touches anyObject];
+    CCLOG(@"DETECTED TOUCH on pauseLayer!");
+    // CGPoint touchLocation = [touch locationInView:self.view];
+    CGPoint touchStart = [[CCDirector sharedDirector] convertToGL:[touch locationInView:[touch view]]];
+    
+    // convert touch location to layer space
+    touchStart = [self convertToNodeSpace:touchStart];
+    [self handleMenuButton:touchStart];
+    
+}
+
+-(void) handleMenuButton: (CGPoint)touch
+{
+    // If in resume button
+    if (fabsf(resume.boundingBoxCenter.x - touch.x) <= resume.boundingBox.size.width/2 +10 &&
+        fabsf(resume.boundingBoxCenter.y - touch.y) <= resume.boundingBox.size.height/2 +10 )
+    {
+           [[CCDirector sharedDirector] popScene];
+    }
+    else if (fabsf(restart.boundingBoxCenter.x - touch.x) <= restart.boundingBox.size.width/2 +10 &&
+        fabsf(restart.boundingBoxCenter.y - touch.y) <= restart.boundingBox.size.height/2 +10 )
+    {
+        [[CCDirector sharedDirector] popScene];
+        HUDLayer *hud = [HUDLayer node];
+        [[CCDirector sharedDirector] replaceScene: (CCScene*)[[GameLayer alloc] initWithHUD:hud]];
+
+    }
+    else if (fabsf(mutemusic.boundingBoxCenter.x - touch.x) <= mutemusic.boundingBox.size.width/2 +10 &&
+        fabsf(mutemusic.boundingBoxCenter.y - touch.y) <= mutemusic.boundingBox.size.height/2 +10 )
+    {
+       // [[CCDirector sharedDirector] popScene];
+        CCLOG(@"mute music unimplemented");
+        SimpleAudioEngine *audio = [SimpleAudioEngine sharedEngine];
+        if ([audio isBackgroundMusicPlaying]) {
+            [audio pauseBackgroundMusic];
+            mutemusic.color = ccGRAY;
+        } else {
+            [audio resumeBackgroundMusic];
+             mutemusic.color = ccWHITE;
+        }
+        
+
+    }
+    else if (fabsf(mutesound.boundingBoxCenter.x - touch.x) <= mutesound.boundingBox.size.width/2 +10 &&
+        fabsf(mutesound.boundingBoxCenter.y - touch.y) <= mutesound.boundingBox.size.height/2 +10 )
+    {
+       // [[CCDirector sharedDirector] popScene];
+        CCLOG(@"mute sound unimplemented");
+    }
+
+}
+
 
 - (void) resume: (CCMenuItem  *) menuItem
 {

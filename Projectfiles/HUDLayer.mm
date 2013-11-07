@@ -104,14 +104,14 @@ CCLabelTTF *menuButton;
 {
     CGRect rect = menuButton.boundingBox;
 
-    CCLOG(@"TOUCH RECEIVED ON MENU IS %@", NSStringFromCGPoint(touch));
-    CCLOG(@"menu is %@", NSStringFromCGPoint(menuButton.boundingBoxCenter));
+   // CCLOG(@"TOUCH RECEIVED ON MENU IS %@", NSStringFromCGPoint(touch));
+    //CCLOG(@"menu is %@", NSStringFromCGPoint(menuButton.boundingBoxCenter));
     //if (CGRectContainsPoint(rect, touch)){
     if (fabsf(menuButton.boundingBoxCenter.x - touch.x) <= rect.size.width/2 +10 &&
         fabsf(menuButton.boundingBoxCenter.y - touch.y) <= rect.size.height/2 +10 )
     {
-       //    [[CCDirector sharedDirector] pushScene: (CCScene*)[[PauseLayer alloc] init]];
-        [[CCDirector sharedDirector] replaceScene: (CCScene*)[[GameOverLayer alloc] init]];
+           [[CCDirector sharedDirector] pushScene: (CCScene*)[[PauseLayer alloc] init]];
+        //[[CCDirector sharedDirector] replaceScene: (CCScene*)[[GameOverLayer alloc] init]];
 
     }
 }

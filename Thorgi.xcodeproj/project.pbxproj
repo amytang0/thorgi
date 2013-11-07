@@ -15,10 +15,6 @@
 		DC485B1113AA0E5600F2BC70 /* libchipmunk-mac.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DC485B0D13AA0E5600F2BC70 /* libchipmunk-mac.a */; };
 		DC485B1713AA0EBB00F2BC70 /* libbox2d-mac.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DC485B1613AA0EBB00F2BC70 /* libbox2d-mac.a */; };
 		DC485B4613AA18A600F2BC70 /* libcocosdenshion-mac.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DC485B4513AA18A600F2BC70 /* libcocosdenshion-mac.a */; };
-		DC485B4813AA194F00F2BC70 /* ship.png in Resources */ = {isa = PBXBuildFile; fileRef = DC485B4713AA194F00F2BC70 /* ship.png */; };
-		DC485B4913AA194F00F2BC70 /* ship.png in Resources */ = {isa = PBXBuildFile; fileRef = DC485B4713AA194F00F2BC70 /* ship.png */; };
-		DC485B4B13AA1C0E00F2BC70 /* ship-hd.png in Resources */ = {isa = PBXBuildFile; fileRef = DC485B4A13AA1C0E00F2BC70 /* ship-hd.png */; };
-		DC485B4C13AA1C0E00F2BC70 /* ship-hd.png in Resources */ = {isa = PBXBuildFile; fileRef = DC485B4A13AA1C0E00F2BC70 /* ship-hd.png */; };
 		DC65615C13A969B600A7AC53 /* libbox2d-ios.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DC65615013A969B600A7AC53 /* libbox2d-ios.a */; };
 		DC65615D13A969B600A7AC53 /* libchipmunk-ios.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DC65615113A969B600A7AC53 /* libchipmunk-ios.a */; };
 		DC65615E13A969B600A7AC53 /* libchipmunk-spacemanager-ios.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DC65615213A969B600A7AC53 /* libchipmunk-spacemanager-ios.a */; };
@@ -32,10 +28,6 @@
 		DC65618615114C6A00E59F8A /* fps_images-ipadhd.png in Resources */ = {isa = PBXBuildFile; fileRef = DC65618515114C6A00E59F8A /* fps_images-ipadhd.png */; };
 		DC7038361420FDEA00A64607 /* fire.png in Resources */ = {isa = PBXBuildFile; fileRef = DC7038351420FDEA00A64607 /* fire.png */; };
 		DC7038371420FDEA00A64607 /* fire.png in Resources */ = {isa = PBXBuildFile; fileRef = DC7038351420FDEA00A64607 /* fire.png */; };
-		DC8586D1142B7F3600613CA4 /* touchsprite-hd.png in Resources */ = {isa = PBXBuildFile; fileRef = DC8586CF142B7F3600613CA4 /* touchsprite-hd.png */; };
-		DC8586D2142B7F3600613CA4 /* touchsprite-hd.png in Resources */ = {isa = PBXBuildFile; fileRef = DC8586CF142B7F3600613CA4 /* touchsprite-hd.png */; };
-		DC8586D3142B7F3600613CA4 /* touchsprite.png in Resources */ = {isa = PBXBuildFile; fileRef = DC8586D0142B7F3600613CA4 /* touchsprite.png */; };
-		DC8586D4142B7F3600613CA4 /* touchsprite.png in Resources */ = {isa = PBXBuildFile; fileRef = DC8586D0142B7F3600613CA4 /* touchsprite.png */; };
 		DC979E3E13B35F8800656CB9 /* libcocos2d-extensions-mac.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DC979E3D13B35F8800656CB9 /* libcocos2d-extensions-mac.a */; };
 		DC979E5A13B3607E00656CB9 /* libchipmunk-spacemanager-mac.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DC979E5913B3607E00656CB9 /* libchipmunk-spacemanager-mac.a */; };
 		DCC1A0FA13A94ED5005BD75D /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = DCC1A0F913A94ED5005BD75D /* Default.png */; };
@@ -68,11 +60,15 @@
 		F32D33B31828CCDB00F1B4BF /* thorgi-med.png in Resources */ = {isa = PBXBuildFile; fileRef = F32D33B21828CCDB00F1B4BF /* thorgi-med.png */; };
 		F32D33B618299B7800F1B4BF /* HUDLayer.mm in Sources */ = {isa = PBXBuildFile; fileRef = F32D33B518299B7800F1B4BF /* HUDLayer.mm */; };
 		F32D33B81829B4BD00F1B4BF /* heart.png in Resources */ = {isa = PBXBuildFile; fileRef = F32D33B71829B4BD00F1B4BF /* heart.png */; };
-		F3356720182A1D1A001E9A7A /* spottedcatsprite.plist in Resources */ = {isa = PBXBuildFile; fileRef = F335671D182A1D1A001E9A7A /* spottedcatsprite.plist */; };
-		F3356721182A1D1A001E9A7A /* spottedcatsprite.png in Resources */ = {isa = PBXBuildFile; fileRef = F335671E182A1D1A001E9A7A /* spottedcatsprite.png */; };
-		F3356722182A1D1A001E9A7A /* spottedcatsprite.tps in Resources */ = {isa = PBXBuildFile; fileRef = F335671F182A1D1A001E9A7A /* spottedcatsprite.tps */; };
+		F3356726182B081B001E9A7A /* StarshipThorgi.wav in Resources */ = {isa = PBXBuildFile; fileRef = F3356725182B081B001E9A7A /* StarshipThorgi.wav */; };
+		F3356729182B3F21001E9A7A /* Box2DDebugLayer.mm in Sources */ = {isa = PBXBuildFile; fileRef = F3356728182B3F20001E9A7A /* Box2DDebugLayer.mm */; };
+		F335672C182B3F30001E9A7A /* GLES-Render.mm in Sources */ = {isa = PBXBuildFile; fileRef = F335672B182B3F30001E9A7A /* GLES-Render.mm */; };
+		F3356730182B471B001E9A7A /* spottedcatsprite.plist in Resources */ = {isa = PBXBuildFile; fileRef = F335672D182B471B001E9A7A /* spottedcatsprite.plist */; };
+		F3356731182B471B001E9A7A /* spottedcatsprite.png in Resources */ = {isa = PBXBuildFile; fileRef = F335672E182B471B001E9A7A /* spottedcatsprite.png */; };
+		F3356732182B471B001E9A7A /* spottedcatsprite.tps in Resources */ = {isa = PBXBuildFile; fileRef = F335672F182B471B001E9A7A /* spottedcatsprite.tps */; };
+		F3356737182B860E001E9A7A /* Item.m in Sources */ = {isa = PBXBuildFile; fileRef = F3356736182B860E001E9A7A /* Item.m */; };
+		F335673B182B86B5001E9A7A /* pew.wav in Resources */ = {isa = PBXBuildFile; fileRef = F335673A182B86B5001E9A7A /* pew.wav */; };
 		F339E3CC1826285F004DFE79 /* button.png in Resources */ = {isa = PBXBuildFile; fileRef = F339E3CB1826285F004DFE79 /* button.png */; };
-		F339E3D118263D50004DFE79 /* menu-background.png in Resources */ = {isa = PBXBuildFile; fileRef = F339E3D018263D50004DFE79 /* menu-background.png */; };
 		F3C94D421823590800D34960 /* background.png in Resources */ = {isa = PBXBuildFile; fileRef = F3C94D411823590800D34960 /* background.png */; };
 		F3C94D4B1823668E00D34960 /* background2.png in Resources */ = {isa = PBXBuildFile; fileRef = F3C94D4A1823668D00D34960 /* background2.png */; };
 		F3C94D501823734800D34960 /* Cat.mm in Sources */ = {isa = PBXBuildFile; fileRef = F3C94D4F1823734800D34960 /* Cat.mm */; };
@@ -86,14 +82,12 @@
 
 /* Begin PBXFileReference section */
 		DC2721BC160CB0B200D88944 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
-		DC275D2A13B27DBF009C5098 /* Pow.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Pow.caf; sourceTree = "<group>"; };
+		DC275D2A13B27DBF009C5098 /* Pow.caf */ = {isa = PBXFileReference; lastKnownFileType = file; name = Pow.caf; path = Resources/Pow.caf; sourceTree = "<group>"; };
 		DC3BE97813B4FB71003739CC /* BuildSettings-iOS.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "BuildSettings-iOS.xcconfig"; sourceTree = "<group>"; };
 		DC3C6FCC14B8BFEA00DAD281 /* fps_images-hd.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "fps_images-hd.png"; sourceTree = "<group>"; };
 		DC485B0D13AA0E5600F2BC70 /* libchipmunk-mac.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = "libchipmunk-mac.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		DC485B1613AA0EBB00F2BC70 /* libbox2d-mac.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = "libbox2d-mac.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		DC485B4513AA18A600F2BC70 /* libcocosdenshion-mac.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = "libcocosdenshion-mac.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		DC485B4713AA194F00F2BC70 /* ship.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ship.png; sourceTree = "<group>"; };
-		DC485B4A13AA1C0E00F2BC70 /* ship-hd.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ship-hd.png"; sourceTree = "<group>"; };
 		DC65615013A969B600A7AC53 /* libbox2d-ios.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = "libbox2d-ios.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		DC65615113A969B600A7AC53 /* libchipmunk-ios.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = "libchipmunk-ios.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		DC65615213A969B600A7AC53 /* libchipmunk-spacemanager-ios.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = "libchipmunk-spacemanager-ios.a"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -105,9 +99,7 @@
 		DC65615913A969B600A7AC53 /* libobjectal-ios.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = "libobjectal-ios.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		DC65615A13A969B600A7AC53 /* libsneakyinput-ios.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = "libsneakyinput-ios.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		DC65618515114C6A00E59F8A /* fps_images-ipadhd.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "fps_images-ipadhd.png"; sourceTree = "<group>"; };
-		DC7038351420FDEA00A64607 /* fire.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = fire.png; sourceTree = "<group>"; };
-		DC8586CF142B7F3600613CA4 /* touchsprite-hd.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "touchsprite-hd.png"; sourceTree = "<group>"; };
-		DC8586D0142B7F3600613CA4 /* touchsprite.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = touchsprite.png; sourceTree = "<group>"; };
+		DC7038351420FDEA00A64607 /* fire.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = fire.png; path = ../../fire.png; sourceTree = "<group>"; };
 		DC979E3D13B35F8800656CB9 /* libcocos2d-extensions-mac.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = "libcocos2d-extensions-mac.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		DC979E5913B3607E00656CB9 /* libchipmunk-spacemanager-mac.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = "libchipmunk-spacemanager-mac.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		DC9C33E713B5024400931BF2 /* BuildSettings-Debug-Mac.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "BuildSettings-Debug-Mac.xcconfig"; sourceTree = "<group>"; };
@@ -150,12 +142,19 @@
 		F32D33B21828CCDB00F1B4BF /* thorgi-med.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "thorgi-med.png"; path = "../../thorgi-med.png"; sourceTree = "<group>"; };
 		F32D33B418299B7800F1B4BF /* HUDLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HUDLayer.h; sourceTree = "<group>"; };
 		F32D33B518299B7800F1B4BF /* HUDLayer.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = HUDLayer.mm; sourceTree = "<group>"; };
-		F32D33B71829B4BD00F1B4BF /* heart.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = heart.png; sourceTree = "<group>"; };
-		F335671D182A1D1A001E9A7A /* spottedcatsprite.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = spottedcatsprite.plist; sourceTree = "<group>"; };
-		F335671E182A1D1A001E9A7A /* spottedcatsprite.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = spottedcatsprite.png; sourceTree = "<group>"; };
-		F335671F182A1D1A001E9A7A /* spottedcatsprite.tps */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = spottedcatsprite.tps; sourceTree = "<group>"; };
-		F339E3CB1826285F004DFE79 /* button.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = button.png; path = "../../../PeevedPenguins/Projectfiles/Resources/Menu Pack/button.png"; sourceTree = "<group>"; };
-		F339E3D018263D50004DFE79 /* menu-background.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "menu-background.png"; sourceTree = "<group>"; };
+		F32D33B71829B4BD00F1B4BF /* heart.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = heart.png; path = ../../heart.png; sourceTree = "<group>"; };
+		F3356725182B081B001E9A7A /* StarshipThorgi.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = StarshipThorgi.wav; path = Resources/StarshipThorgi.wav; sourceTree = "<group>"; };
+		F3356727182B3F20001E9A7A /* Box2DDebugLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Box2DDebugLayer.h; sourceTree = "<group>"; };
+		F3356728182B3F20001E9A7A /* Box2DDebugLayer.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = Box2DDebugLayer.mm; sourceTree = "<group>"; };
+		F335672A182B3F30001E9A7A /* GLES-Render.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "GLES-Render.h"; sourceTree = "<group>"; };
+		F335672B182B3F30001E9A7A /* GLES-Render.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = "GLES-Render.mm"; sourceTree = "<group>"; };
+		F335672D182B471B001E9A7A /* spottedcatsprite.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = spottedcatsprite.plist; path = ../../spottedcatsprite.plist; sourceTree = "<group>"; };
+		F335672E182B471B001E9A7A /* spottedcatsprite.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = spottedcatsprite.png; path = ../../spottedcatsprite.png; sourceTree = "<group>"; };
+		F335672F182B471B001E9A7A /* spottedcatsprite.tps */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = spottedcatsprite.tps; path = ../../spottedcatsprite.tps; sourceTree = "<group>"; };
+		F3356735182B860E001E9A7A /* Item.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Item.h; sourceTree = "<group>"; };
+		F3356736182B860E001E9A7A /* Item.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Item.m; sourceTree = "<group>"; };
+		F335673A182B86B5001E9A7A /* pew.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = pew.wav; sourceTree = "<group>"; };
+		F339E3CB1826285F004DFE79 /* button.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = button.png; path = "../../../../../PeevedPenguins/Projectfiles/Resources/Menu Pack/button.png"; sourceTree = "<group>"; };
 		F3C94D411823590800D34960 /* background.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = background.png; sourceTree = "<group>"; };
 		F3C94D4A1823668D00D34960 /* background2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = background2.png; sourceTree = "<group>"; };
 		F3C94D4E1823734800D34960 /* Cat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Cat.h; sourceTree = "<group>"; };
@@ -296,29 +295,11 @@
 		DCC1A38C13A94F1A005BD75D /* Projectfiles */ = {
 			isa = PBXGroup;
 			children = (
-				DCC1A39113A94F1A005BD75D /* main.m */,
-				F3C94D5B182450C600D34960 /* ContactListener.h */,
-				F3C94D5C182450C700D34960 /* ContactListener.mm */,
-				F3E099571824E51D00F9AA2D /* GameOverLayer.h */,
-				F3E099581824E51D00F9AA2D /* GameOverLayer.mm */,
-				F3D6D9831825881C00B7C77B /* PauseLayer.h */,
-				F3D6D9841825881C00B7C77B /* PauseLayer.mm */,
-				F3F5FCD8182662A1009910F9 /* GameLayer.h */,
-				F3F5FCD9182662A1009910F9 /* GameLayer.mm */,
-				F32D33B418299B7800F1B4BF /* HUDLayer.h */,
-				F32D33B518299B7800F1B4BF /* HUDLayer.mm */,
-				F3C94D511824345000D34960 /* Dog.h */,
-				F3C94D521824345000D34960 /* Dog.mm */,
-				DCC1A38D13A94F1A005BD75D /* AppDelegate.h */,
-				DCC1A38E13A94F1A005BD75D /* AppDelegate.mm */,
+				F3356733182B85B3001E9A7A /* Scenes */,
+				F3356738182B8634001E9A7A /* Mechanics */,
+				F3356734182B85DA001E9A7A /* Sprites */,
 				DCC1A39413A94F1A005BD75D /* Resources */,
 				DCC1A3CF13A94F2C005BD75D /* Supporting Files */,
-				F3C94D4E1823734800D34960 /* Cat.h */,
-				F3C94D4F1823734800D34960 /* Cat.mm */,
-				F3C94D58182449A600D34960 /* StartMenuLayer.h */,
-				F3C94D59182449A700D34960 /* StartMenuLayer.mm */,
-				F304E1471824A86F00783BD3 /* Bullet.h */,
-				F304E1481824A86F00783BD3 /* Bullet.mm */,
 			);
 			path = Projectfiles;
 			sourceTree = "<group>";
@@ -326,23 +307,13 @@
 		DCC1A39413A94F1A005BD75D /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				F335671D182A1D1A001E9A7A /* spottedcatsprite.plist */,
-				F335671E182A1D1A001E9A7A /* spottedcatsprite.png */,
-				F335671F182A1D1A001E9A7A /* spottedcatsprite.tps */,
-				F32D33B71829B4BD00F1B4BF /* heart.png */,
+				F3356739182B8668001E9A7A /* Sounds */,
+				F335673C182B86D3001E9A7A /* MenuStuff */,
 				F32D33A51828AF2000F1B4BF /* Characters */,
 				F32D33A01828AF0E00F1B4BF /* Logos */,
-				F339E3D018263D50004DFE79 /* menu-background.png */,
-				F339E3CB1826285F004DFE79 /* button.png */,
 				F3C94D4A1823668D00D34960 /* background2.png */,
 				F3C94D411823590800D34960 /* background.png */,
 				DCC1A39513A94F1A005BD75D /* config.lua */,
-				DC275D2A13B27DBF009C5098 /* Pow.caf */,
-				DC8586CF142B7F3600613CA4 /* touchsprite-hd.png */,
-				DC8586D0142B7F3600613CA4 /* touchsprite.png */,
-				DC485B4713AA194F00F2BC70 /* ship.png */,
-				DC485B4A13AA1C0E00F2BC70 /* ship-hd.png */,
-				DC7038351420FDEA00A64607 /* fire.png */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -382,11 +353,84 @@
 		F32D33A51828AF2000F1B4BF /* Characters */ = {
 			isa = PBXGroup;
 			children = (
+				F335672D182B471B001E9A7A /* spottedcatsprite.plist */,
+				F335672E182B471B001E9A7A /* spottedcatsprite.png */,
+				F335672F182B471B001E9A7A /* spottedcatsprite.tps */,
 				F32D33B21828CCDB00F1B4BF /* thorgi-med.png */,
 				F32D33B01828BE0400F1B4BF /* thorgi.png */,
 				F32D33A61828AF2000F1B4BF /* cat.png */,
+				DC7038351420FDEA00A64607 /* fire.png */,
 			);
 			name = Characters;
+			path = Logos/Characters;
+			sourceTree = "<group>";
+		};
+		F3356733182B85B3001E9A7A /* Scenes */ = {
+			isa = PBXGroup;
+			children = (
+				F3C94D58182449A600D34960 /* StartMenuLayer.h */,
+				F3C94D59182449A700D34960 /* StartMenuLayer.mm */,
+				F32D33B418299B7800F1B4BF /* HUDLayer.h */,
+				F32D33B518299B7800F1B4BF /* HUDLayer.mm */,
+				F3E099571824E51D00F9AA2D /* GameOverLayer.h */,
+				F3E099581824E51D00F9AA2D /* GameOverLayer.mm */,
+				F3D6D9831825881C00B7C77B /* PauseLayer.h */,
+				F3D6D9841825881C00B7C77B /* PauseLayer.mm */,
+				F3F5FCD8182662A1009910F9 /* GameLayer.h */,
+				F3F5FCD9182662A1009910F9 /* GameLayer.mm */,
+			);
+			name = Scenes;
+			sourceTree = "<group>";
+		};
+		F3356734182B85DA001E9A7A /* Sprites */ = {
+			isa = PBXGroup;
+			children = (
+				F3C94D511824345000D34960 /* Dog.h */,
+				F3C94D521824345000D34960 /* Dog.mm */,
+				F3C94D4E1823734800D34960 /* Cat.h */,
+				F3C94D4F1823734800D34960 /* Cat.mm */,
+				F304E1471824A86F00783BD3 /* Bullet.h */,
+				F304E1481824A86F00783BD3 /* Bullet.mm */,
+				F3356735182B860E001E9A7A /* Item.h */,
+				F3356736182B860E001E9A7A /* Item.m */,
+			);
+			name = Sprites;
+			sourceTree = "<group>";
+		};
+		F3356738182B8634001E9A7A /* Mechanics */ = {
+			isa = PBXGroup;
+			children = (
+				F3C94D5B182450C600D34960 /* ContactListener.h */,
+				F3C94D5C182450C700D34960 /* ContactListener.mm */,
+				DCC1A39113A94F1A005BD75D /* main.m */,
+				DCC1A38D13A94F1A005BD75D /* AppDelegate.h */,
+				DCC1A38E13A94F1A005BD75D /* AppDelegate.mm */,
+				F3356727182B3F20001E9A7A /* Box2DDebugLayer.h */,
+				F3356728182B3F20001E9A7A /* Box2DDebugLayer.mm */,
+				F335672A182B3F30001E9A7A /* GLES-Render.h */,
+				F335672B182B3F30001E9A7A /* GLES-Render.mm */,
+			);
+			name = Mechanics;
+			sourceTree = "<group>";
+		};
+		F3356739182B8668001E9A7A /* Sounds */ = {
+			isa = PBXGroup;
+			children = (
+				F335673A182B86B5001E9A7A /* pew.wav */,
+				F3356725182B081B001E9A7A /* StarshipThorgi.wav */,
+				DC275D2A13B27DBF009C5098 /* Pow.caf */,
+			);
+			name = Sounds;
+			path = ..;
+			sourceTree = "<group>";
+		};
+		F335673C182B86D3001E9A7A /* MenuStuff */ = {
+			isa = PBXGroup;
+			children = (
+				F339E3CB1826285F004DFE79 /* button.png */,
+				F32D33B71829B4BD00F1B4BF /* heart.png */,
+			);
+			name = MenuStuff;
 			path = Logos/Characters;
 			sourceTree = "<group>";
 		};
@@ -469,19 +513,14 @@
 				DCC1A10813A94ED5005BD75D /* Icon@2x.png in Resources */,
 				DCC1A10B13A94ED5005BD75D /* iTunesArtwork in Resources */,
 				DCC1A3AF13A94F1A005BD75D /* config.lua in Resources */,
-				DC485B4813AA194F00F2BC70 /* ship.png in Resources */,
-				DC485B4B13AA1C0E00F2BC70 /* ship-hd.png in Resources */,
 				DC275D2B13B27DBF009C5098 /* Pow.caf in Resources */,
 				DC7038361420FDEA00A64607 /* fire.png in Resources */,
-				DC8586D1142B7F3600613CA4 /* touchsprite-hd.png in Resources */,
-				DC8586D3142B7F3600613CA4 /* touchsprite.png in Resources */,
 				DC3C6FCD14B8BFEA00DAD281 /* fps_images-hd.png in Resources */,
 				DC65618615114C6A00E59F8A /* fps_images-ipadhd.png in Resources */,
 				DC2721BD160CB0B200D88944 /* Default-568h@2x.png in Resources */,
 				F3C94D421823590800D34960 /* background.png in Resources */,
 				F3C94D4B1823668E00D34960 /* background2.png in Resources */,
 				F339E3CC1826285F004DFE79 /* button.png in Resources */,
-				F339E3D118263D50004DFE79 /* menu-background.png in Resources */,
 				F32D33A31828AF0E00F1B4BF /* dogofthunder.png in Resources */,
 				F32D33A41828AF0E00F1B4BF /* thorgitext.png in Resources */,
 				F32D33A81828AF2000F1B4BF /* cat.png in Resources */,
@@ -489,9 +528,11 @@
 				F32D33B11828BE0400F1B4BF /* thorgi.png in Resources */,
 				F32D33B31828CCDB00F1B4BF /* thorgi-med.png in Resources */,
 				F32D33B81829B4BD00F1B4BF /* heart.png in Resources */,
-				F3356720182A1D1A001E9A7A /* spottedcatsprite.plist in Resources */,
-				F3356721182A1D1A001E9A7A /* spottedcatsprite.png in Resources */,
-				F3356722182A1D1A001E9A7A /* spottedcatsprite.tps in Resources */,
+				F3356726182B081B001E9A7A /* StarshipThorgi.wav in Resources */,
+				F3356730182B471B001E9A7A /* spottedcatsprite.plist in Resources */,
+				F3356731182B471B001E9A7A /* spottedcatsprite.png in Resources */,
+				F3356732182B471B001E9A7A /* spottedcatsprite.tps in Resources */,
+				F335673B182B86B5001E9A7A /* pew.wav in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -504,12 +545,8 @@
 				DCC1A26E13A94EE6005BD75D /* fps_images.png in Resources */,
 				DCC1A27013A94EE6005BD75D /* icon.icns in Resources */,
 				DCC1A3B013A94F1A005BD75D /* config.lua in Resources */,
-				DC485B4913AA194F00F2BC70 /* ship.png in Resources */,
-				DC485B4C13AA1C0E00F2BC70 /* ship-hd.png in Resources */,
 				DC275D2C13B27DBF009C5098 /* Pow.caf in Resources */,
 				DC7038371420FDEA00A64607 /* fire.png in Resources */,
-				DC8586D2142B7F3600613CA4 /* touchsprite-hd.png in Resources */,
-				DC8586D4142B7F3600613CA4 /* touchsprite.png in Resources */,
 				DC3C6FCE14B8BFEA00DAD281 /* fps_images-hd.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -532,6 +569,9 @@
 				F3D6D9851825881C00B7C77B /* PauseLayer.mm in Sources */,
 				F3F5FCDA182662A1009910F9 /* GameLayer.mm in Sources */,
 				F32D33B618299B7800F1B4BF /* HUDLayer.mm in Sources */,
+				F3356729182B3F21001E9A7A /* Box2DDebugLayer.mm in Sources */,
+				F335672C182B3F30001E9A7A /* GLES-Render.mm in Sources */,
+				F3356737182B860E001E9A7A /* Item.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

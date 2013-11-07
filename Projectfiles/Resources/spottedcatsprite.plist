@@ -7,11 +7,11 @@
             <key>backcat1.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{192,250},{52,77}}</string>
+                <string>{{163,249},{52,77}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
-                <false/>
+                <true/>
                 <key>sourceColorRect</key>
                 <string>{{0,0},{52,77}}</string>
                 <key>sourceSize</key>
@@ -20,7 +20,7 @@
             <key>backcat2.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{138,170},{52,79}}</string>
+                <string>{{187,94},{52,79}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -33,11 +33,11 @@
             <key>backcat3.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{192,170},{52,78}}</string>
+                <string>{{83,209},{52,78}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
-                <false/>
+                <true/>
                 <key>sourceColorRect</key>
                 <string>{{0,0},{52,78}}</string>
                 <key>sourceSize</key>
@@ -46,11 +46,11 @@
             <key>frontcat1.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{2,228},{53,90}}</string>
+                <string>{{95,76},{53,90}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
-                <false/>
+                <true/>
                 <key>sourceColorRect</key>
                 <string>{{0,0},{53,90}}</string>
                 <key>sourceSize</key>
@@ -59,11 +59,11 @@
             <key>frontcat2.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{188,2},{53,92}}</string>
+                <string>{{2,2},{53,92}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
-                <false/>
+                <true/>
                 <key>sourceColorRect</key>
                 <string>{{0,0},{53,92}}</string>
                 <key>sourceSize</key>
@@ -72,7 +72,7 @@
             <key>frontcat3.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{83,154},{53,90}}</string>
+                <string>{{189,2},{53,90}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -85,7 +85,7 @@
             <key>leftcat1.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{2,154},{79,72}}</string>
+                <string>{{2,209},{79,72}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -98,7 +98,7 @@
             <key>leftcat2.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{83,76},{79,76}}</string>
+                <string>{{83,131},{79,76}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -111,7 +111,7 @@
             <key>leftcat3.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{95,2},{91,72}}</string>
+                <string>{{2,57},{91,72}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -124,7 +124,7 @@
             <key>rightcat1.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{2,2},{91,72}}</string>
+                <string>{{96,2},{91,72}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -137,7 +137,7 @@
             <key>rightcat2.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{2,76},{79,76}}</string>
+                <string>{{2,131},{79,76}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -150,7 +150,7 @@
             <key>rightcat3.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{164,96},{79,72}}</string>
+                <string>{{164,175},{79,72}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -170,7 +170,7 @@
             <key>size</key>
             <string>{256,512}</string>
             <key>smartupdate</key>
-            <string>$TexturePacker:SmartUpdate:83aed9801b19eae1ac2de3945d60a75c:1/1$</string>
+            <string>$TexturePacker:SmartUpdate:558988a2311f757bfc9efc49cb98904b:1/1$</string>
             <key>textureFileName</key>
             <string>spottedcatsprite.png</string>
         </dict>

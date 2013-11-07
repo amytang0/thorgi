@@ -12,6 +12,7 @@
 #import "Dog.h"
 #import "HUDLayer.h"
 
+
 enum {
     SpriteStateNormal,
     SpriteStateHit,

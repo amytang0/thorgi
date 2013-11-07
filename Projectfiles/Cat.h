@@ -17,8 +17,8 @@
 @property int health;
 @property int points, speed;
 @property NSString *direction;
+@property CCAction *moveAction;
 -(id) initWithCatImage;
 -(id) initWithAnimatedCat;
--(void) setWalkDirection: (NSString*)d;
 
 @end
