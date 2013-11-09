@@ -13,10 +13,12 @@
 
 #import "SimpleAudioEngine.h"
 
-CCLabelTTF *resume;
-CCLabelTTF *restart;
-CCLabelTTF *mutemusic;
-CCLabelTTF *mutesound;
+CCSprite *resume;
+CCSprite *restart;
+CCSprite *mutemusic;
+CCSprite *mutesound;
+
+
 
 #define FONT_SIZE 20.0f
 
@@ -42,56 +44,52 @@ CCLabelTTF *mutesound;
 	self = [super init];
 	if (self)
 	{
-		/*
-        // Create some menu items
-        CCMenuItemImage * menuItem1 = [CCMenuItemImage itemWithNormalImage:@"resumebutton.png"
-                                                             selectedImage: @"resumebutton_selected.png"
-                                                                    target:self
-                                                                  selector:@selector(resume:)];
+        [[CCSpriteFrameCache sharedSpriteFrameCache] addSpriteFramesWithFile:@"buttons.plist"];
+       
         
-        CCMenuItemImage * menuItem2 = [CCMenuItemImage itemWithNormalImage:@"restartbutton.png"
-                                                             selectedImage: @"restartbutton_selected.png"
-                                                                    target:self
-                                                                  selector:@selector(restart:)];
-        
-        CCMenuItemImage * menuItem3 = [CCMenuItemImage itemWithNormalImage:@"quitbutton.png"
-                                                             selectedImage: @"quitbutton_selected.png"
-                                                                    target:self
-                                                                  selector:@selector(quit:)];
-        
-        CCMenuItemImage * menuItem4 = [CCMenuItemImage itemWithNormalImage:@"mutemusicbutton.png"
-                                                             selectedImage: @"mutemusicbutton_selected.png"
-                                                                    target:self
-                                                                  selector:@selector(muteMusic:)];
-        
-        
-        CCMenuItemImage * menuItem5 = [CCMenuItemImage itemWithNormalImage:@"mutesoundbutton.png"
-                                                             selectedImage: @"mutesoundbutton_selected.png"
-                                                                    target:self
-                                                                  selector:@selector(muteSound:)];
-        */
+               
         CGSize winSize = [CCDirector sharedDirector].winSize;
         CGPoint pos = ccp(winSize.width* 0.1, winSize.height/2);
-        resume = [CCLabelTTF labelWithString:@"resume" fontName:@"Arial" fontSize:FONT_SIZE];
+        
+        // Makes texture tiled background
+        CCTexture2D *texture = [[CCTextureCache sharedTextureCache] addImage:@"smalltexture3.png"];
+        ccTexParams params = {GL_LINEAR, GL_LINEAR, GL_REPEAT, GL_REPEAT};
+        [texture setTexParameters:&params];
+        CGRect r = [CCDirector sharedDirector].screenRectInPixels;
+        CCSprite *bg = [[CCSprite alloc] initWithTexture:texture rect:r];
+        bg.position = CGPointZero;
+        [self addChild:bg z:-10];
+        
+        CCSpriteFrame *buttonFrame = [[CCSpriteFrameCache sharedSpriteFrameCache] spriteFrameByName:@"play.png"];
+        resume = [[CCSprite alloc] initWithSpriteFrame:buttonFrame];
         resume.position = pos;
+        [resume setScale:1.5f];
         [self addChild:resume];
         pos = [self incrementPos:pos];
         
-        restart = [CCLabelTTF labelWithString:@"restart" fontName:@"Arial" fontSize:FONT_SIZE];
+        buttonFrame = [[CCSpriteFrameCache sharedSpriteFrameCache] spriteFrameByName:@"restart.png"];
+        restart = [[CCSprite alloc] initWithSpriteFrame:buttonFrame];
         restart.position = pos;
+         [restart setScale:1.5f];
         [self addChild:restart];
         pos = [self incrementPos:pos];
         
-        mutemusic = [CCLabelTTF labelWithString:@"mute music" fontName:@"Arial" fontSize:FONT_SIZE];
+        buttonFrame = [[CCSpriteFrameCache sharedSpriteFrameCache] spriteFrameByName:@"music.png"];
+        mutemusic = [[CCSprite alloc] initWithSpriteFrame:buttonFrame];
         mutemusic.position = pos;
+        [mutemusic setScale:1.5f];
         if (![[SimpleAudioEngine sharedEngine] isBackgroundMusicPlaying]) {
-            mutemusic.color = ccGRAY;
+            CCSpriteFrame *buttonFrame = [[CCSpriteFrameCache sharedSpriteFrameCache] spriteFrameByName:@"mutemusic.png"];
+            //mutemusic = [[CCSprite alloc] initWithSpriteFrame:buttonFrame];
+            [mutemusic setDisplayFrame:buttonFrame];
         }
         [self addChild:mutemusic];
         pos = [self incrementPos:pos];
     
-        mutesound = [CCLabelTTF labelWithString:@"mute sound" fontName:@"Arial" fontSize:FONT_SIZE];
+        buttonFrame = [[CCSpriteFrameCache sharedSpriteFrameCache] spriteFrameByName:@"sound.png"];
+        mutesound = [[CCSprite alloc] initWithSpriteFrame:buttonFrame];
         mutesound.position = pos;
+         [mutesound setScale:1.5f];
         [self addChild:mutesound];
         pos = [self incrementPos:pos];
         
@@ -144,10 +142,15 @@ CCLabelTTF *mutesound;
         SimpleAudioEngine *audio = [SimpleAudioEngine sharedEngine];
         if ([audio isBackgroundMusicPlaying]) {
             [audio pauseBackgroundMusic];
-            mutemusic.color = ccGRAY;
+            CCSpriteFrame *buttonFrame = [[CCSpriteFrameCache sharedSpriteFrameCache] spriteFrameByName:@"mutemusic.png"];
+            //mutemusic = [[CCSprite alloc] initWithSpriteFrame:buttonFrame];
+            [mutemusic setDisplayFrame:buttonFrame];
+            
         } else {
             [audio resumeBackgroundMusic];
-             mutemusic.color = ccWHITE;
+            CCSpriteFrame *buttonFrame = [[CCSpriteFrameCache sharedSpriteFrameCache] spriteFrameByName:@"music.png"];
+           // mutemusic = [[CCSprite alloc] initWithSpriteFrame:buttonFrame];
+            [mutemusic setDisplayFrame:buttonFrame];
         }
         
 
@@ -157,6 +160,21 @@ CCLabelTTF *mutesound;
     {
        // [[CCDirector sharedDirector] popScene];
         CCLOG(@"mute sound unimplemented");
+        SimpleAudioEngine *audio = [SimpleAudioEngine sharedEngine];
+        if ([audio isBackgroundMusicPlaying]) {
+            [audio pauseBackgroundMusic];
+            CCSpriteFrame *buttonFrame = [[CCSpriteFrameCache sharedSpriteFrameCache] spriteFrameByName:@"mutesound.png"];
+            //mutesound = [[CCSprite alloc] initWithSpriteFrame:buttonFrame];
+            [mutesound setDisplayFrame:buttonFrame];
+            
+        } else {
+            [audio resumeBackgroundMusic];
+            CCSpriteFrame *buttonFrame = [[CCSpriteFrameCache sharedSpriteFrameCache] spriteFrameByName:@"sound.png"];
+            //mutesound = [[CCSprite alloc] initWithSpriteFrame:buttonFrame];
+             [mutesound setDisplayFrame:buttonFrame];
+          
+        }
+
     }
 
 }

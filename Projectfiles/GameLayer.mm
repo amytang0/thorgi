@@ -20,12 +20,13 @@
 
 
 #define MAX_SPEED 15.0f
-#define BOARD_LENGTH 1000
+#define BOARD_LENGTH 1024
 #define BULLET_SPEED 15.0f
 #define INVINCIBILITY 2.0f
 #define MAX_CATS 30
 
 const float PTM_RATIO = 32.0f;
+ccTime elapsedTime = 0;
 //#define PTM_RATIO 32.0f
 CCSpriteBatchNode *bullets;
 CCSpriteBatchNode *basicCats;
@@ -69,8 +70,20 @@ CCSpriteBatchNode *wizardCats;
 - (id)initWithHUD:(HUDLayer *)hudLayer
 {
     if ((self = [super init])) {
+		CCLOG(@"%@ init", NSStringFromClass([self class]));
         
-        [[CCDirector sharedDirector] setDisplayFPS:YES];
+        // Putting a background in.
+        glClearColor(.210f, .210f, .299f, 1.0f);
+        
+        
+        // Makes texture tiled background
+        CCTexture2D *texture = [[CCTextureCache sharedTextureCache] addImage:@"texture3.png"];
+        ccTexParams params = {GL_LINEAR, GL_LINEAR, GL_REPEAT, GL_REPEAT};
+        [texture setTexParameters:&params];
+        CGRect r = CGRectMake(0,0,BOARD_LENGTH*2, BOARD_LENGTH*2);        
+        CCSprite *bg = [[CCSprite alloc] initWithTexture:texture rect:r];
+        [self addChild:bg z:-10];
+        
         // Add the HUD layer on top.
         [self initHud: hudLayer];
         //hud = hudLayer;
@@ -81,18 +94,9 @@ CCSpriteBatchNode *wizardCats;
         
         [self initSoundsAndMusic];
         
-        CCSprite *bg = [[CCSprite alloc] initWithFile:@"background.png"];
-        bg.scale=10;
-        [self addChild:bg z:-10];
         
-		CCLOG(@"%@ init", NSStringFromClass([self class]));
-        //bullets = [[NSMutableArray alloc] init];
-        //bulletsLocations = [[NSMutableArray alloc] init];
-        //enemies = [[NSMutableArray alloc] init];
         score = 0;
 		
-        glClearColor(.210f, .210f, .299f, 1.0f);
-
         [self initDog];
 		
 		// initialize KKInput
@@ -101,7 +105,6 @@ CCSpriteBatchNode *wizardCats;
 		input.gestureTapEnabled = input.gesturesAvailable;
 		input.gestureLongPressEnabled = input.gesturesAvailable;
 		input.gesturePanEnabled = input.gesturesAvailable;
-        //input.gestureSwipeEnabled = input.gesturesAvailable;
         
         self.isTouchEnabled = YES;
         
@@ -116,9 +119,10 @@ CCSpriteBatchNode *wizardCats;
          CGRect rect = CGRectMake(0, 0, BOARD_LENGTH, BOARD_LENGTH);
           [self runAction:[CCFollow actionWithTarget:dogSprite worldBoundary:rect]];
         //[self runAction:[CCFollow actionWithTarget:dogSprite]];
-        //[self->hud runAction:[CCFollow actionWithTarget:self]];
         
-        [self enableBox2dDebugDrawing];
+        //[self enableBox2dDebugDrawing];
+        
+        [[CCDirector sharedDirector] setDisplayFPS:YES];
 
     }
 
@@ -141,7 +145,7 @@ CCSpriteBatchNode *wizardCats;
     CGSize winSize = [CCDirector sharedDirector].winSize;
     self->hud = hudLayer;
    // self->hud.position=ccp(0,winSize.height-2*hudLayer.size.height);
-    self->hud.position=ccp(0,winSize.height-40);
+    self->hud.position=ccp(0,winSize.height-50);
     //self->hud.position = ccp(-winSize.height/2, winSize.height);
    // self->hud.position = ccp(0,0);
   //  [self->hud runAction:[CCFollow actionWithTarget:dogSprite]];
@@ -160,6 +164,7 @@ CCSpriteBatchNode *wizardCats;
     
     bullets = [CCSpriteBatchNode batchNodeWithFile:@"fire.png"];
     [self addChild:bullets];
+
 }
 
 
@@ -302,30 +307,19 @@ CCSpriteBatchNode *wizardCats;
     int x = arc4random()%width;
     int y = arc4random()%height;
     
-    //int i = 0;
+    int i = 0;
     //Makes sure it doesn't hit dog immediately
     float distance = fabsf(hypotf(x - dogPos.x, y - dogPos.y));
     //while (fabsf(x - dogPos.x) <= 350 &&
     //       fabsf(y - dogPos.y) <= 200 ) {
-    while (distance <= 300) {
+    while (distance <= 300 || distance >=700) {
         //CCLOG(@"in for loop");
         x = arc4random()%width;
         y = arc4random()%height;
         distance = hypotf(x - dogPos.x, y - dogPos.y);
-        /*
-        //Puts this at the edges
-        if(x%4 == 0) {
-            x = screenSize.width;
-        } else if (x%4 == 1){
-            y = screenSize.height;
-        } else if (x%3 == 2) {
-            x = 0+20;
-        } else {
-            y = 0+20;
-        }
-         */
+        i++;
     }
-    //CCLOG(@"WAS IN WHILE LOOP FOR: %d", i);
+    CCLOG(@"WAS IN WHILE LOOP FOR: %d", i);
     
     //CGPoint p = [self getScreenPosition:CGPointMake(x,y)];
     CGPoint p = ccp(x,y);
@@ -342,7 +336,7 @@ CCSpriteBatchNode *wizardCats;
 {
     CCSprite *sprite;
         int random = arc4random();
-    if (score >= 10 && random%10 <1) {
+    if (score >= 10 && random%10 <1 && wizardCats.children.count <= (int)(score/50)*10) {
         sprite =[[WizardCat alloc] initWithAnimatedCat];
         [wizardCats addChild:sprite z:1];
     } else {
@@ -350,7 +344,7 @@ CCSpriteBatchNode *wizardCats;
    //Create the sprite.
     
     //sprite = [[Cat alloc] initWithCatImage];
-        if (score > 25 && random%10 >= 3) {
+        if (score > 25 && random%10 >= 3 && basicCats.children.count <= score%50*20) {
           sprite = [[DashCat alloc] initWithAnimatedCat];
         } else {
             
@@ -443,10 +437,6 @@ CCSpriteBatchNode *wizardCats;
     
 	if (input.gestureTapRecognizedThisFrame)
 	{
-        //[self createBullets:input.gestureTapLocation];
-       // CCLOG(@"tapLoc: %@, %@", NSStringFromCGPoint(input.gestureTapLocation),NSStringFromCGPoint( dogSprite.position));
-        //CGPoint point = ccpAdd(input.gestureTapLocation, dogSprite.position);
-       // CGPoint point = [[CCDirector sharedDirector] convertToGL:input.gestureTapLocation];
        
         CGPoint point = [self getScreenPosition:input.gestureTapLocation];
       //  CCLOG(@"tapLoc: %@", NSStringFromCGPoint(point));
@@ -458,27 +448,6 @@ CCSpriteBatchNode *wizardCats;
     
 	if (input.gesturePanBegan )
 	{
-        
-		//CCLOG(@"gesturetranslation: %.0f, %.0f, velocity: %.1f, %.1f", input.gesturePanTranslation.x, input.gesturePanTranslation.y, input.gesturePanVelocity.x, input.gesturePanVelocity.y);
-        
-        /*
-        // This makes sure that sprite follows drag.
-        CGPoint eventualStop = input.gesturePanLocation;
-        CGSize size = dogSprite.textureRect.size;
-        if (fabsf(eventualStop.x - dogSprite.position.x) <= size.width/2+10 &&
-            fabs(eventualStop.y - dogSprite.position.y) <= size.height/2+10) {
-            
-            //eventualStop.x = max(min(.95*(input.gesturePanLocation.x - dogSprite.position.x),MAX_SPEED), -1*MAX_SPEED);
-            //eventualStop.y = max(min(.95*(input.gesturePanLocation.y - dogSprite.position.y),MAX_SPEED), -1*MAX_SPEED);
-            eventualStop.x = .90*(input.gesturePanLocation.x - dogSprite.position.x);
-            eventualStop.y = .90*(input.gesturePanLocation.y - dogSprite.position.y);
-            
-            dogBody->SetLinearVelocity( b2Vec2( eventualStop.x, eventualStop.y ));
-            dogBody->SetLinearDamping(3.0f);
-        }
-         
-         */
-        
         float speed = pow(input.gesturePanVelocity.x, 2) + pow(input.gesturePanVelocity.y, 2);
         speed = pow(speed, .5);
         //CCLOG(@"speed %f", speed);
@@ -493,12 +462,6 @@ CCSpriteBatchNode *wizardCats;
         vector*=(.5*speed + .5*10);
         
         dogBody->SetLinearVelocity( vector);
-       
-        /*b2Vec2 velocity = b2Vec2(input.gesturePanVelocity.x, -1*input.gesturePanVelocity.y);
-        //velocity.Normalize();
-        //velocity*=10;
-        dogBody->SetLinearVelocity( velocity);
-         */
         dogBody->SetLinearDamping(3.0f);
        
     }
@@ -509,7 +472,7 @@ CCSpriteBatchNode *wizardCats;
 
 -(void) update:(ccTime)delta
 {
-     
+    elapsedTime += delta;
     // 1% chance to spawn a cat
     if ((arc4random()%100) < 1)
       [self populateWithCats];
@@ -536,7 +499,6 @@ CCSpriteBatchNode *wizardCats;
     [self moveCats];
     [self updateHUD];
     
-    
 }
 
 -(void) updateHUD
@@ -558,11 +520,6 @@ CCSpriteBatchNode *wizardCats;
             Cat* cat = (Cat*)sprite;
             b2Vec2 velocity = b2Vec2(dogSprite.boundingBoxCenter.x-sprite.boundingBoxCenter.x,dogSprite.boundingBoxCenter.y- sprite.boundingBoxCenter.y);
             velocity.Normalize();
-            //b2Vec2 oldVelocity = body->GetLinearVelocity();
-            //oldVelocity.Normalize();
-            //CGFloat oldAngle = [self getAngleFromVelocity:oldVelocity];
-            //CGFloat newAngle = [self getAngleFromVelocity:velocity];
-                               
             
             if ([cat isKindOfClass:[DashCat class]]){
                 DashCat *dashCat = (DashCat *)cat;
@@ -576,7 +533,8 @@ CCSpriteBatchNode *wizardCats;
             body->SetLinearVelocity(((Cat*)sprite).speed*velocity);
             
             
-            [self setWalkDirection:[self getDirectionFromVelocity:body->GetLinearVelocity()] sprite:cat];
+            //[self setWalkDirection:[self getDirectionFromVelocity:body->GetLinearVelocity()] sprite:cat];
+            [self setWalkDirection:[self getDirectionFromVelocity:velocity] sprite:cat];
             
             body->SetAngularVelocity(0);
         }
@@ -601,7 +559,6 @@ CCSpriteBatchNode *wizardCats;
     }
     
     for (int i = 1; i <= 3; i++){
-        
         NSString *fileName = [NSString stringWithFormat:@"%@%@cat%d.png",d,catType,i];
         [walkAnimFrames addObject:
          [[CCSpriteFrameCache sharedSpriteFrameCache] spriteFrameByName:
@@ -616,10 +573,6 @@ CCSpriteBatchNode *wizardCats;
     cat.direction = d;
     
 }
-
-
-
-
 
 -(CGFloat) getAngleFromVelocity: (b2Vec2)velocity
 {
@@ -661,6 +614,45 @@ CCSpriteBatchNode *wizardCats;
         return @"front";
 }
 
+-(void) shootBulletAtDog:(CGPoint)location
+{
+    Bullet *bulletSprite = [[Bullet alloc] initWithBulletImage];
+    bulletSprite.position = location;
+    bulletSprite.color = ccBLUE;//ccc3(1.0f,0,1.0f); //purple
+    bulletSprite.tag = SpriteStateEnemyBullet;
+    [bullets addChild:bulletSprite z:5];
+    
+    b2BodyDef bulletBodyDef;
+    bulletBodyDef.type = b2_dynamicBody;
+    bulletBodyDef.bullet = true; //this tells Box2D to check for collisions more often - sets "bullet" mode on
+    bulletBodyDef.position.Set(location.x/PTM_RATIO,location.y/PTM_RATIO);
+    bulletBodyDef.userData = (__bridge void*)bulletSprite;
+    b2Body *bullet = world->CreateBody(&bulletBodyDef);
+    bullet->SetActive(false); //an inactive body does not collide with other bodies
+    
+    b2CircleShape circle;
+    circle.m_radius = bulletSprite.size.width*3/PTM_RATIO; //you can figure the dimensions out by looking at flyingpenguin.png in image editing software
+    
+    b2FixtureDef ballShapeDef;
+    ballShapeDef.shape = &circle;
+    ballShapeDef.density = 0.8f;
+    ballShapeDef.restitution = 0.0f; //set the "bounciness" of a body (0 = no bounce, 1 = complete (elastic) bounce)
+    ballShapeDef.friction = 0.99f;
+    ballShapeDef.isSensor = true;
+    //try changing these and see what happens!
+    bullet->CreateFixture(&ballShapeDef);
+    
+    //[bullets addObject:[NSValue valueWithPointer:bullet]];
+    CGPoint translation = ccpSub(dogSprite.position, location);
+    b2Vec2 direction = b2Vec2( translation.x, translation.y);
+    direction.Normalize();
+    bullet->SetLinearVelocity( BULLET_SPEED/4*direction );
+    bullet->SetActive(true);
+    
+    [[SimpleAudioEngine sharedEngine] playEffect:@"pew.wav"];
+
+}
+
 -(void) updateWorld
 {
     for (b2Body* body = world->GetBodyList(); body != nil; body = body->GetNext())
@@ -684,6 +676,13 @@ CCSpriteBatchNode *wizardCats;
         if (![sprite isKindOfClass:[Bullet class]]){
             body->SetLinearVelocity(0.97f*body->GetLinearVelocity());
             body->SetAngularVelocity(0);
+        }
+        
+        if ([sprite isKindOfClass:[WizardCat class]]) {
+            if (((WizardCat *)sprite).countdown == 0) {
+                [self shootBulletAtDog:sprite.position];
+                [(WizardCat *)sprite resetCountDown];
+            }
         }
         
         if (sprite != NULL && sprite.tag==SpriteStateHit)
@@ -790,7 +789,6 @@ CCSpriteBatchNode *wizardCats;
 //Create the bullets, add them to the list of bullets so they can be referred to later
 - (void)createBullets:(CGPoint)location
 {
-   
     Bullet *bulletSprite = [[Bullet alloc] initWithBulletImage];
     bulletSprite.position = dogSprite.position;
     [bullets addChild:bulletSprite z:9];
@@ -829,45 +827,6 @@ CCSpriteBatchNode *wizardCats;
     
 }
 
-
-
-
-/*
-// TODO:Currently KKInput swallows up all touch inputs. Find out how to get around this
-// Also move this menu to the top of screen rather than middle
--(void)setUpMenu
-{
-    CCMenuItemImage * menuItem1 = [CCMenuItemImage itemWithNormalImage:@"ship.png"
-                                                         selectedImage: @"button.png"
-                                                                target:self
-                                                              selector:@selector(handleMenuPress:)];
-    CCMenuItem *item = [CCMenuItemFont itemFromString:@"Menu" target:self selector:@selector(handleMenuPress:)];
-    
-    NSString *scoreString = [NSString stringWithFormat:@"Score: %d",score];
-    scoreItem = [CCMenuItemFont itemFromString:scoreString target:self selector:@selector(handleMenuPress:)];
-    
-    CGSize screenSize = [CCDirector sharedDirector].winSize;
-    int width = (int)screenSize.width;
-    int height = (int)screenSize.height;
-       
-    // Create a menu and add your menu items to it
-    menu = [CCMenu menuWithItems:menuItem1, item, scoreItem,nil];
-    menu.isTouchEnabled = YES;
-   
-    menu.position = ccp(width/2,height- scoreItem.rect.size.height/3*2);
-    // Arrange the menu items Horizontally
-    [menu alignItemsHorizontally];
-    
-    // add the menu to your scene
-    [self addChild:menu];
-}
-*/
-
-
--(void) handleMenuPress: (CCMenuItem *) item
-{
-    CCLOG(@"PRESSED MENU");
-}
 // convenience method to convert a b2Vec2 to a CGPoint
 -(CGPoint) toPixels:(b2Vec2)vec
 {

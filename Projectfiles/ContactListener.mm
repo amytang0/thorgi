@@ -31,22 +31,39 @@ void ContactListener::BeginContact(b2Contact* contact)
         return;
     }
     
+    // If shooting at dog
+    if (([spriteA isKindOfClass:[Dog class]] && [spriteB isKindOfClass:[Bullet class]]) ||
+        ([spriteB isKindOfClass:[Dog class]] && [spriteA isKindOfClass:[Bullet class]])) {
+        if (spriteA.tag == SpriteStateEnemyBullet || spriteB.tag == SpriteStateEnemyBullet) {
+            ((__bridge CCSprite*) contact->GetFixtureA()->GetBody()->GetUserData()).tag=SpriteStateHit;
+            ((__bridge CCSprite*) contact->GetFixtureB()->GetBody()->GetUserData()).tag=SpriteStateHit;
+            spriteA.color = ccRED;
+            spriteB.color = ccRED;
+        }
+    }
+    
+    // If shooting a cat.
     if (spriteA != NULL && spriteB != NULL)
 	{
         if (([spriteA isKindOfClass:[Cat class]] && [spriteB isKindOfClass:[Bullet class]]) ||
             ([spriteB isKindOfClass:[Cat class]] && [spriteA isKindOfClass:[Bullet class]])) {
+            if (spriteA.tag == SpriteStateEnemyBullet || spriteB.tag == SpriteStateEnemyBullet) {
+                return;
+            }
+            
                 ((__bridge CCSprite*) contact->GetFixtureA()->GetBody()->GetUserData()).tag=SpriteStateHit;
                 ((__bridge CCSprite*) contact->GetFixtureB()->GetBody()->GetUserData()).tag=SpriteStateHit;
                 spriteA.color = ccRED;
                 spriteB.color = ccRED;
         }
         
+        // When dog is invincible.
         if (spriteA.tag == SpriteStateInvincible || spriteB.tag == SpriteStateInvincible) {
             //CCLOG(@"begincontact invinc");
             return;
         }
 
-        
+        // When cats run into dogs.
         if (([spriteA isKindOfClass:[Cat class]] && [spriteB isKindOfClass:[Dog class]]) ) {
            // CCLOG(@"Dog hit!1");
            //  ((Dog*)spriteB).health--; 

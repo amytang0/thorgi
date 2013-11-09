@@ -35,6 +35,7 @@
 
 }
 @property int countdown;
+-(void) resetCountDown;
 @end
 
 

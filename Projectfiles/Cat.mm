@@ -122,7 +122,7 @@ CGFloat timeElapsed;
     //[self stopAction:self.moveAction];
   //  [self scheduleUpdate];
         [self schedule:@selector(dash) interval:5.0f];
-        [self schedule:@selector(stop) interval:5.0f repeat:kCCRepeatForever  delay:2.0f];
+        [self schedule:@selector(stop) interval:5.0f repeat:kCCRepeatForever  delay:1.0f];
     }
     return self;
 }
@@ -157,8 +157,8 @@ CGFloat timeElapsed;
 -(id) initWithAnimatedCat
 {
     if ((self = [super initWithSpriteFrameName:@"frontwizardcat1.png"])) {
-        self.health = 2;
-        self.points = 3;
+        self.health = 1;
+        self.points = 5;
         self.speed = 1;
         self.countdown = 3;
         self.direction = @"left";
@@ -180,11 +180,22 @@ CGFloat timeElapsed;
         [self runAction:self.moveAction];
         //[spriteSheet addChild:sprite];
         //[self addChild:sprite];
-        
+        [self schedule:@selector(countDown) interval:1.0f];
     }
     return self;
 }
+-(void) countDown
+{
+    if(self.countdown < 0) [self resetCountDown];
+    else {
+      self.countdown--;
+    }
+}
 
+-(void) resetCountDown
+{
+    self.countdown = 3;
+}
 
 @end
 

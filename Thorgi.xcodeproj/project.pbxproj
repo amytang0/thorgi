@@ -72,6 +72,13 @@
 		F3356753182CAF8D001E9A7A /* wizardcatsprite.png in Resources */ = {isa = PBXBuildFile; fileRef = F3356750182CAF8D001E9A7A /* wizardcatsprite.png */; };
 		F3356754182CAF8D001E9A7A /* wizardcatsprite.tps in Resources */ = {isa = PBXBuildFile; fileRef = F3356751182CAF8D001E9A7A /* wizardcatsprite.tps */; };
 		F339E3CC1826285F004DFE79 /* button.png in Resources */ = {isa = PBXBuildFile; fileRef = F339E3CB1826285F004DFE79 /* button.png */; };
+		F3532CE8182EC5CB00955679 /* buttons.plist in Resources */ = {isa = PBXBuildFile; fileRef = F3532CE6182EC5CB00955679 /* buttons.plist */; };
+		F3532CE9182EC5CB00955679 /* buttons.png in Resources */ = {isa = PBXBuildFile; fileRef = F3532CE7182EC5CB00955679 /* buttons.png */; };
+		F3532CEB182EC5D300955679 /* buttons.tps in Resources */ = {isa = PBXBuildFile; fileRef = F3532CEA182EC5D300955679 /* buttons.tps */; };
+		F3532CF1182ED68900955679 /* texture1.png in Resources */ = {isa = PBXBuildFile; fileRef = F3532CF0182ED68900955679 /* texture1.png */; };
+		F3532CFF182EDF9F00955679 /* texture2.png in Resources */ = {isa = PBXBuildFile; fileRef = F3532CFE182EDF9F00955679 /* texture2.png */; };
+		F3532D0B182EE9EB00955679 /* texture3.png in Resources */ = {isa = PBXBuildFile; fileRef = F3532D0A182EE9EB00955679 /* texture3.png */; };
+		F3532D0D182EEB7400955679 /* smalltexture3.png in Resources */ = {isa = PBXBuildFile; fileRef = F3532D0C182EEB7400955679 /* smalltexture3.png */; };
 		F3C94D421823590800D34960 /* background.png in Resources */ = {isa = PBXBuildFile; fileRef = F3C94D411823590800D34960 /* background.png */; };
 		F3C94D4B1823668E00D34960 /* background2.png in Resources */ = {isa = PBXBuildFile; fileRef = F3C94D4A1823668D00D34960 /* background2.png */; };
 		F3C94D501823734800D34960 /* Cat.mm in Sources */ = {isa = PBXBuildFile; fileRef = F3C94D4F1823734800D34960 /* Cat.mm */; };
@@ -161,6 +168,13 @@
 		F3356750182CAF8D001E9A7A /* wizardcatsprite.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = wizardcatsprite.png; sourceTree = "<group>"; };
 		F3356751182CAF8D001E9A7A /* wizardcatsprite.tps */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = wizardcatsprite.tps; sourceTree = "<group>"; };
 		F339E3CB1826285F004DFE79 /* button.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = button.png; path = "../../../../../PeevedPenguins/Projectfiles/Resources/Menu Pack/button.png"; sourceTree = "<group>"; };
+		F3532CE6182EC5CB00955679 /* buttons.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = buttons.plist; path = ../../buttons.plist; sourceTree = "<group>"; };
+		F3532CE7182EC5CB00955679 /* buttons.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = buttons.png; path = ../../buttons.png; sourceTree = "<group>"; };
+		F3532CEA182EC5D300955679 /* buttons.tps */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = buttons.tps; path = ../../buttons.tps; sourceTree = "<group>"; };
+		F3532CF0182ED68900955679 /* texture1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = texture1.png; sourceTree = "<group>"; };
+		F3532CFE182EDF9F00955679 /* texture2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = texture2.png; path = Logos/texture2.png; sourceTree = "<group>"; };
+		F3532D0A182EE9EB00955679 /* texture3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = texture3.png; sourceTree = "<group>"; };
+		F3532D0C182EEB7400955679 /* smalltexture3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = smalltexture3.png; sourceTree = "<group>"; };
 		F3C94D411823590800D34960 /* background.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = background.png; sourceTree = "<group>"; };
 		F3C94D4A1823668D00D34960 /* background2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = background2.png; sourceTree = "<group>"; };
 		F3C94D4E1823734800D34960 /* Cat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Cat.h; sourceTree = "<group>"; };
@@ -313,11 +327,15 @@
 		DCC1A39413A94F1A005BD75D /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				F3532D0C182EEB7400955679 /* smalltexture3.png */,
+				F3532D0A182EE9EB00955679 /* texture3.png */,
 				F3356739182B8668001E9A7A /* Sounds */,
 				F335673C182B86D3001E9A7A /* MenuStuff */,
 				F32D33A51828AF2000F1B4BF /* Characters */,
 				F32D33A01828AF0E00F1B4BF /* Logos */,
 				F3C94D4A1823668D00D34960 /* background2.png */,
+				F3532CFE182EDF9F00955679 /* texture2.png */,
+				F3532CF0182ED68900955679 /* texture1.png */,
 				F3C94D411823590800D34960 /* background.png */,
 				DCC1A39513A94F1A005BD75D /* config.lua */,
 			);
@@ -436,6 +454,9 @@
 		F335673C182B86D3001E9A7A /* MenuStuff */ = {
 			isa = PBXGroup;
 			children = (
+				F3532CEA182EC5D300955679 /* buttons.tps */,
+				F3532CE6182EC5CB00955679 /* buttons.plist */,
+				F3532CE7182EC5CB00955679 /* buttons.png */,
 				F339E3CB1826285F004DFE79 /* button.png */,
 				F32D33B71829B4BD00F1B4BF /* heart.png */,
 			);
@@ -545,6 +566,13 @@
 				F3356752182CAF8D001E9A7A /* wizardcatsprite.plist in Resources */,
 				F3356753182CAF8D001E9A7A /* wizardcatsprite.png in Resources */,
 				F3356754182CAF8D001E9A7A /* wizardcatsprite.tps in Resources */,
+				F3532CE8182EC5CB00955679 /* buttons.plist in Resources */,
+				F3532CE9182EC5CB00955679 /* buttons.png in Resources */,
+				F3532CEB182EC5D300955679 /* buttons.tps in Resources */,
+				F3532CF1182ED68900955679 /* texture1.png in Resources */,
+				F3532CFF182EDF9F00955679 /* texture2.png in Resources */,
+				F3532D0B182EE9EB00955679 /* texture3.png in Resources */,
+				F3532D0D182EEB7400955679 /* smalltexture3.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

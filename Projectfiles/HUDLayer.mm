@@ -13,11 +13,11 @@
 #import "GameOverLayer.h"
 
 #define PADDING_TOP 20.0f
-#define HEIGHT 20.0f
+#define HEIGHT 25.0f
 
 CCLabelTTF *scoreString;
 CCLabelTTF *livesString;
-CCLabelTTF *menuButton;
+CCSprite *pauseButton;
   NSMutableArray *hearts;
 
 @interface HUDLayer (PrivateMethods)
@@ -30,7 +30,7 @@ CCLabelTTF *menuButton;
 
 -(id) init
 {
-	self = [super initWithColor:ccc4(255,255,255,5)];
+	self = [super initWithColor:ccc4(255,255,255,0)];
 	if (self)
 	{
 
@@ -39,23 +39,27 @@ CCLabelTTF *menuButton;
         
         CGSize winSize = [CCDirector sharedDirector].winSize;
         
-        //[self setContentSize:CGSizeMake(winSize.width,HEIGHT*2)];
+        [self setContentSize:CGSizeMake(winSize.width,HEIGHT*2)];
         
         if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
-            scoreString = [CCLabelTTF labelWithString:@"WOOOP" fontName:@"Arial" fontSize:22.0f];
+            scoreString = [CCLabelTTF labelWithString:@"WOOOP" fontName:@"Chalkduster" fontSize:22.0f];
         } else {
-            scoreString = [CCLabelTTF labelWithString:@"WOOOP!!" fontName:@"Arial" fontSize:16.0f];
+            scoreString = [CCLabelTTF labelWithString:@"WOOOP!!" fontName:@"Chalkduster" fontSize:20.0f];
         }
         //scoreString.position = ccp(winSize.width* 0.5, winSize.height - PADDING_TOP);
-        scoreString.position = ccp(winSize.width* 0.5, HEIGHT);
-
+        //scoreString.position = ccp(winSize.width* 0.5, HEIGHT);
+        scoreString.position = ccp(winSize.width * 0.5f, HEIGHT/3.0f*2.0f);
+        
         [self addChild:scoreString];
         
         
-        menuButton = [CCLabelTTF labelWithString:@"menu" fontName:@"Arial" fontSize:16.0f];
-        menuButton.position =  ccp(winSize.width* 0.9, HEIGHT);
-        [self addChild:menuButton];
-         
+        [[CCSpriteFrameCache sharedSpriteFrameCache] addSpriteFramesWithFile:@"buttons.plist"];
+        CCSpriteFrame *pauseButtonFrame = [[CCSpriteFrameCache sharedSpriteFrameCache] spriteFrameByName:@"pause.png"];
+        pauseButton = [[CCSprite alloc] initWithSpriteFrame:pauseButtonFrame];
+       // pauseButton.position =  ccp(winSize.width -30, HEIGHT);
+        pauseButton.position =  ccp(winSize.width -30, HEIGHT/2.0f);
+        [self addChild:pauseButton];
+        
         /*
         livesString = [CCLabelTTF labelWithString:@"WOOOP" fontName:@"Arial" fontSize:16.0f];
         livesString.position = ccp(winSize.width*.15, winSize.height * .9);
@@ -106,13 +110,13 @@ CCLabelTTF *menuButton;
 
 -(void) handleMenuButton: (CGPoint)touch
 {
-    CGRect rect = menuButton.boundingBox;
+    CGRect rect = pauseButton.boundingBox;
 
    // CCLOG(@"TOUCH RECEIVED ON MENU IS %@", NSStringFromCGPoint(touch));
-    //CCLOG(@"menu is %@", NSStringFromCGPoint(menuButton.boundingBoxCenter));
+    CCLOG(@"menu is %@", NSStringFromCGPoint(pauseButton.boundingBoxCenter));
     //if (CGRectContainsPoint(rect, touch)){
-    if (fabsf(menuButton.boundingBoxCenter.x - touch.x) <= rect.size.width/2 +10 &&
-        fabsf(menuButton.boundingBoxCenter.y - touch.y) <= rect.size.height/2 +10 )
+    if (fabsf(pauseButton.boundingBoxCenter.x - touch.x) <= rect.size.width/2 +10 &&
+        fabsf(pauseButton.boundingBoxCenter.y - touch.y) <= rect.size.height/2 +10 )
     {
            [[CCDirector sharedDirector] pushScene: (CCScene*)[[PauseLayer alloc] init]];
         //[[CCDirector sharedDirector] replaceScene: (CCScene*)[[GameOverLayer alloc] init]];
@@ -129,7 +133,7 @@ CCLabelTTF *menuButton;
 }
 
 -(void)setScore:(int) score {
-    scoreString.string = [NSString stringWithFormat:@"Score: %d", score];
+    scoreString.string = [NSString stringWithFormat:@"%d", score];
 }
 
 -(void) setLives:(int) health {
@@ -145,7 +149,8 @@ CCLabelTTF *menuButton;
 
     CGSize winSize = [CCDirector sharedDirector].winSize;
    // CGPoint position = ccp(winSize.width*.05, winSize.height - PADDING_TOP);
-    CGPoint position = ccp(winSize.width*.05, HEIGHT);
+   // CGPoint position = ccp(winSize.width*.05, HEIGHT);
+    CGPoint position = ccp(winSize.width*.05, HEIGHT/3.0f*2.0f);
     for (int i = 0; i < health; i++){
         CCSprite *heart = [CCSprite spriteWithFile:@"heart.png"];
         heart.position = position;
