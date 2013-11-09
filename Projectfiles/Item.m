@@ -59,5 +59,21 @@
 -(void) update:(ccTime)delta
 {
 }
+@end
+
+@implementation Heart
+
+-(id) init
+{
+	self = [super initWithFile:@"heart.png"];
+	if (self)
+	{
+		// add init code here (note: self.parent is still nil here!)
+		
+		// uncomment if you want the update method to be executed every frame
+		//[self scheduleUpdate];
+	}
+	return self;
+}
 
 @end

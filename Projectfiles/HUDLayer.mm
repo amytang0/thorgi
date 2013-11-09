@@ -18,7 +18,7 @@
 CCLabelTTF *scoreString;
 CCLabelTTF *livesString;
 CCSprite *pauseButton;
-  NSMutableArray *hearts;
+  NSMutableArray *lives;
 
 @interface HUDLayer (PrivateMethods)
 // declare private methods here
@@ -35,7 +35,7 @@ CCSprite *pauseButton;
 	{
 
         CCLOG(@"HUDLAYER INIT");
-        hearts = [[NSMutableArray alloc] init];
+        lives = [[NSMutableArray alloc] init];
         
         CGSize winSize = [CCDirector sharedDirector].winSize;
         
@@ -66,6 +66,7 @@ CCSprite *pauseButton;
         [self addChild:livesString];
          */
        // [self addChild:hearts];
+        [self initLives:5];
         
         self.isTouchEnabled = YES;
     }
@@ -136,14 +137,38 @@ CCSprite *pauseButton;
     scoreString.string = [NSString stringWithFormat:@"%d", score];
 }
 
+-(void) initLives:(int)health {
+    lives = [[NSMutableArray alloc] init];
+
+    CGSize winSize = [CCDirector sharedDirector].winSize;
+    // CGPoint position = ccp(winSize.width*.05, winSize.height - PADDING_TOP);
+    // CGPoint position = ccp(winSize.width*.05, HEIGHT);
+    CGPoint position = ccp(winSize.width*.05, HEIGHT/3.0f*2.0f);
+    for (int i = 0; i < health; i++){
+        CCSprite *heart = [CCSprite spriteWithFile:@"heart.png"];
+        heart.position = position;
+        [lives addObject:heart];
+        [self addChild:heart z:100];
+        position = ccpAdd(position,ccp(20,0));
+    }
+
+}
+
 -(void) setLives:(int) health {
     //CCLOG(@"BLEH");
     livesString.string = [NSString stringWithFormat:@"Lives: %d", health];
-    if (abs([hearts count]) == health)
+    if (abs([lives count]) == health)
         return;
    
-    [self removeChildrenInArray:hearts cleanup:NO];
-    
+    for (int i = 0; i < abs([lives count]); i++) {
+        CCSprite *heart = [lives objectAtIndex:i];
+        if (i >= health)
+          heart.color = ccGRAY;
+        else
+            heart.color = ccWHITE;
+    }
+    /*
+    [self removeChildrenInArray:hearts cleanup:YES];
     hearts = [[NSMutableArray alloc] init];
     
 
@@ -158,6 +183,7 @@ CCSprite *pauseButton;
         [self addChild:heart z:100];
         position = ccpAdd(position,ccp(20,0));
     }
+     */
 }
 
 -(void) playGame:(CCMenuItem *)sender

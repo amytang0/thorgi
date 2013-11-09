@@ -15,3 +15,11 @@
 }
 
 @end
+
+@interface Heart : Item
+{
+@protected
+@private
+}
+
+@end

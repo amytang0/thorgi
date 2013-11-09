@@ -18,4 +18,5 @@
 -(void) setLives:(int) health;
 
 -(void) handleTouch:(CGPoint)tap;
+-(void) setLives:(int) health;
 @end

@@ -12,6 +12,7 @@
 #import "Bullet.h"
 #import "Cat.h"
 #import "Dog.h"
+#import "Item.h"
 
 
 void ContactListener::BeginContact(b2Contact* contact)
@@ -29,6 +30,26 @@ void ContactListener::BeginContact(b2Contact* contact)
     } else if (spriteA != NULL && spriteB == NULL && ![spriteA isKindOfClass:[Dog class]]) {
         spriteA.tag=SpriteStateRemove;
         return;
+    }
+    
+    // If dog runs into an item
+    if (([spriteA isKindOfClass:[Dog class]] && [spriteB isKindOfClass:[Item class]]) ||
+        ([spriteB isKindOfClass:[Dog class]] && [spriteA isKindOfClass:[Item class]])) {
+        if ([spriteA isKindOfClass:[Heart class]]) {
+            //set dog.health
+            CCLOG(@"hit over heart");
+            ((Dog*)spriteB).health++;
+            spriteA.tag=SpriteStateRemove;
+            return;
+        }
+        else if ([spriteB isKindOfClass:[Heart class]]) {
+            //set dog.health
+            CCLOG(@"hit over heart");
+            ((Dog*)spriteA).health++;
+            spriteB.tag=SpriteStateRemove;
+            return;
+            
+        }
     }
     
     // If shooting at dog

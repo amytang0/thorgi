@@ -17,6 +17,7 @@
 #import "GameOverLayer.h"
 #import "HUDLayer.h"
 #import "SimpleAudioEngine.h"
+#import "Item.h"
 
 
 #define MAX_SPEED 15.0f
@@ -31,6 +32,7 @@ ccTime elapsedTime = 0;
 CCSpriteBatchNode *bullets;
 CCSpriteBatchNode *basicCats;
 CCSpriteBatchNode *wizardCats;
+CCSpriteBatchNode *hearts;
 
 @interface GameLayer (PrivateMethods)
 -(void) changeInputType:(ccTime)delta;
@@ -120,7 +122,7 @@ CCSpriteBatchNode *wizardCats;
           [self runAction:[CCFollow actionWithTarget:dogSprite worldBoundary:rect]];
         //[self runAction:[CCFollow actionWithTarget:dogSprite]];
         
-        //[self enableBox2dDebugDrawing];
+        [self enableBox2dDebugDrawing];
         
         [[CCDirector sharedDirector] setDisplayFPS:YES];
 
@@ -164,6 +166,9 @@ CCSpriteBatchNode *wizardCats;
     
     bullets = [CCSpriteBatchNode batchNodeWithFile:@"fire.png"];
     [self addChild:bullets];
+    
+    hearts = [CCSpriteBatchNode batchNodeWithFile:@"heart.png"];
+    [self addChild:hearts];
 
 }
 
@@ -668,6 +673,9 @@ CCSpriteBatchNode *wizardCats;
                 [basicCats removeChild:sprite  cleanup:YES];
             } else if ([sprite isKindOfClass:[Bullet class]]){
                 [bullets removeChild:sprite cleanup:YES];
+            } else if ([sprite isKindOfClass:[Heart class]]){
+                [hearts removeChild:sprite cleanup:YES];
+
             }
             world->DestroyBody(body);
             continue;
@@ -701,6 +709,7 @@ CCSpriteBatchNode *wizardCats;
                     }
                     world->DestroyBody(body);
                     [self createSmallExplosionAt:sprite.position];
+                    [self createItem:sprite.position];
                 }
                 else
                 {
@@ -750,6 +759,44 @@ CCSpriteBatchNode *wizardCats;
     }
     
  }
+
+-(void) createItem:(CGPoint)position
+{
+    Item *item;
+    if (arc4random()%100 ==0) {
+        item = [[Heart alloc]init];
+        item.position = position;
+        [hearts addChild:item];
+ 
+    
+        //add body
+        b2BodyDef bodyDef;
+        bodyDef.type = b2_dynamicBody;
+        bodyDef.position.Set(position.x/PTM_RATIO,position.y/PTM_RATIO);
+        bodyDef.userData = (__bridge void*)item;
+        b2Body *itemBody = world->CreateBody(&bodyDef);
+        //itemBody->SetActive(false); //an inactive body does not collide with other bodies
+        
+        b2CircleShape circle;
+        circle.m_radius = item.size.width/PTM_RATIO;
+    
+    
+    // Create the bounding box shape.
+    b2PolygonShape box;
+    box.SetAsBox(item.boundingBox.size.width/2.0f/PTM_RATIO,
+                 item.boundingBox.size.height/2.0f/PTM_RATIO);
+
+    
+        b2FixtureDef ballShapeDef;
+        ballShapeDef.shape = &box;
+        ballShapeDef.density = 0.8f;
+        ballShapeDef.restitution = 0.0f; //set the "bounciness" of a body (0 = no bounce, 1 = complete (elastic) bounce)
+        ballShapeDef.friction = 0.99f;
+        ballShapeDef.isSensor = true;
+        //try changing these and see what happens!
+        itemBody->CreateFixture(&ballShapeDef);
+    }
+}
 
 -(void) beginInvincibility
 {
