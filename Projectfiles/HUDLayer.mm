@@ -76,6 +76,7 @@ CCLabelTTF *menuButton;
 }
 */
 
+/*
 // scheduled update method
 -(void) update:(ccTime)delta
 {
@@ -86,11 +87,12 @@ CCLabelTTF *menuButton;
         CCLOG(@"yay");
     }
 }
+ */
 
 - (void)ccTouchesBegan:(NSSet*)touches withEvent:(UIEvent*)event
 {
     UITouch* touch = [touches anyObject];
-       CCLOG(@"DETECTED TOUCH on hudlayer!");
+     //  CCLOG(@"DETECTED TOUCH on hudlayer!");
      // CGPoint touchLocation = [touch locationInView:self.view];
     CGPoint touchStart = [[CCDirector sharedDirector] convertToGL:[touch locationInView:[touch view]]];
     

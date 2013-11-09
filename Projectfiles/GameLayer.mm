@@ -27,11 +27,9 @@
 
 const float PTM_RATIO = 32.0f;
 //#define PTM_RATIO 32.0f
-
-//NSMutableArray *enemies;
-//CCSprite *enemy;
-//CGRect firstrect;
-//CGRect secondrect;
+CCSpriteBatchNode *bullets;
+CCSpriteBatchNode *basicCats;
+CCSpriteBatchNode *wizardCats;
 
 @interface GameLayer (PrivateMethods)
 -(void) changeInputType:(ccTime)delta;
@@ -72,13 +70,12 @@ const float PTM_RATIO = 32.0f;
 {
     if ((self = [super init])) {
         
-        
+        [[CCDirector sharedDirector] setDisplayFPS:YES];
         // Add the HUD layer on top.
         [self initHud: hudLayer];
         //hud = hudLayer;
         
         [self initWorld];
-        //[self initSpriteSheets];
                
         [self initSpriteSheets];
         
@@ -116,9 +113,9 @@ const float PTM_RATIO = 32.0f;
        // [self populateWithCats];
         
         //Has camera follow
-        // CGRect rect = CGRectMake(0, 0, BOARD_LENGTH, BOARD_LENGTH);
-        //  [self runAction:[CCFollow actionWithTarget:dogSprite worldBoundary:rect]];
-        [self runAction:[CCFollow actionWithTarget:dogSprite]];
+         CGRect rect = CGRectMake(0, 0, BOARD_LENGTH, BOARD_LENGTH);
+          [self runAction:[CCFollow actionWithTarget:dogSprite worldBoundary:rect]];
+        //[self runAction:[CCFollow actionWithTarget:dogSprite]];
         //[self->hud runAction:[CCFollow actionWithTarget:self]];
         
         [self enableBox2dDebugDrawing];
@@ -154,8 +151,15 @@ const float PTM_RATIO = 32.0f;
 -(void) initSpriteSheets
 {
     [[CCSpriteFrameCache sharedSpriteFrameCache] addSpriteFramesWithFile:@"spottedcatsprite.plist"];
-    CCSpriteBatchNode *spriteSheet = [CCSpriteBatchNode batchNodeWithFile:@"spottedcatsprite.png"];
-    [self addChild:spriteSheet];
+    basicCats = [CCSpriteBatchNode batchNodeWithFile:@"spottedcatsprite.png"];
+    [self addChild:basicCats];
+    
+    [[CCSpriteFrameCache sharedSpriteFrameCache] addSpriteFramesWithFile:@"wizardcatsprite.plist"];
+    wizardCats = [CCSpriteBatchNode batchNodeWithFile:@"wizardcatsprite.png"];
+    [self addChild:wizardCats];
+    
+    bullets = [CCSpriteBatchNode batchNodeWithFile:@"fire.png"];
+    [self addChild:bullets];
 }
 
 
@@ -167,37 +171,70 @@ const float PTM_RATIO = 32.0f;
     world->SetAllowSleeping(YES);
     //world->SetContinuousPhysics(YES);
     
-    //create an object that will check for collisions
+    // Create an object that will check for collisions.
     contactListener = new ContactListener();
     world->SetContactListener(contactListener);
-    
-    //CGSize screenSize = [CCDirector sharedDirector].winSize;
-    
-    
-    b2Vec2 lowerLeftCorner =b2Vec2(0,0);
-    b2Vec2 lowerRightCorner = b2Vec2(BOARD_LENGTH/PTM_RATIO,0);
-    b2Vec2 upperLeftCorner = b2Vec2(0,BOARD_LENGTH/PTM_RATIO);
-    b2Vec2 upperRightCorner = b2Vec2(BOARD_LENGTH/PTM_RATIO,BOARD_LENGTH/PTM_RATIO);
     
     // Define the static container body, which will provide the collisions at screen borders.
     b2BodyDef screenBorderDef;
     screenBorderDef.position.Set(0, 0);
     screenBorderBody = world->CreateBody(&screenBorderDef);
     
-    b2EdgeShape screenBorderShape;
+    CGSize winSize = [CCDirector sharedDirector].winSize;
+    //b2EdgeShape screenBorderShape;  //This is line.
+    b2PolygonShape box; //This is box.
+    box.SetAsBox(winSize.width/2.0f/PTM_RATIO,
+                 winSize.height/2.0f/PTM_RATIO);
+    
+    
+    //Vertices must be in counter-clockwise order.
+    // Making right border.
+    b2Vec2 vertices[] = {
+        b2Vec2(0,0),
+      b2Vec2(0,BOARD_LENGTH/PTM_RATIO),
+        b2Vec2(-winSize.width/2/PTM_RATIO, BOARD_LENGTH/PTM_RATIO),
+          b2Vec2(-winSize.width/2/PTM_RATIO,0)
+        
+    };
+    box.Set(vertices, 4);
+    
     b2FixtureDef screenDef;
-    screenDef.shape = &screenBorderShape;
-    
-    screenBorderShape.Set(lowerLeftCorner, lowerRightCorner);
+    screenDef.shape = &box;
     screenBorderBody->CreateFixture(&screenDef);
     
-    screenBorderShape.Set(lowerRightCorner, upperRightCorner);
+    // Making top border.
+    b2Vec2 vertices2[] = {
+        b2Vec2((-winSize.width/2)/PTM_RATIO,(BOARD_LENGTH+winSize.height/2)/PTM_RATIO),
+        b2Vec2(-winSize.width/2/PTM_RATIO, BOARD_LENGTH/PTM_RATIO),
+        b2Vec2((BOARD_LENGTH +winSize.width/2)/PTM_RATIO,BOARD_LENGTH/PTM_RATIO),
+        b2Vec2((BOARD_LENGTH +winSize.width/2)/PTM_RATIO,(BOARD_LENGTH+winSize.height/2)/PTM_RATIO),
+        
+    };
+    box.Set(vertices2, 4);
+    screenDef.shape = &box;
     screenBorderBody->CreateFixture(&screenDef);
     
-    screenBorderShape.Set(upperRightCorner, upperLeftCorner);
+    
+    // Making left border.
+    b2Vec2 vertices3[] = {
+        b2Vec2((BOARD_LENGTH +winSize.width/2)/PTM_RATIO,0),
+        b2Vec2((BOARD_LENGTH +winSize.width/2)/PTM_RATIO,BOARD_LENGTH/PTM_RATIO),
+        b2Vec2((BOARD_LENGTH)/PTM_RATIO,BOARD_LENGTH/PTM_RATIO),
+        b2Vec2(BOARD_LENGTH/PTM_RATIO,0),
+    };
+    box.Set(vertices3, 4);
+    screenDef.shape = &box;
     screenBorderBody->CreateFixture(&screenDef);
     
-    screenBorderShape.Set(upperLeftCorner, lowerLeftCorner);
+    // Making bottom border.
+    b2Vec2 vertices4[] = {
+        b2Vec2((BOARD_LENGTH +winSize.width/2)/PTM_RATIO,0),
+        b2Vec2((-winSize.width/2)/PTM_RATIO,0),
+        b2Vec2((-winSize.width/2)/PTM_RATIO,-winSize.height/2/PTM_RATIO),
+        b2Vec2((BOARD_LENGTH + winSize.width/2)/PTM_RATIO,-winSize.height/2/PTM_RATIO),
+    };
+    box.Set(vertices4, 4);
+    screenDef.shape = &box;
     screenBorderBody->CreateFixture(&screenDef);
     
 
@@ -212,7 +249,8 @@ const float PTM_RATIO = 32.0f;
    //       appframe.origin.x, appframe.origin.y, appframe.size.width, appframe.size.height);
     
     //CCLOG(@"centersize: %@", centerSize);
-    CGPoint center = ccp(appframe.size.width/2.0f, appframe.size.height/2.0f);
+    //CGPoint center = ccp(appframe.size.width/2.0f, appframe.size.height/2.0f);
+    CGPoint center = ccp(BOARD_LENGTH/2.0f, BOARD_LENGTH/2.0f);
     //[self addLabels];
     
     // Add dog.
@@ -250,47 +288,48 @@ const float PTM_RATIO = 32.0f;
 {
     CCDirector* director = [CCDirector sharedDirector];
 	CGSize screenSize = director.screenSize;
-    int width = (int)screenSize.width;
-    int height = (int)screenSize.height;
+    //int width = (int)screenSize.width;
+    //int height = (int)screenSize.height;
     
     // Use this one once big board is implemented.
-    //int width,height = BOARD_LENGTH;
+    int width = BOARD_LENGTH*2;
+    int height = BOARD_LENGTH*2;
+    float ratio = (1.0f*BOARD_LENGTH)/(1.0f*screenSize.width);
+    CGPoint dogPos = ccp(dogSprite.boundingBoxCenter.x * ratio, dogSprite.boundingBoxCenter.y * ratio);
+    //CCLOG(@"ratio: %f. dogpos: %@", ratio,NSStringFromCGPoint(dogPos));
+    //CGPoint dogPos = [self getScreenPosition:dogSprite.position];
+    //CGPoint dogPos = ccpSub([self toPixels: dogBody->GetPosition()], self.position);
+    int x = arc4random()%width;
+    int y = arc4random()%height;
     
-    int x = arc4random()%(width);
-    int y = arc4random()%(height);
-    
-    //Puts this at the edges
-    if(x%4 == 0) {
-        x = width;
-    } else if (x%4 == 1){
-        y = height;
-    } else if (x%3 == 2) {
-        x = 0;
-    } else {
-        y = 0;
-    }
-    
-    //Makes sure this is within board space
-    CGPoint p = [self getScreenPosition:CGPointMake(x,y)];
-    CCLOG(@"POINT: %@", NSStringFromCGPoint(p));
-    if (p.x >= width) p.x = BOARD_LENGTH-dogSprite.textureRect.size.width;
-    if (p.y >= height) p.y = BOARD_LENGTH-dogSprite.textureRect.size.height;
-    if (p.x < 0) p.x = 5;
-    if (p.y < 0) p.y = 5;
-    
-    CGPoint dogPos = [self getScreenPosition:dogSprite.boundingBoxCenter];
-    
+    //int i = 0;
     //Makes sure it doesn't hit dog immediately
-    while (fabsf(p.x - dogPos.x) <= 150 &&
-           fabsf(p.y - dogPos.y) <= dogSprite.textureRect.size.height+90 ) {
-        p.x = arc4random()%(width);
-        p.y = arc4random()%(height);
-        p = [self getScreenPosition:CGPointMake(p.x,p.y)];
+    float distance = fabsf(hypotf(x - dogPos.x, y - dogPos.y));
+    //while (fabsf(x - dogPos.x) <= 350 &&
+    //       fabsf(y - dogPos.y) <= 200 ) {
+    while (distance <= 300) {
+        //CCLOG(@"in for loop");
+        x = arc4random()%width;
+        y = arc4random()%height;
+        distance = hypotf(x - dogPos.x, y - dogPos.y);
+        /*
+        //Puts this at the edges
+        if(x%4 == 0) {
+            x = screenSize.width;
+        } else if (x%4 == 1){
+            y = screenSize.height;
+        } else if (x%3 == 2) {
+            x = 0+20;
+        } else {
+            y = 0+20;
+        }
+         */
     }
-   
+    //CCLOG(@"WAS IN WHILE LOOP FOR: %d", i);
     
-    
-    
+    //CGPoint p = [self getScreenPosition:CGPointMake(x,y)];
+    CGPoint p = ccp(x,y);
+    CCLOG(@"POINT: %@", NSStringFromCGPoint(p));
     [self createCat:@"cat.png" atPosition:p rotation:0.0f isStatic:NO];
     
 }
@@ -301,18 +340,29 @@ const float PTM_RATIO = 32.0f;
             rotation:(CGFloat)rotation
             isStatic:(BOOL)isStatic
 {
-  
+    CCSprite *sprite;
+        int random = arc4random();
+    if (score >= 10 && random%10 <1) {
+        sprite =[[WizardCat alloc] initWithAnimatedCat];
+        [wizardCats addChild:sprite z:1];
+    } else {
     
    //Create the sprite.
-    Cat* sprite;
+    
     //sprite = [[Cat alloc] initWithCatImage];
-    sprite =[[Cat alloc] initWithAnimatedCat];
-    [self addChild:sprite z:1];
+        if (score > 25 && random%10 >= 3) {
+          sprite = [[DashCat alloc] initWithAnimatedCat];
+        } else {
+            
+            sprite =[[Cat alloc] initWithAnimatedCat];
+        }
+      [basicCats addChild:sprite z:1];
+    }
     
     //Create the bodyDef
     b2BodyDef bodyDef;
     bodyDef.type = isStatic?b2_staticBody:b2_dynamicBody; //this is a shorthand/abbreviated if-statement
-    bodyDef.position.Set((position.x+sprite.contentSize.width/2.0f)/PTM_RATIO,(position.y+sprite.contentSize.height/2.0f)/PTM_RATIO);
+    bodyDef.position.Set((position.x/2.0f)/PTM_RATIO,(position.y/2.0f)/PTM_RATIO);
     bodyDef.angle = CC_DEGREES_TO_RADIANS(rotation);
     bodyDef.userData = (__bridge void*) sprite;
     b2Body *body = world->CreateBody(&bodyDef);
@@ -513,6 +563,16 @@ const float PTM_RATIO = 32.0f;
             //CGFloat oldAngle = [self getAngleFromVelocity:oldVelocity];
             //CGFloat newAngle = [self getAngleFromVelocity:velocity];
                                
+            
+            if ([cat isKindOfClass:[DashCat class]]){
+                DashCat *dashCat = (DashCat *)cat;
+                if (dashCat.velocity.Length() == 0 && dashCat.speed != 0) { // not moving but about to dash
+                    dashCat.velocity = velocity;
+                } else {
+                    velocity = dashCat.velocity;
+                }
+            }
+            
             body->SetLinearVelocity(((Cat*)sprite).speed*velocity);
             
             
@@ -535,10 +595,14 @@ const float PTM_RATIO = 32.0f;
     [cat stopAction:cat.moveAction];
     
     NSMutableArray *walkAnimFrames = [NSMutableArray array];
+    NSString *catType = @"";
+    if([cat isKindOfClass:[WizardCat class]]){
+        catType = @"wizard";
+    }
     
     for (int i = 1; i <= 3; i++){
         
-        NSString *fileName = [NSString stringWithFormat:@"%@cat%d.png",d,i];
+        NSString *fileName = [NSString stringWithFormat:@"%@%@cat%d.png",d,catType,i];
         [walkAnimFrames addObject:
          [[CCSpriteFrameCache sharedSpriteFrameCache] spriteFrameByName:
           fileName]];
@@ -604,6 +668,19 @@ const float PTM_RATIO = 32.0f;
         //get the sprite associated with the body
         CCSprite* sprite = (__bridge CCSprite*)body->GetUserData();
         
+        if(sprite.tag==SpriteStateRemove) {
+            CCLOG(@"REMOVED A SPRITE FROM OUTSIDE BOUNDARY");
+            if ([sprite isKindOfClass:[WizardCat class]]) {
+                [wizardCats removeChild:sprite cleanup:YES];
+            } else if ([sprite isKindOfClass:[Cat class]]) {
+                [basicCats removeChild:sprite  cleanup:YES];
+            } else if ([sprite isKindOfClass:[Bullet class]]){
+                [bullets removeChild:sprite cleanup:YES];
+            }
+            world->DestroyBody(body);
+            continue;
+        }
+        
         if (![sprite isKindOfClass:[Bullet class]]){
             body->SetLinearVelocity(0.97f*body->GetLinearVelocity());
             body->SetAngularVelocity(0);
@@ -618,7 +695,11 @@ const float PTM_RATIO = 32.0f;
                 if( ((Cat*)sprite).health==1 )
                 {
                     score += ((Cat*)sprite).points;
-                    [self removeChild:sprite cleanup:NO];
+                    if ([sprite isKindOfClass:[WizardCat class]]) {
+                      [wizardCats removeChild:sprite cleanup:YES];
+                    } else {
+                        [basicCats removeChild:sprite  cleanup:YES];
+                    }
                     world->DestroyBody(body);
                     [self createSmallExplosionAt:sprite.position];
                 }
@@ -633,7 +714,7 @@ const float PTM_RATIO = 32.0f;
                 {
                     ((Dog*)sprite).health--;
                     [self createExplosionAt:sprite.position];
-                    [self removeChild:sprite cleanup:NO];
+                    [self removeChild:sprite cleanup:YES];
                     world->DestroyBody(body);
                     //[self endGame];
                     [KKInput sharedInput].userInteractionEnabled = NO;
@@ -654,7 +735,7 @@ const float PTM_RATIO = 32.0f;
             }
             else
             {
-                [self removeChild:sprite cleanup:NO];
+                [bullets removeChild:sprite cleanup:YES];
                 world->DestroyBody(body);
             }
             sprite.tag = SpriteStateNormal;
@@ -664,8 +745,8 @@ const float PTM_RATIO = 32.0f;
             // update the sprite's position to where their physics bodies are
         
             sprite.position = [self toPixels:body->GetPosition()];
-           // if ([sprite isKindOfClass:[Cat class]])
-            //    CCLOG(@"IS CAT!!!!");
+            
+            
         }
     }
     
@@ -712,9 +793,9 @@ const float PTM_RATIO = 32.0f;
    
     Bullet *bulletSprite = [[Bullet alloc] initWithBulletImage];
     bulletSprite.position = dogSprite.position;
-    [self addChild:bulletSprite z:9];
+    [bullets addChild:bulletSprite z:9];
     //[bullets addObject:bulletSprite];
-    NSValue *value = [NSValue valueWithCGPoint:ccpSub(location, dogSprite.position)];
+    //NSValue *value = [NSValue valueWithCGPoint:ccpSub(location, dogSprite.position)];
     //[bulletsLocations addObject:value];
  
     b2BodyDef bulletBodyDef;
@@ -838,7 +919,7 @@ const float PTM_RATIO = 32.0f;
 		{
 			debugDraw->SetFlags(debugDrawFlags);
 			world->SetDebugDraw(debugDraw);
-		}
+            }
 	}
 }
 

@@ -56,7 +56,7 @@
 
 - (void)ccTouchesBegan:(NSSet*)touches withEvent:(UIEvent*)event
 {
-    UITouch* touch = [touches anyObject];
+    //UITouch* touch = [touches anyObject];
     CCLOG(@"DETECTED TOUCH on gameOverlayer!");
     
 }

@@ -16,7 +16,8 @@
 enum {
     SpriteStateNormal,
     SpriteStateHit,
-    SpriteStateInvincible
+    SpriteStateInvincible,
+    SpriteStateRemove
 };
 typedef NSInteger SpriteState;
 

@@ -21,6 +21,16 @@ void ContactListener::BeginContact(b2Contact* contact)
 	CCSprite* spriteA = (__bridge CCSprite*)bodyA->GetUserData();
 	CCSprite* spriteB = (__bridge CCSprite*)bodyB->GetUserData();
     
+    // If wall
+    if (spriteA == NULL && spriteB != NULL && ![spriteB isKindOfClass:[Dog class]]) {
+        //remove Sprite B
+        spriteB.tag=SpriteStateRemove;
+        return;
+    } else if (spriteA != NULL && spriteB == NULL && ![spriteA isKindOfClass:[Dog class]]) {
+        spriteA.tag=SpriteStateRemove;
+        return;
+    }
+    
     if (spriteA != NULL && spriteB != NULL)
 	{
         if (([spriteA isKindOfClass:[Cat class]] && [spriteB isKindOfClass:[Bullet class]]) ||
@@ -100,6 +110,17 @@ void ContactListener::PreSolve(b2Contact* contact,
         }
         
 	}
+    // If it's a wall, get rid of the sprite that isn't a wall
+    //TODO: TEST THAT THIS WORKS. THAT IF SPRITE A IS NULL IT'S A WALL.
+    else if (spriteA == NULL && spriteB != NULL && ![spriteB isKindOfClass:[Dog class]]) {
+        //remove Sprite B
+        contact->SetEnabled(false);
+         spriteB.tag=SpriteStateRemove;
+    } else if (spriteA != NULL && spriteB == NULL && ![spriteA isKindOfClass:[Dog class]]) {
+        //remove Sprite A
+        contact->SetEnabled(false);
+        spriteA.tag=SpriteStateRemove;
+    }
     
 }
 

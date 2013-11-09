@@ -22,3 +22,20 @@
 -(id) initWithAnimatedCat;
 
 @end
+
+@interface DashCat : Cat
+{
+    
+}
+@property b2Vec2 velocity;
+@end
+
+@interface WizardCat : Cat
+{
+
+}
+@property int countdown;
+@end
+
+
+

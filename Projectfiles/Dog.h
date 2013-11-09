@@ -14,5 +14,7 @@
 @private
 }
 @property int health;
+@property NSString *status;
 -(id) initWithDogImage;
+
 @end

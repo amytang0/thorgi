@@ -19,7 +19,7 @@ const float PTM_RATIO = 32.0f;
 #define HEALTH 5
 
 @implementation Dog
-@synthesize health;
+@synthesize health, status;
 
 -(id) init
 {
@@ -42,6 +42,7 @@ const float PTM_RATIO = 32.0f;
     //if ((self = [super initWithFile:@"ship.png"]))
     {
         health = HEALTH;
+        status = @"normal";
         
         
         
