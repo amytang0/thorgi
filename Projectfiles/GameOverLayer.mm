@@ -9,6 +9,8 @@
 #import "GameOverLayer.h"
 #import "StartMenuLayer.h"
 
+CCLabelTTF *score;
+
 @interface GameOverLayer (PrivateMethods)
 // declare private methods here
 @end
@@ -33,11 +35,22 @@
 	self = [super init];
 	if (self)
 	{
+        // Makes texture tiled background
+        CCTexture2D *texture = [[CCTextureCache sharedTextureCache] addImage:@"texture3.png"];
+        ccTexParams params = {GL_LINEAR, GL_LINEAR, GL_REPEAT, GL_REPEAT};
+        [texture setTexParameters:&params];
+        CGRect r = [CCDirector sharedDirector].screenRectInPixels;
+        CCSprite *bg = [[CCSprite alloc] initWithTexture:texture rect:r];
+        [self addChild:bg z:-10];
         
-        
+        if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+            score = [CCLabelTTF labelWithString:@"WOOOP" fontName:@"Chalkduster" fontSize:22.0f];
+        } else {
+            score = [CCLabelTTF labelWithString:@"WOOOP!!" fontName:@"Chalkduster" fontSize:20.0f];
+        }
+
         CCMenuItemImage *menuPlayButton = [CCMenuItemImage itemWithNormalImage:@"button.png" selectedImage:@"ship.png" target:self selector:@selector(showStartScreen:)];
-        
-        
+                
         // Create a menu and add your menu items to it
         CCMenu * myMenu = [CCMenu menuWithItems: menuPlayButton, nil];
         
@@ -57,15 +70,13 @@
 - (void)ccTouchesBegan:(NSSet*)touches withEvent:(UIEvent*)event
 {
     //UITouch* touch = [touches anyObject];
-    CCLOG(@"DETECTED TOUCH on gameOverlayer!");
+    //CCLOG(@"DETECTED TOUCH on gameOverlayer!");
     
 }
 
 -(void) showStartScreen:(CCMenuItem *)sender{
     NSLog(@"Show start screen");
-    
     [[CCDirector sharedDirector] replaceScene: (CCScene*)[[StartMenuLayer alloc] init]];
-    
 }
 
 -(void) onEnter

@@ -18,8 +18,6 @@ CCSprite *restart;
 CCSprite *mutemusic;
 CCSprite *mutesound;
 
-
-
 #define FONT_SIZE 20.0f
 
 @interface PauseLayer (PrivateMethods)
@@ -45,8 +43,6 @@ CCSprite *mutesound;
 	if (self)
 	{
         [[CCSpriteFrameCache sharedSpriteFrameCache] addSpriteFramesWithFile:@"buttons.plist"];
-       
-        
                
         CGSize winSize = [CCDirector sharedDirector].winSize;
         CGPoint pos = ccp(winSize.width* 0.1, winSize.height/2);
@@ -79,8 +75,7 @@ CCSprite *mutesound;
         mutemusic.position = pos;
         [mutemusic setScale:1.5f];
         if (![[SimpleAudioEngine sharedEngine] isBackgroundMusicPlaying]) {
-            CCSpriteFrame *buttonFrame = [[CCSpriteFrameCache sharedSpriteFrameCache] spriteFrameByName:@"mutemusic.png"];
-            //mutemusic = [[CCSprite alloc] initWithSpriteFrame:buttonFrame];
+            buttonFrame = [[CCSpriteFrameCache sharedSpriteFrameCache] spriteFrameByName:@"mutemusic.png"];
             [mutemusic setDisplayFrame:buttonFrame];
         }
         [self addChild:mutemusic];
@@ -90,6 +85,11 @@ CCSprite *mutesound;
         mutesound = [[CCSprite alloc] initWithSpriteFrame:buttonFrame];
         mutesound.position = pos;
          [mutesound setScale:1.5f];
+        if ([SimpleAudioEngine sharedEngine].effectsVolume == 0) {
+            buttonFrame = [[CCSpriteFrameCache sharedSpriteFrameCache] spriteFrameByName:@"mutesound.png"];
+            [mutesound setDisplayFrame:buttonFrame];
+        }
+
         [self addChild:mutesound];
         pos = [self incrementPos:pos];
         
@@ -137,19 +137,15 @@ CCSprite *mutesound;
     else if (fabsf(mutemusic.boundingBoxCenter.x - touch.x) <= mutemusic.boundingBox.size.width/2 +10 &&
         fabsf(mutemusic.boundingBoxCenter.y - touch.y) <= mutemusic.boundingBox.size.height/2 +10 )
     {
-       // [[CCDirector sharedDirector] popScene];
-        CCLOG(@"mute music unimplemented");
         SimpleAudioEngine *audio = [SimpleAudioEngine sharedEngine];
         if ([audio isBackgroundMusicPlaying]) {
             [audio pauseBackgroundMusic];
             CCSpriteFrame *buttonFrame = [[CCSpriteFrameCache sharedSpriteFrameCache] spriteFrameByName:@"mutemusic.png"];
-            //mutemusic = [[CCSprite alloc] initWithSpriteFrame:buttonFrame];
             [mutemusic setDisplayFrame:buttonFrame];
             
         } else {
             [audio resumeBackgroundMusic];
             CCSpriteFrame *buttonFrame = [[CCSpriteFrameCache sharedSpriteFrameCache] spriteFrameByName:@"music.png"];
-           // mutemusic = [[CCSprite alloc] initWithSpriteFrame:buttonFrame];
             [mutemusic setDisplayFrame:buttonFrame];
         }
         
@@ -159,18 +155,16 @@ CCSprite *mutesound;
         fabsf(mutesound.boundingBoxCenter.y - touch.y) <= mutesound.boundingBox.size.height/2 +10 )
     {
        // [[CCDirector sharedDirector] popScene];
-        CCLOG(@"mute sound unimplemented");
         SimpleAudioEngine *audio = [SimpleAudioEngine sharedEngine];
-        if ([audio isBackgroundMusicPlaying]) {
-            [audio pauseBackgroundMusic];
+        if (audio.effectsVolume > 0) {
+            [audio setEffectsVolume:0.0f];
             CCSpriteFrame *buttonFrame = [[CCSpriteFrameCache sharedSpriteFrameCache] spriteFrameByName:@"mutesound.png"];
-            //mutesound = [[CCSprite alloc] initWithSpriteFrame:buttonFrame];
             [mutesound setDisplayFrame:buttonFrame];
             
         } else {
-            [audio resumeBackgroundMusic];
+            
+            [audio setEffectsVolume:1.0f];
             CCSpriteFrame *buttonFrame = [[CCSpriteFrameCache sharedSpriteFrameCache] spriteFrameByName:@"sound.png"];
-            //mutesound = [[CCSprite alloc] initWithSpriteFrame:buttonFrame];
              [mutesound setDisplayFrame:buttonFrame];
           
         }

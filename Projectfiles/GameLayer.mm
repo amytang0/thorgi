@@ -77,15 +77,6 @@ CCSpriteBatchNode *hearts;
         // Putting a background in.
         glClearColor(.210f, .210f, .299f, 1.0f);
         
-        
-        // Makes texture tiled background
-        CCTexture2D *texture = [[CCTextureCache sharedTextureCache] addImage:@"texture3.png"];
-        ccTexParams params = {GL_LINEAR, GL_LINEAR, GL_REPEAT, GL_REPEAT};
-        [texture setTexParameters:&params];
-        CGRect r = CGRectMake(0,0,BOARD_LENGTH*2, BOARD_LENGTH*2);        
-        CCSprite *bg = [[CCSprite alloc] initWithTexture:texture rect:r];
-        [self addChild:bg z:-10];
-        
         // Add the HUD layer on top.
         [self initHud: hudLayer];
         //hud = hudLayer;
@@ -95,6 +86,8 @@ CCSpriteBatchNode *hearts;
         [self initSpriteSheets];
         
         [self initSoundsAndMusic];
+        
+        [self initBackground];
         
         
         score = 0;
@@ -131,6 +124,17 @@ CCSpriteBatchNode *hearts;
 	return self;
 }
 
+-(void) initBackground
+{
+    
+    // Makes texture tiled background
+    CCTexture2D *texture = [[CCTextureCache sharedTextureCache] addImage:@"texture3.png"];
+    ccTexParams params = {GL_LINEAR, GL_LINEAR, GL_REPEAT, GL_REPEAT};
+    [texture setTexParameters:&params];
+    CGRect r = CGRectMake(0,0,BOARD_LENGTH*2, BOARD_LENGTH*2);
+    CCSprite *bg = [[CCSprite alloc] initWithTexture:texture rect:r];
+    [self addChild:bg z:-10];
+}
 
 -(void) initSoundsAndMusic
 {
@@ -763,7 +767,7 @@ CCSpriteBatchNode *hearts;
 -(void) createItem:(CGPoint)position
 {
     Item *item;
-    if (arc4random()%100 ==0) {
+    if (arc4random()%100 < 10) {
         item = [[Heart alloc]init];
         item.position = position;
         [hearts addChild:item];

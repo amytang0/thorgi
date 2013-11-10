@@ -44,14 +44,12 @@
         sprite.scale = (1.0f*appframe.size.height-padding)/(1.0f*MAX(size.width, size.height));
         sprite.position = ccp(padding/2, appframe.size.width/2.0f);
         sprite.anchorPoint = CGPointZero;
-        //CCLOG(@"POSITION: %3.0f %3.0f", sprite.position.x, sprite.position.y);
         [self addChild:sprite z:-1];
         
         sprite = [CCSprite spriteWithFile:@"dogofthundertext.png"];
         sprite.scale = (1.0f*appframe.size.height-padding)/(1.0f*MAX(size.width, size.height));
         sprite.position = ccp(sprite.scale*padding/2, appframe.size.width/2.0f - size.height + 10);
         sprite.anchorPoint = CGPointZero;
-        //sprite.anchorPoint = CGPointZero;
         [self addChild:sprite z:-1];
         
         
@@ -59,7 +57,6 @@
         menuPlayButton.tag = 1; 
         
         // Create a menu and add your menu items to it
-        //CCMenu * myMenu = [CCMenu menuWithItems:menuPlayButton, menuLevel1Button, menuLevel2Button, nil];
         CCMenu *myMenu = [CCMenu menuWithItems:menuPlayButton, nil];
         
         // Arrange the menu items vertically
@@ -79,11 +76,8 @@
 
 -(void) playGame:(CCMenuItem *)sender 
 {
-           HUDLayer *hud = [HUDLayer node];
-        [[CCDirector sharedDirector] replaceScene: (CCScene*)[[GameLayer alloc] initWithHUD:hud]];
-    
-    NSLog(@"Play the game");
-    
+    HUDLayer *hud = [HUDLayer node];
+    [[CCDirector sharedDirector] replaceScene: (CCScene*)[[GameLayer alloc] initWithHUD:hud]];
 }
 
 -(void) onEnter
