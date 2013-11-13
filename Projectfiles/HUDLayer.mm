@@ -40,8 +40,10 @@ CCSprite *pauseButton;
         
         if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
             scoreString = [CCLabelTTF labelWithString:@"WOOOP" fontName:@"Chalkduster" fontSize:22.0f];
+            scoreString.color = ccBLACK;
         } else {
             scoreString = [CCLabelTTF labelWithString:@"WOOOP!!" fontName:@"Chalkduster" fontSize:20.0f];
+            scoreString.color = ccBLACK;
         }
         scoreString.position = ccp(winSize.width * 0.5f, HEIGHT/3.0f*2.0f);
         
@@ -52,7 +54,6 @@ CCSprite *pauseButton;
         pauseButton = [[CCSprite alloc] initWithSpriteFrame:pauseButtonFrame];
         pauseButton.position =  ccp(winSize.width -30, HEIGHT/2.0f);
         [self addChild:pauseButton];
-        
 
         [self initLives:5];
         

@@ -14,6 +14,7 @@
 @private
 }
 +(id) scene;
+-(id) initWithScore:(int)scorePoints;
 -(void) showStartScreen:(CCMenuItem *)sender;
 @end
 

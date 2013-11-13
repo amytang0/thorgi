@@ -15,11 +15,12 @@
 }
 
 @property int health;
-@property int points, speed;
-@property NSString *direction;
+@property int points, speed, numFrames;
+@property NSString *direction, *name;
 @property CCAction *moveAction;
--(id) initWithCatImage;
+@property b2Vec2 velocity;
 -(id) initWithAnimatedCat;
+-(void) setMoveDirection: (NSString*)d;
 
 @end
 
@@ -27,8 +28,15 @@
 {
     
 }
-@property b2Vec2 velocity;
 @end
+
+@interface NyanCat : Cat
+{
+    
+}
+-(id) initWithAnimatedNyanCat;
+@end
+
 
 @interface WizardCat : Cat
 {
@@ -37,6 +45,7 @@
 @property int countdown;
 -(void) resetCountDown;
 @end
+
 
 
 

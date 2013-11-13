@@ -51,6 +51,13 @@ void ContactListener::BeginContact(b2Contact* contact)
             
         }
     }
+    // If shooting at enemy bullets, remove both
+    if (([spriteA isKindOfClass:[WizardBullet class]] && [spriteB isKindOfClass:[Bullet class]]) ||
+        ([spriteB isKindOfClass:[WizardBullet class]] && [spriteA isKindOfClass:[Bullet class]])) {
+        spriteA.tag=SpriteStateRemove;
+        spriteB.tag=SpriteStateRemove;
+        return;
+    }
     
     // If shooting at dog
     if (([spriteA isKindOfClass:[Dog class]] && [spriteB isKindOfClass:[Bullet class]]) ||

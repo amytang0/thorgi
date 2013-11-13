@@ -16,3 +16,9 @@
 @property int damage;
 -(id) initWithBulletImage;
 @end
+
+@interface WizardBullet : Bullet
+{
+    
+}
+@end

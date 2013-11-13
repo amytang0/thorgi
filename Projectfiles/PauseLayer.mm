@@ -47,16 +47,20 @@ CCSprite *mutesound;
         CGSize winSize = [CCDirector sharedDirector].winSize;
         CGPoint pos = ccp(winSize.width* 0.1, winSize.height/2);
         
+        
         // Makes texture tiled background
-        CCTexture2D *texture = [[CCTextureCache sharedTextureCache] addImage:@"smalltexture3.png"];
+        CCTexture2D *texture = [[CCTextureCache sharedTextureCache] addImage:@"sky.png"];
         ccTexParams params = {GL_LINEAR, GL_LINEAR, GL_REPEAT, GL_REPEAT};
         [texture setTexParameters:&params];
         CGRect r = [CCDirector sharedDirector].screenRectInPixels;
         CCSprite *bg = [[CCSprite alloc] initWithTexture:texture rect:r];
-        bg.position = CGPointZero;
+        bg.position = ccp(winSize.width*.7, winSize.height*.2);
         [self addChild:bg z:-10];
         
-        CCSpriteFrame *buttonFrame = [[CCSpriteFrameCache sharedSpriteFrameCache] spriteFrameByName:@"play.png"];
+        
+        CCSpriteFrame *buttonFrame
+        
+        = [[CCSpriteFrameCache sharedSpriteFrameCache] spriteFrameByName:@"play.png"];
         resume = [[CCSprite alloc] initWithSpriteFrame:buttonFrame];
         resume.position = pos;
         [resume setScale:1.5f];

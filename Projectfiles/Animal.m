@@ -1,19 +1,18 @@
 //
-//  Bullet.m
+//  Animal.m
 //  Thorgi
 //
-//  Created by Amy Tang on 11/1/13.
-//  Copyright 2013 UC Berkeley. All rights reserved.
+//  Created by Amy Tang on 11/12/13.
+//  Copyright 2013 __MyCompanyName__. All rights reserved.
 //
 
-#import "Bullet.h"
+#import "Animal.h"
 
-@interface Bullet (PrivateMethods)
+@interface Animal (PrivateMethods)
 // declare private methods here
 @end
 
-@implementation Bullet
-@synthesize damage;
+@implementation Animal
 
 -(id) init
 {
@@ -21,23 +20,11 @@
 	if (self)
 	{
 		// add init code here (note: self.parent is still nil here!)
-        
 		
 		// uncomment if you want the update method to be executed every frame
 		//[self scheduleUpdate];
 	}
 	return self;
-}
-
--(id) initWithBulletImage
-{
-    // This calls CCSprite's init. Basically this init method does everything CCSprite's init method does and then more
-    if ((self = [super initWithFile:@"fire.png"]))
-    {
-        damage = 1;
-        //properties work internally just like normal instance variables
-    }
-    return self;
 }
 
 -(void) onEnter
@@ -72,22 +59,5 @@
 -(void) update:(ccTime)delta
 {
 }
-
-@end
-
-@implementation WizardBullet
-
--(id) initWithBulletImage
-{
-    // This calls CCSprite's init. Basically this init method does everything CCSprite's init method does and then more
-    if ((self = [super initWithBulletImage]))
-    {
-        self.damage = 1;
-        self.color = ccGREEN;
-        //properties work internally just like normal instance variables
-    }
-    return self;
-}
-
 
 @end

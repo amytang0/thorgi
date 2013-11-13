@@ -14,65 +14,56 @@
 @end
 
 @implementation Cat
-@synthesize health, points, speed;
+@synthesize health, points, speed, numFrames;
 @synthesize direction;
 @synthesize moveAction;
-
+@synthesize velocity;
+@synthesize name;
 -(id) init
 {
-	self = [super init];
+    self = [super init];
 	if (self)
 	{
-		// add init code here (note: self.parent is still nil here!)
-        
-		
-		// uncomment if you want the update method to be executed every frame
-		//[self scheduleUpdate];
 	}
 	return self;
 }
 
--(id) initWithCatImage
+-(id) initWithAnimatedCat
 {
-    // This calls CCSprite's init. Basically this init method does everything CCSprite's init method does and then more
-    if ((self = [super initWithFile:@"cat.png"]))
-    {
+   // CCLOG(@"BasicCat initWithAnimatedCat called");
+    if ((self = [super initWithSpriteFrameName:@"frontcat1.png"])) {
         health = 1;
         points = 2;
-        speed = 3.5;
-        //properties work internally just like normal instance variables
+        speed = 1.5f;
+        numFrames = 3;
+        self.name = @"";
     }
     return self;
 }
 
--(id) initWithAnimatedCat
+-(void) setMoveDirection: (NSString*)d
 {
-    if ((self = [super initWithSpriteFrameName:@"frontcat1.png"])) {
-        health = 1;
-        points = 2;
-        speed = 2;
-        direction = @"left";
-        NSMutableArray *frontWalkAnimFrames = [NSMutableArray array];
-        for (int i=1; i<=3; i++) {
-            [frontWalkAnimFrames addObject:
-             [[CCSpriteFrameCache sharedSpriteFrameCache] spriteFrameByName:
-              [NSString stringWithFormat:@"%@cat%d.png",direction,i]]];
-        }
-        
-        CCAnimation *walkAnim = [CCAnimation
-                                 animationWithSpriteFrames:frontWalkAnimFrames delay:0.1f];
-        
-        //CGSize winSize = [[CCDirector sharedDirector] winSize];
-       
-       // self.position = ccp(winSize.width/2, winSize.height/2);
-        moveAction = [CCRepeatForever actionWithAction:
-                                [CCAnimate actionWithAnimation:walkAnim]];
-        [self runAction:moveAction];
-        //[spriteSheet addChild:sprite];
-        //[self addChild:sprite];
-    
+    if ([self.direction isEqualToString:d]) {
+        return;
     }
-    return self;
+    
+    [self stopAction:self.moveAction];
+    
+    NSMutableArray *walkAnimFrames = [NSMutableArray array];
+       
+    for (int i = 1; i <= self.numFrames; i++){
+        NSString *fileName = [NSString stringWithFormat:@"%@%@cat%d.png",d,self.name,i];
+        [walkAnimFrames addObject:
+         [[CCSpriteFrameCache sharedSpriteFrameCache] spriteFrameByName:
+          fileName]];
+        
+    }
+    CCAnimation *walkAnim = [CCAnimation
+                             animationWithSpriteFrames:walkAnimFrames delay:0.1f];
+    self.moveAction = [CCRepeatForever actionWithAction:
+                      [CCAnimate actionWithAnimation:walkAnim]];
+    [self runAction:self.moveAction];
+    self.direction = d;
 }
 
 -(void) onEnter
@@ -107,20 +98,20 @@
 -(void) update:(ccTime)delta
 {
 }
+
+
 @end
 
 @implementation DashCat
 CGFloat timeElapsed;
-@synthesize velocity;
 -(id) initWithAnimatedCat
 {
+   // CCLOG(@"DASHCAT INIT CALLED");
     if (self = [super initWithAnimatedCat]){
-    //self.speed = 0;
         self.speed = 5;
         self.points = 5;
-    timeElapsed = 0;
-    //[self stopAction:self.moveAction];
-  //  [self scheduleUpdate];
+        self.name=@"";
+        timeElapsed = 0;
         [self schedule:@selector(dash) interval:5.0f];
         [self schedule:@selector(stop) interval:5.0f repeat:kCCRepeatForever  delay:1.0f];
     }
@@ -128,10 +119,7 @@ CGFloat timeElapsed;
 }
 -(void) dash
 {
-
     if (self.speed == 0){
-            CCLOG(@"Dash called");
-    //[self runAction:self.moveAction];
          self.speed = 6;
          self.color = ccGREEN;
     }    
@@ -139,51 +127,34 @@ CGFloat timeElapsed;
 
 -(void) stop
 {
-
     if (self.speed != 0) {
-             CCLOG(@"Stop Dash called");
-       self.color= ccWHITE;
-    //[self stopAction:self.moveAction];
-       self.speed = 0;
-        velocity = b2Vec2(0,0);
+        self.color= ccWHITE;
+        self.speed = 0;
+        self.velocity = b2Vec2(0,0);
     }
     
 }
-
 @end
 
 @implementation WizardCat
 @synthesize countdown;
 -(id) initWithAnimatedCat
 {
+    
     if ((self = [super initWithSpriteFrameName:@"frontwizardcat1.png"])) {
         self.health = 1;
         self.points = 5;
         self.speed = 1;
         self.countdown = 3;
-        self.direction = @"left";
-        NSMutableArray *frontWalkAnimFrames = [NSMutableArray array];
-        for (int i=1; i<=3; i++) {
-            [frontWalkAnimFrames addObject:
-             [[CCSpriteFrameCache sharedSpriteFrameCache] spriteFrameByName:
-              [NSString stringWithFormat:@"%@wizardcat%d.png",self.direction,i]]];
-        }
-        
-        CCAnimation *walkAnim = [CCAnimation
-                                 animationWithSpriteFrames:frontWalkAnimFrames delay:0.15f];
-        
-        //CGSize winSize = [[CCDirector sharedDirector] winSize];
-        
-        // self.position = ccp(winSize.width/2, winSize.height/2);
-        self.moveAction = [CCRepeatForever actionWithAction:
-                      [CCAnimate actionWithAnimation:walkAnim]];
-        [self runAction:self.moveAction];
-        //[spriteSheet addChild:sprite];
-        //[self addChild:sprite];
+        //self.direction = @"";
+         self.name = @"wizard";
+        self.numFrames = 3;
+
         [self schedule:@selector(countDown) interval:1.0f];
     }
     return self;
 }
+
 -(void) countDown
 {
     if(self.countdown < 0) [self resetCountDown];
@@ -196,6 +167,32 @@ CGFloat timeElapsed;
 {
     self.countdown = 3;
 }
-
 @end
 
+@implementation NyanCat
+-(id) initWithAnimatedNyanCat
+{
+    self = [super initWithSpriteFrame:[[CCSpriteFrameCache sharedSpriteFrameCache] spriteFrameByName:@"leftnyancat1.png"]];
+    CCLOG(@"HEY NYAN INIT");
+    
+    if (self) {
+        self.health = 3;
+        self.points = 10;
+        self.speed = 6;
+        self.name = @"nyan";
+        self.numFrames = 6;
+        
+        if (arc4random()%2 == 0) {
+         //   self.flipX = YES;
+            self.velocity = b2Vec2(-1.0f,0);
+        } else {
+          //  self.flipX = NO;
+            self.velocity = b2Vec2(1.0f,0);
+        }
+    }
+    return self;
+    
+}
+
+
+@end

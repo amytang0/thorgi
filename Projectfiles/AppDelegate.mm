@@ -6,6 +6,10 @@
  */
 
 #import "AppDelegate.h"
+// At the top of the file
+#import "GCHelper.h"
+
+
 
 @implementation AppDelegate
 
@@ -16,11 +20,18 @@
 #else
 	CCLOG(@"ARC is either not available or not enabled");
 #endif
+    // At the end of applicationDidFinishLaunching, right before
+    // the last line that calls runWithScene:
+    [[GCHelper sharedInstance] authenticateLocalUser];
 }
 
 -(id) alternateView
 {
 	return nil;
+}
+
+- (void)applicationDidReceiveMemoryWarning:(UIApplication *)application {
+    [[CCTextureCache sharedTextureCache] removeUnusedTextures];
 }
 
 @end

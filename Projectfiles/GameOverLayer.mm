@@ -9,7 +9,8 @@
 #import "GameOverLayer.h"
 #import "StartMenuLayer.h"
 
-CCLabelTTF *score;
+#import "GameState.h"
+#import "GCHelper.h"
 
 @interface GameOverLayer (PrivateMethods)
 // declare private methods here
@@ -30,38 +31,67 @@ CCLabelTTF *score;
 	// return the scene
 	return scene;
 }
--(id) init
+-(id) initWithScore:(int)scorePoints
 {
 	self = [super init];
 	if (self)
 	{
         // Makes texture tiled background
-        CCTexture2D *texture = [[CCTextureCache sharedTextureCache] addImage:@"texture3.png"];
+        CCTexture2D *texture = [[CCTextureCache sharedTextureCache] addImage:@"smalltexture3.png"];
         ccTexParams params = {GL_LINEAR, GL_LINEAR, GL_REPEAT, GL_REPEAT};
         [texture setTexParameters:&params];
         CGRect r = [CCDirector sharedDirector].screenRectInPixels;
         CCSprite *bg = [[CCSprite alloc] initWithTexture:texture rect:r];
         [self addChild:bg z:-10];
         
-        if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
-            score = [CCLabelTTF labelWithString:@"WOOOP" fontName:@"Chalkduster" fontSize:22.0f];
-        } else {
-            score = [CCLabelTTF labelWithString:@"WOOOP!!" fontName:@"Chalkduster" fontSize:20.0f];
-        }
+        NSString *scoreS = [[NSString alloc] initWithFormat:@"Final Score: %d", scorePoints];
+        CCMenuItemFont *scoreMenuItem = [[CCMenuItemFont alloc] initWithString:scoreS target:NULL selector:@selector(showHighScores)];
 
         CCMenuItemImage *menuPlayButton = [CCMenuItemImage itemWithNormalImage:@"button.png" selectedImage:@"ship.png" target:self selector:@selector(showStartScreen:)];
                 
         // Create a menu and add your menu items to it
-        CCMenu * myMenu = [CCMenu menuWithItems: menuPlayButton, nil];
+        CCMenu * myMenu = [CCMenu menuWithItems: scoreMenuItem, menuPlayButton, nil];
         
         // Arrange the menu items vertically
         [myMenu alignItemsVertically];
         
         // add the menu to your scene
-        [self addChild:myMenu];
+        [self addChild:myMenu z:0];
 		// uncomment if you want the update method to be executed every frame
 		//[self scheduleUpdate];
         self.isTouchEnabled = YES;
+        CCLOG(@"Saved score: %d",[GameState sharedInstance].scorePoints);
+        
+        if ([GameState sharedInstance].scorePoints < scorePoints) {
+            [GameState sharedInstance].scorePoints = scorePoints;
+            [[GameState sharedInstance] save];
+                CCLOG(@"SAVED SCORE");
+            
+            /*
+            double pctComplete = ((double)
+                                  [GameState sharedInstance].scorePoints /
+                                  (int)maxTimesToFall) * 100.0;
+            [[GCHelper sharedInstance]
+             reportAchievement:kAchievementKillTen
+             percentComplete:pctComplete];
+            if ([GameState sharedInstance].timesFell >= maxTimesToFall) {
+                achievementLabelText.string =
+                @"Achievement Unlocked: Bad Dream!";
+             */
+        }
+        
+        if ([[GameState sharedInstance] getTotalCatsKilledThisGame] >= 10) {
+            double pctComplete = ([[GameState sharedInstance] getTotalCatsKilledThisGame ] /
+                                  10) * 100.0f;
+            [[GCHelper sharedInstance] reportAchievement:kAchievementKillTen percentComplete:pctComplete];
+            [[GameState sharedInstance] save];
+            CCSprite *achievement = [[CCSprite alloc] initWithFile:@"fire.png"];
+            [self addChild:achievement z:1];
+            
+            CCLOG(@"KILLED CATS");
+
+        }
+        
 	}
 	return self;
 }
@@ -72,6 +102,11 @@ CCLabelTTF *score;
     //UITouch* touch = [touches anyObject];
     //CCLOG(@"DETECTED TOUCH on gameOverlayer!");
     
+}
+
+-(void) showHighScores
+{
+     NSLog(@"Show high scores");
 }
 
 -(void) showStartScreen:(CCMenuItem *)sender{

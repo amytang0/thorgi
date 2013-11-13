@@ -14,7 +14,7 @@
 @private
 }
 -(void) setScoreString:(NSString *)string;
--(void)setScore:(int) score;
+-(void) setScore:(int) score;
 -(void) setLives:(int) health;
 
 @end

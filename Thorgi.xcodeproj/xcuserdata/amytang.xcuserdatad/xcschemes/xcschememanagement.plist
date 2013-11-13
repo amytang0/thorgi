@@ -16,13 +16,24 @@
 		</dict>
 		<key>Thorgi-iOS 2.xcscheme</key>
 		<dict>
+			<key>isShown</key>
+			<true/>
 			<key>orderHint</key>
 			<integer>10</integer>
 		</dict>
 		<key>Thorgi-iOS 4.xcscheme</key>
 		<dict>
+			<key>isShown</key>
+			<false/>
 			<key>orderHint</key>
 			<integer>11</integer>
+		</dict>
+		<key>Thorgi-iOS 6.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+			<key>orderHint</key>
+			<integer>12</integer>
 		</dict>
 		<key>Thorgi-iOS.xcscheme</key>
 		<dict>
@@ -33,6 +44,8 @@
 		</dict>
 		<key>Thorgi2-iOS.xcscheme</key>
 		<dict>
+			<key>isShown</key>
+			<false/>
 			<key>orderHint</key>
 			<integer>9</integer>
 		</dict>
