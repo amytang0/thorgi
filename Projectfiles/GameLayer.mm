@@ -20,8 +20,6 @@
 #import "SimpleAudioEngine.h"
 #import "Item.h"
 
-
-
 #define MAX_SPEED 15.0f
 #define BOARD_LENGTH 1024
 #define BULLET_SPEED 15.0f
@@ -29,13 +27,9 @@
 #define MAX_CATS 30
 
 const float PTM_RATIO = 32.0f;
-ccTime elapsedTime = 0;
-//#define PTM_RATIO 32.0f
-CCSpriteBatchNode *bullets;
-//CCSpriteBatchNode *basicCats, *wizardCats, *nyanCats;
-CCSpriteBatchNode *cats;
-CCSpriteBatchNode *hearts;
 
+
+// These things probably don't have to be here?
 @interface GameLayer (PrivateMethods)
 -(void) changeInputType:(ccTime)delta;
 -(void) postUpdateInputTests:(ccTime)delta;
@@ -70,109 +64,144 @@ CCSpriteBatchNode *hearts;
 	return scene;
 }
 
-// Replace beginning of init with the following
+/*
+ Inits with HUDLayer added as a child (better way is for scene to be used, but for some reason it doesn't work TODO).
+ */
 - (id)initWithHUD:(HUDLayer *)hudLayer
 {
-    if ((self = [super init])) {
+    self = [super init];
+    if (self) {
 		CCLOG(@"%@ init", NSStringFromClass([self class]));
         
         // Putting a background in.
         //glClearColor(.210f, .210f, .299f, 1.0f);
         
-        // Add the HUD layer on top.
+        // Initialize some variables.
+        score = 0;
+        elapsedTime = 0;
+        hasLokitty = NO;
+        hasBiggerBullets = NO;
+        
+        // Initialize the world with its resources.
         [self initHud: hudLayer];
-        //hud = hudLayer;
-        
-        [self initWorld];
-               
+        [self initBox2dWorld];
         [self initSpriteSheets];
-        
         [self initSoundsAndMusic];
-        
         [self initBackground];
         
+        // Reset the GameState (which includes typesofcatskilled)
         [[GameState sharedInstance] newGame];
-        
-        score = 0;
 		
+        // Initialize the Box2d body and CCSprite of the dog.
         [self initDog];
 		
-		// initialize KKInput
+		// Initialize KKInput.
+        // (TODO: Maybe better to replace this with plain Cocos2d touches?)
 		KKInput* input = [KKInput sharedInput];
         input.multipleTouchEnabled = YES;
 		input.gestureTapEnabled = input.gesturesAvailable;
 		input.gestureLongPressEnabled = input.gesturesAvailable;
 		input.gesturePanEnabled = input.gesturesAvailable;
-        
         self.isTouchEnabled = YES;
         
         [self scheduleUpdate];
         
-        //[self setUpMenu];
+        // Have camera follow the dog around the board.
+        // This places the dog in the center.
+        CGRect rect = CGRectMake(0, 0, BOARD_LENGTH, BOARD_LENGTH);
+        [self runAction:[CCFollow actionWithTarget:dogSprite worldBoundary:rect]];
         
-       // for(int i=0; i < MAX_CATS; i++)
-       // [self populateWithCats];
-        
-        //Has camera follow
-         CGRect rect = CGRectMake(0, 0, BOARD_LENGTH, BOARD_LENGTH);
-          [self runAction:[CCFollow actionWithTarget:dogSprite worldBoundary:rect]];
-        //[self runAction:[CCFollow actionWithTarget:dogSprite]];
-        
-        [self enableBox2dDebugDrawing];
-        
-        [[CCDirector sharedDirector] setDisplayFPS:YES];
-        
-        [self schedule:@selector(populateWithCats) interval:.5f repeat:kCCRepeatForever delay:0.05f];
+        // These are debugging tools.
+        // [self enableBox2dDebugDrawing];
+        // [[CCDirector sharedDirector] setDisplayFPS:YES];
+
+        // Populate the game with cats every .5 seconds.
+        [self schedule:@selector(populateWithCats) interval:.5f repeat:kCCRepeatForever delay:0.01f];
 
     }
 
 	return self;
 }
 
-
+// This creates the repeating sky background.
 -(void) initBackground
 {
-    
     // Makes texture tiled background
+    
+    CCSprite *spback = [(CCSprite*)[CCSprite alloc] init];
+    [self addChild:spback z:-10];
+    
     CCTexture2D *texture = [[CCTextureCache sharedTextureCache] addImage:@"sky.png"];
     ccTexParams params = {GL_LINEAR, GL_LINEAR, GL_REPEAT, GL_REPEAT};
     [texture setTexParameters:&params];
     CGRect r = CGRectMake(0,0,BOARD_LENGTH*2, BOARD_LENGTH*2);
     CCSprite *bg = [[CCSprite alloc] initWithTexture:texture rect:r];
-    [self addChild:bg z:-10];
+    //[self addChild:bg z:-10];
+    
+    [spback addChild:bg];
+ 
 }
 
 -(void) initSoundsAndMusic
 {
     SimpleAudioEngine *engine = [SimpleAudioEngine sharedEngine];
-    [engine preloadBackgroundMusic:@"StarshipThorgi.wav"];
-    [engine playBackgroundMusic:@"StarshipThorgi.wav" loop:YES];
+    //CCLOG(@"muteSound: %s",[GameState sharedInstance].muteSound?"true":"false");
+    
+    [engine preloadBackgroundMusic:@"StarshipThorgi2.wav"];
+    [engine preloadBackgroundMusic:@"PeppyThorgi.mp3"];
+    [engine preloadBackgroundMusic:@"nyancat.mp3"];
+    [engine playBackgroundMusic:@"PeppyThorgi.mp3" loop:YES];
+    
+    if ([GameState sharedInstance].muteMusic) {
+        [engine pauseBackgroundMusic];
+    }
+    if ([GameState sharedInstance].muteSound) {
+        [engine setEffectsVolume:0.0f];
+    } else {
+        [engine setEffectsVolume:1.0f];
+    }
     [engine setBackgroundMusicVolume:0.5f];
-    [engine preloadEffect:@"pew.wav"];
-    [engine preloadEffect:@"Pow.caf"];
-    for (int i = 1; i < 6; i++) {
-        NSString *sound = [NSString stringWithFormat:@"gun%d.aif", i];
+    
+    for (int i = 0; i < 8; i++) {
+        NSString *sound = [NSString stringWithFormat:@"pop%d.aif", i];
         [engine preloadEffect:sound];
     }
+    
+    for (int i = 0; i < 9; i++) {
+        NSString *sound = [NSString stringWithFormat:@"fizz%d.aif", i];
+        [engine preloadEffect:sound];
+    }
+    
+    for (int i = 0; i < 6; i++) {
+        NSString *sound = [NSString stringWithFormat:@"pew%d.aif", i];
+        [engine preloadEffect:sound];
+    }
+
 }
 
+// Currently, the HUD just moves along with the dog (position is manually updated).
 -(void) initHud: (HUDLayer*)hudLayer
 {
     CGSize winSize = [CCDirector sharedDirector].winSize;
     self->hud = hudLayer;
-   // self->hud.position=ccp(0,winSize.height-2*hudLayer.size.height);
     self->hud.position=ccp(0,winSize.height-50);
-    //self->hud.position = ccp(-winSize.height/2, winSize.height);
-   // self->hud.position = ccp(0,0);
-  //  [self->hud runAction:[CCFollow actionWithTarget:dogSprite]];
     [self addChild:hud z:100];
 }
 
 -(void) initSpriteSheets
 {
+    /*
     [[CCSpriteFrameCache sharedSpriteFrameCache] addSpriteFramesWithFile:@"cats.plist"];
     cats = [CCSpriteBatchNode batchNodeWithFile:@"cats.png"];
     [self addChild:cats];
+     */
+    
+    [[CCSpriteFrameCache sharedSpriteFrameCache] addSpriteFramesWithFile:@"catssprite.plist"];
+    cats = [CCSpriteBatchNode batchNodeWithFile:@"catssprite.png"];
+    [self addChild:cats];
+    
+    [[CCSpriteFrameCache sharedSpriteFrameCache] addSpriteFramesWithFile:@"thorgisprite.plist"];
+    //[[CCSpriteFrameCache sharedSpriteFrameCache] addSpriteFramesWithFile:@"lokittysprite.plist"];
     
     bullets = [CCSpriteBatchNode batchNodeWithFile:@"fire.png"];
     [self addChild:bullets];
@@ -181,17 +210,15 @@ CCSpriteBatchNode *hearts;
     [self addChild:hearts];
     
      [[CCSpriteFrameCache sharedSpriteFrameCache] addSpriteFramesWithFile:@"cats.plist"];
-
 }
 
-
--(void) initWorld
+// Creates the Box2d parameters on the edges.
+-(void) initBox2dWorld
 {
     // Construct a world object, which will hold and simulate the rigid bodies.
     b2Vec2 gravity = b2Vec2(0.0f, 0.0f);
     world = new b2World(gravity);
     world->SetAllowSleeping(YES);
-    //world->SetContinuousPhysics(YES);
     
     // Create an object that will check for collisions.
     contactListener = new ContactListener();
@@ -202,6 +229,9 @@ CCSpriteBatchNode *hearts;
     screenBorderDef.position.Set(0, 0);
     screenBorderBody = world->CreateBody(&screenBorderDef);
     
+    // We use box instead of EdgeShape because otherwise cats spawn
+    // at the edges of the screen and can't get into the world
+    // but are still visible.
     CGSize winSize = [CCDirector sharedDirector].winSize;
     //b2EdgeShape screenBorderShape;  //This is line.
     b2PolygonShape box; //This is box.
@@ -209,7 +239,7 @@ CCSpriteBatchNode *hearts;
                  winSize.height/2.0f/PTM_RATIO);
     
     
-    //Vertices must be in counter-clockwise order.
+    // Vertices must be in counter-clockwise order in b2Vec2.
     // Making right border.
     b2Vec2 vertices[] = {
         b2Vec2(0,0),
@@ -263,17 +293,10 @@ CCSpriteBatchNode *hearts;
 
 }
 
+// Create b2Body and ccSprite of dog.
 -(void) initDog
 {
-    CGRect appframe= [[UIScreen mainScreen] applicationFrame];
-    
-   // NSLog(@"mainScreen applicationFrame: %.0f, %.0f, %3.0f, %3.0f",
-   //       appframe.origin.x, appframe.origin.y, appframe.size.width, appframe.size.height);
-    
-    //CCLOG(@"centersize: %@", centerSize);
-    //CGPoint center = ccp(appframe.size.width/2.0f, appframe.size.height/2.0f);
     CGPoint center = ccp(BOARD_LENGTH/2.0f, BOARD_LENGTH/2.0f);
-    //[self addLabels];
     
     // Add dog.
     dogSprite = [[Dog alloc] initWithDogImage];
@@ -285,15 +308,13 @@ CCSpriteBatchNode *hearts;
     bodyDef.type = b2_dynamicBody; 
     bodyDef.position.Set(dogSprite.position.y/PTM_RATIO, dogSprite.position.x/PTM_RATIO);
     
-    // CCLOG(@"dogBodyPos : %3.0f, %3.0f", bodyDef.position.x, bodyDef.position.y);
-    
     bodyDef.userData = (__bridge void*) dogSprite;
     dogBody = world->CreateBody(&bodyDef);
     
     b2FixtureDef boxDef;
     
     b2PolygonShape box; // Make bounding box slightly smaller than dog image
-    box.SetAsBox(.65*(dogSprite.contentSize.width/2.0f)/PTM_RATIO,
+    box.SetAsBox(.95*(dogSprite.contentSize.width/2.0f)/PTM_RATIO,
                  .9*(dogSprite.contentSize.height/2.0f)/PTM_RATIO);
     //contentSize is used to determine the dimensions of the sprite
     boxDef.shape = &box;
@@ -305,12 +326,12 @@ CCSpriteBatchNode *hearts;
     dogBody->SetFixedRotation(YES);
 }
 
-
+// This handles the probability of spawning
+// and the picking of random position of the cat.
 -(void) populateWithCats
 {
-    
-    // 25% chance to spawn a cat
-    if ((arc4random()%100) > 25)
+    // 30% chance to spawn a cat)
+    if ((arc4random()%100) > min(100, 30 + score/2))
         return;
     CCDirector* director = [CCDirector sharedDirector];
 	CGSize screenSize = director.screenSize;
@@ -324,9 +345,9 @@ CCSpriteBatchNode *hearts;
     int y = arc4random()%height;
     
     int i = 0;
-    //Makes sure it doesn't hit dog immediately
+    // Makes sure that the cat spawns not too far & not too close to the dog.
     float distance = fabsf(hypotf(x - dogPos.x, y - dogPos.y));
-    while (distance <= 400 || distance >=800) {
+    while (distance <= 400 || distance >= 700) {
         //CCLOG(@"in for loop");
         x = arc4random()%width;
         y = arc4random()%height;
@@ -337,10 +358,10 @@ CCSpriteBatchNode *hearts;
     
     CGPoint p = ccp(x,y);
     [self createCat:@"cat.png" atPosition:p rotation:0.0f isStatic:NO];
-    
 }
 
-
+// Create b2Body and ccSprite of cat.
+// Also picks the type of cat.
 - (void)createCat:(NSString*)imageName
           atPosition:(CGPoint)position
             rotation:(CGFloat)rotation
@@ -349,14 +370,20 @@ CCSpriteBatchNode *hearts;
     Cat *sprite;
     
         int random = arc4random();
-
-    if (score >= 10  && random%10 <1 ) {//&& cats.children.count <= (int)(score/50)*10) {
-        sprite =[[WizardCat alloc] initWithAnimatedCat];
-          } else if (score >=100 && random%100 == 0) {
+    if (!hasLokitty &&
+        ((score!=0 && score% 50 == 0) || (score >= 35 && arc4random()%100 <3))
+        ) {
+        CCLOG(@"CREATED LOKITTY");
+        sprite = [[Lokitty alloc] initWithAnimatedCat];
+        hasLokitty = YES;
+    } else if (score >= 30 && arc4random()%100 < 30) {
         sprite = [[NyanCat alloc] initWithAnimatedNyanCat];
+    }
+    else if (score >= 5  && arc4random()%10 < 4 ) {
+        sprite =[[WizardCat alloc] initWithAnimatedCat];
     } else {
    //Create the sprite.
-        if (score > 25 && random%10 >= 3 && cats.children.count <= score%50*20) {
+        if (score > 15 && random%10 >= 3 && cats.children.count <= score%50 * 30) {
           sprite = [[DashCat alloc] initWithAnimatedCat];
         } else {
             
@@ -364,6 +391,7 @@ CCSpriteBatchNode *hearts;
         }
     }
     [cats addChild:sprite z:1];
+    
 
     //Create the bodyDef
     b2BodyDef bodyDef;
@@ -389,6 +417,7 @@ CCSpriteBatchNode *hearts;
     body->SetFixedRotation(YES);
 }
 
+// I think this is unused.
 -(void) createExplosionAt:(CGPoint)location
 {
 	CCParticleExplosion* explosion = [[CCParticleExplosion alloc] initWithTotalParticles:100];
@@ -402,7 +431,7 @@ CCSpriteBatchNode *hearts;
 	[self addChild:explosion];
 }
 
-
+// This is used when cats die and explode.
 -(void) createSmallExplosionAt:(CGPoint)location
 {
 	CCParticleExplosion* explosion = [[CCParticleExplosion alloc] initWithTotalParticles:50];
@@ -416,8 +445,42 @@ CCSpriteBatchNode *hearts;
     ccColor4F color = ccc4f(0, .2f, .8f, 1);
     explosion.startColor = color;
     [self addChild:explosion];
+    
 }
 
+// This is used when the dog has an effect (like Nyan or Loki).
+-(void) createRainbowExplosionAtDog
+{
+    CCParticleExplosion* explosion = [[CCParticleExplosion alloc] initWithTotalParticles:10];
+#ifndef KK_ARC_ENABLED
+	[explosion autorelease];
+#endif
+	explosion.autoRemoveOnFinish = YES;
+	explosion.blendAdditive = YES;
+	explosion.position =dogSprite.position;
+    explosion.life = 0.2f;
+    explosion.lifeVar = 1.0f;
+    ccColor4F color = ccc4f(0.5f, .5f, .5f, 1);
+    explosion.startColor = color;
+    //explosion.totalParticles = 750;
+    explosion.startColorVar = ccc4f(0.5f, .5f, .5f, 0);
+    explosion.startSize = 30;
+    explosion.startSizeVar = 10;
+    explosion.endSize = 30;
+    explosion.endSizeVar = 0;
+    explosion.angle = 90;
+    explosion.angleVar =360;
+    
+    explosion.speed = 50;
+    explosion.speedVar = 30;
+    explosion.radialAccel = -60;
+    explosion.tangentialAccel = 15;
+    [self addChild:explosion];
+
+}
+
+// This is a helper method to get the screen position because the camera is
+// following junk. I THINK. NOT SURE.
 -(CGPoint) getScreenPosition:(CGPoint)point
 {
     point.x -= self.position.x;
@@ -425,6 +488,7 @@ CCSpriteBatchNode *hearts;
     return point;
 }
 
+// Handles swipes and taps. Taps create bullets, swipes move dog.
 -(void) gestureRecognition
 {
 	KKInput* input = [KKInput sharedInput];
@@ -460,10 +524,13 @@ CCSpriteBatchNode *hearts;
         
         dogBody->SetLinearVelocity( vector);
         dogBody->SetLinearDamping(3.0f);
+        
+        
+        [dogSprite setMoveDirection:[self getDirectionFromVelocity:vector]];
     }
 }
 
-
+// This updates b2bodies, moves cats, and moves HUD.
 -(void) update:(ccTime)delta
 {
     elapsedTime += delta;
@@ -492,6 +559,7 @@ CCSpriteBatchNode *hearts;
     
 }
 
+// This moves HUD so that it always stays on top of screen. HACK.
 -(void) updateHUD
 {
     CGSize winSize = [CCDirector sharedDirector].winSize;
@@ -500,6 +568,7 @@ CCSpriteBatchNode *hearts;
     [hud setLives:dogSprite.health];
 }
 
+// This moves the cats. Dashcats and LokitCat are handled differently.
 -(void) moveCats
 {
     for (b2Body* body = world->GetBodyList(); body != nil; body = body->GetNext())
@@ -518,6 +587,25 @@ CCSpriteBatchNode *hearts;
                     velocity = dashCat.velocity;
                 }
             }
+            
+            if ([cat isKindOfClass:[Lokitty class]]) {
+                Lokitty *lokitty = (Lokitty *)cat;
+                
+                // This makes Lokitty go towards a randomish path hopefully
+                int randomDistance = arc4random() % 2 ? 1 : -1;
+                randomDistance *= arc4random() % 50;
+                int randomDistance2 = arc4random() % 2 ? 1 : -1;
+                randomDistance *= arc4random() % 50;
+                 velocity = b2Vec2(dogSprite.boundingBoxCenter.x-sprite.boundingBoxCenter.x + randomDistance,dogSprite.boundingBoxCenter.y- sprite.boundingBoxCenter.y+ randomDistance2);
+                velocity.Normalize();
+                                
+                if (lokitty.velocity.Length() == 0 && lokitty.speed != 0) { // not moving but about to dash
+                    lokitty.velocity = velocity;
+                } else {
+                    velocity = lokitty.velocity;
+                }
+            }
+            
             [cat setMoveDirection:[self getDirectionFromVelocity:velocity]];
             body->SetLinearVelocity(((Cat*)sprite).speed*velocity);
             body->SetAngularVelocity(0);
@@ -525,6 +613,7 @@ CCSpriteBatchNode *hearts;
     }
 }
 
+// Helper method that gets angle from velocity. I think this is unused?
 -(CGFloat) getAngleFromVelocity: (b2Vec2)velocity
 {
     CGFloat angle = atan2(velocity.y,velocity.x)*180.0f/M_PI;
@@ -532,6 +621,7 @@ CCSpriteBatchNode *hearts;
     return angle;
 }
 
+// Gets 4 compass directions from velocity.
 -(NSString*) getDirectionFromVelocity: (b2Vec2)velocity
 {
     CGFloat angle = [self getAngleFromVelocity:velocity];
@@ -546,12 +636,13 @@ CCSpriteBatchNode *hearts;
     }
 }
 
-
--(void) shootBulletAtDog:(CGPoint)location
+// This handles the Wizard's bullets. I'm not sure if WizardBullet actually has anything yet?
+-(void) shootBulletAtDog:(CGPoint)location isLoki:(Boolean)isLoki
 {
     WizardBullet *bulletSprite = [[WizardBullet alloc] initWithBulletImage];
     bulletSprite.position = location;
     bulletSprite.color = ccBLUE;//ccc3(1.0f,0,1.0f); //purple
+    if (isLoki) bulletSprite.color = ccGREEN;
     bulletSprite.tag = SpriteStateEnemyBullet;
     [bullets addChild:bulletSprite z:5];
     
@@ -582,57 +673,137 @@ CCSpriteBatchNode *hearts;
     bullet->SetLinearVelocity( BULLET_SPEED/4*direction );
     bullet->SetActive(true);
     
-    [[SimpleAudioEngine sharedEngine] playEffect:@"pew.wav"];
+    //[[SimpleAudioEngine sharedEngine] playEffect:@"pew.wav"];
+    
+    NSString *sound = [NSString stringWithFormat:@"pew%d.aif", arc4random()%6];
+    [[SimpleAudioEngine sharedEngine] playEffect:sound pitch:1.0f pan:1.0f gain:0.95f];
 
 }
 
+// This handles removal of b2bodies and ccsprites.
+// This also handles different sprite states such as SpriteStateNyan and SpriteStateLoki.
+// This is kind of a clusterfudge of junk, which should prolly be later refactored.
 -(void) updateWorld
 {
     for (b2Body* body = world->GetBodyList(); body != nil; body = body->GetNext())
     {
         //get the sprite associated with the body
         CCSprite* sprite = (__bridge CCSprite*)body->GetUserData();
-        
-        if(sprite.tag==SpriteStateRemove) {
-            CCLOG(@"REMOVED A SPRITE FROM OUTSIDE BOUNDARY");
-            if([sprite isKindOfClass:[Cat class]]) {
-                [cats removeChild:sprite cleanup:YES];
-            } else if ([sprite isKindOfClass:[Bullet class]]){
-                [bullets removeChild:sprite cleanup:YES];
-            } else if ([sprite isKindOfClass:[Heart class]]){
-                [hearts removeChild:sprite cleanup:YES];
+        switch(sprite.tag) {
+            case SpriteStateRemove: 
+                CCLOG(@"REMOVED A SPRITE FROM OUTSIDE BOUNDARY");
+                if ([sprite isKindOfClass:[Lokitty class]]) { //Currently a hack, should be in cats.png bleh
+                    hasLokitty = NO;
+                }
+                
+                if ([sprite isKindOfClass:[Cat class]]) {
+                    [cats removeChild:sprite cleanup:YES];
+                } else if ([sprite isKindOfClass:[Bullet class]]){
+                    [bullets removeChild:sprite cleanup:YES];
+                } else if ([sprite isKindOfClass:[Heart class]]){
+                    [hearts removeChild:sprite cleanup:YES];
+                } else {
+                    [self removeChild:sprite cleanup:YES];
+                }
+                world->DestroyBody(body);
+                continue;
+                break;
+            
+            case SpriteStateNyan:
+                CCLOG(@"Started rainbows");
+                [self unschedule:@selector(createRainbowExplosionAtDog)];
+            
+                [self schedule:@selector(createRainbowExplosionAtDog) interval:0.2f repeat:46 delay:0.0f];
+                [self runNyanMusic];
+                sprite.tag = SpriteStateInvincible;
+                sprite.color = ccYELLOW;
+                [self unschedule:@selector(endInvincibility)];
+                [self scheduleOnce:@selector(endInvincibility) delay:10.1f];
+                break;
+            
+            case SpriteStateRupee:
+                CCLOG(@"Started rupee");
+                hasBiggerBullets = YES;
+                [self unschedule:@selector(createRainbowExplosionAtDog)];
+                [self schedule:@selector(createRainbowExplosionAtDog) interval:0.2f repeat:47 delay:0.0f];
+                [self runLokiMusic];
+                sprite.tag = SpriteStateInvincible;
+                sprite.color = ccGREEN;
+                [self unschedule:@selector(endInvincibility)];
+                [self scheduleOnce:@selector(endInvincibility) delay:10.1f];
+                break;
+        }
+            
+            // Bodies that aren't bullets slow down as they reach their destination
+            if (![sprite isKindOfClass:[Bullet class]]){
+                body->SetLinearVelocity(0.97f*body->GetLinearVelocity());
+                body->SetAngularVelocity(0);
             }
-            world->DestroyBody(body);
-            continue;
-        }
-        
-        // Bodies that aren't bullets slow down as they reach their destination
-        if (![sprite isKindOfClass:[Bullet class]]){
-            body->SetLinearVelocity(0.97f*body->GetLinearVelocity());
-            body->SetAngularVelocity(0);
-        }
-        
-        // Have wizard shoot if they're supposed to shoot.
-        if ([sprite isKindOfClass:[WizardCat class]]) {
-            if (((WizardCat *)sprite).countdown == 0) {
-                [self shootBulletAtDog:sprite.position];
-                [(WizardCat *)sprite resetCountDown];
+            
+            // Have dog sprite stop if near 0 velocity
+            if ([sprite isKindOfClass:[Dog class]]) {
+                float distance = pow(pow(body->GetLinearVelocity().x,2) + pow(body->GetLinearVelocity().y,2),.5);
+                if (distance < 1.25f) {
+                    [dogSprite stopAction];
+                }
+            }
+            
+            // Have wizard shoot if they're supposed to shoot.
+            if ([sprite isKindOfClass:[WizardCat class]]) {
+                if (((WizardCat *)sprite).countdown == 0) {
+                    [self shootBulletAtDog:sprite.position isLoki:[sprite isKindOfClass:[Lokitty class]]];
+                    [(WizardCat *)sprite resetCountDown];
+                }
+            }
+            
+            // Handles hits.
+            if (sprite != NULL && sprite.tag==SpriteStateHit)
+            {
+                [self handleHits:body];
+            }
+            else if (sprite != NULL)
+            {
+                // Update the sprite's position to where their physics bodies are.
+                sprite.position = [self toPixels:body->GetPosition()];
             }
         }
-        
-        // Handles hits.
-        if (sprite != NULL && sprite.tag==SpriteStateHit)
-        {
-            [self handleHits:body];
-        }
-        else if (sprite != NULL)
-        {
-            // Update the sprite's position to where their physics bodies are.
-            sprite.position = [self toPixels:body->GetPosition()];
-        }
+    
+}
+
+// Runs Starship Thorgi when in Green Loki State.
+-(void) runLokiMusic {
+    SimpleAudioEngine *audio = [SimpleAudioEngine sharedEngine];
+    if ([audio isBackgroundMusicPlaying]) {
+        [audio stopBackgroundMusic];
+        [audio playBackgroundMusic:@"StarshipThorgi2.wav" loop:YES];
+       // [audio playBackgroundMusic:@"StarshipThorgi.wav" loop:YES];
+        [self unschedule:@selector(runNormalMusic)];
+        [self scheduleOnce:@selector(runNormalMusic) delay:10.0f];
     }
 }
 
+// Runs Nyancat music.
+-(void) runNyanMusic {
+    SimpleAudioEngine *audio = [SimpleAudioEngine sharedEngine];
+    if ([audio isBackgroundMusicPlaying]) {
+    [audio stopBackgroundMusic];
+    [audio playBackgroundMusic:@"nyancat.mp3" loop:YES];
+           [self unschedule:@selector(runNormalMusic)];
+    [self scheduleOnce:@selector(runNormalMusic) delay:10.0f];
+    }
+    
+}
+
+// Runs normal pepy thorgi music.
+-(void) runNormalMusic {
+    SimpleAudioEngine *audio = [SimpleAudioEngine sharedEngine];
+    if ([audio isBackgroundMusicPlaying]) {
+        [audio stopBackgroundMusic];
+        [audio playBackgroundMusic:@"PeppyThorgi.mp3" loop:YES];
+    }
+}
+
+// Handles every sprite's hits. Cats' health decrease and dog's health decreases.
 -(void) handleHits: (b2Body *)body
 {
      CCSprite* sprite = (__bridge CCSprite*)body->GetUserData();
@@ -683,10 +854,12 @@ CCSpriteBatchNode *hearts;
     CCSprite* sprite = (__bridge CCSprite*)body->GetUserData();
     score += ((Cat*)sprite).points;
     //Play dying sound.
-    NSString *sound = [NSString stringWithFormat:@"gun%d.aif", arc4random()%3+1];
-    [[SimpleAudioEngine sharedEngine] playEffect:sound];
+    NSString *sound = [NSString stringWithFormat:@"fizz%d.aif", arc4random()%9];
+    [[SimpleAudioEngine sharedEngine] playEffect:sound pitch:1.0f pan:1.0f gain:0.25f];
     
-    if ([sprite isKindOfClass:[WizardCat class]]) {
+    if ([sprite isKindOfClass:[Lokitty class]]) {
+       hasLokitty = NO;
+    } else if ([sprite isKindOfClass:[WizardCat class]]) {
         [GameState sharedInstance].wizardCatsKilledThisGame++;
     } else if ([sprite isKindOfClass:[DashCat class]]){
          [GameState sharedInstance].dashCatsKilledThisGame++;
@@ -700,17 +873,45 @@ CCSpriteBatchNode *hearts;
     [[GameState sharedInstance] save];
     world->DestroyBody(body);
     [self createSmallExplosionAt:sprite.position];
-    [self createItem:sprite.position];
+    [self createItem:sprite.position sprite:sprite];
 }
 
--(void) createItem:(CGPoint)position
+// Creates an item drop based on probability and type of cat sprite.
+-(void) createItem:(CGPoint)position sprite:(CCSprite *)sprite
 {
     Item *item;
-    if (arc4random()%100 < 10) {
-        item = [[Heart alloc]init];
-        item.position = position;
-        [hearts addChild:item];
- 
+    if ([sprite isKindOfClass:[NyanCat class]] ||
+        [sprite isKindOfClass:[Lokitty class]] ||
+        arc4random()%100 < 10) {//max(5,10-score/50) ) {
+      /*
+       // Good for testing lokitty and poptart
+        if (YES) {
+            item = arc4random() %2 == 0? [[Rupee alloc] init] : [[PopTart alloc] init];
+            item.position = position;
+            [self addChild:item];
+        }
+       else
+        */
+         if ([sprite isKindOfClass:[Lokitty class]]) {
+            item = [[Rupee alloc] init];
+            item.position = position;
+            [self addChild:item];
+        }
+        else if ([sprite isKindOfClass:[NyanCat class]]) {
+            if ( arc4random()%2 == 0) {
+            item = [[PopTart alloc]init];
+            item.position = position;
+            [self addChild:item];
+            } else {
+                return;
+            }
+        }
+        else {
+            item = [[Heart alloc]init];
+            item.position = position;
+            [hearts addChild:item];
+        }
+        
         //add body
         b2BodyDef bodyDef;
         bodyDef.type = b2_dynamicBody;
@@ -719,12 +920,11 @@ CCSpriteBatchNode *hearts;
         b2Body *itemBody = world->CreateBody(&bodyDef);
         //itemBody->SetActive(false); //an inactive body does not collide with other bodies
         
-    
-    // Create the bounding box shape.
-    b2PolygonShape box;
-    box.SetAsBox(item.boundingBox.size.width/2.0f/PTM_RATIO,
-                 item.boundingBox.size.height/2.0f/PTM_RATIO);
-
+        // Create the bounding box shape.
+        b2PolygonShape box;
+        box.SetAsBox(item.boundingBox.size.width/2.0f/PTM_RATIO,
+                     item.boundingBox.size.height/2.0f/PTM_RATIO);
+        
         b2FixtureDef ballShapeDef;
         ballShapeDef.shape = &box;
         ballShapeDef.density = 0.8f;
@@ -736,16 +936,20 @@ CCSpriteBatchNode *hearts;
     }
 }
 
+// Begin invincibility (that happens after dog is hit).
 -(void) beginInvincibility
 {
     dogSprite.color = ccGRAY;
     dogSprite.tag = SpriteStateInvincible;
 }
 
+// Ends all types of invincibility.
 -(void) endInvincibility
 {
+    CCLOG(@"ended invincibility");
     dogSprite.color= ccWHITE;
     dogSprite.tag = SpriteStateNormal;
+    hasBiggerBullets = NO;
 }
 
 -(void) stopTakingKKInput
@@ -755,26 +959,31 @@ CCSpriteBatchNode *hearts;
     KKInput* input = [KKInput sharedInput];
     
     input.userInteractionEnabled = YES;
+    
     UITapGestureRecognizer* tapGestureRecognizer;
     tapGestureRecognizer = input.tapGestureRecognizer;
     tapGestureRecognizer.cancelsTouchesInView = NO;
 }
 
+// Stops music and replaces scene
 -(void) endGame{
-    
-    // This is a hack that prevents KKInput from swallowing every fuckign touch.
-    // God I hate this documentation.
     [self stopTakingKKInput];
+     [[SimpleAudioEngine sharedEngine] pauseBackgroundMusic];
      [[SimpleAudioEngine sharedEngine] stopBackgroundMusic];
     [[CCDirector sharedDirector] replaceScene:[CCTransitionCrossFade transitionWithDuration:0.7f  scene:((CCScene*)[[GameOverLayer alloc] initWithScore:score]) ]];
 }
 
 //Create the bullets, add them to the list of bullets so they can be referred to later
-- (void)createBullets:(CGPoint)location
+- (void)createBullets:(CGPoint)location 
 {
+    NSString *sound = [NSString stringWithFormat:@"pop%d.aif", arc4random()%8];
+    [[SimpleAudioEngine sharedEngine] playEffect:sound pitch:1.0f pan:1.0f gain:0.8f];
+    
     Bullet *bulletSprite = [[Bullet alloc] initWithBulletImage];
     bulletSprite.position = dogSprite.position;
     bulletSprite.color = ccYELLOW;
+    bulletSprite.scale = hasBiggerBullets? 5.0f : 1.0f;
+    //CCLOG(@"Has bigger bullets? %f", bulletSprite.scale);
     [bullets addChild:bulletSprite z:9];
     //[bullets addObject:bulletSprite];
     //NSValue *value = [NSValue valueWithCGPoint:ccpSub(location, dogSprite.position)];
@@ -806,11 +1015,9 @@ CCSpriteBatchNode *hearts;
     direction.Normalize();
     bullet->SetLinearVelocity( BULLET_SPEED*direction );
     bullet->SetActive(true);
-    //TODO: PUT BULLET PEW SOUND
-    //[[SimpleAudioEngine sharedEngine] playEffect:@"pew.wav"];
 }
 
-// convenience method to convert a b2Vec2 to a CGPoint
+// Convenience method to convert a b2Vec2 to a CGPoint.
 -(CGPoint) toPixels:(b2Vec2)vec
 {
 	return ccpMult(CGPointMake(vec.x, vec.y), PTM_RATIO);
@@ -819,7 +1026,6 @@ CCSpriteBatchNode *hearts;
 -(void) dealloc
 {
 	delete world;
-    
 #ifndef KK_ARC_ENABLED
 	[super dealloc];
 #endif

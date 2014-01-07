@@ -8,6 +8,7 @@
 #import "AppDelegate.h"
 // At the top of the file
 #import "GCHelper.h"
+#import "LandscapeOnlyViewController.h"
 
 
 
@@ -23,6 +24,11 @@
     // At the end of applicationDidFinishLaunching, right before
     // the last line that calls runWithScene:
     [[GCHelper sharedInstance] authenticateLocalUser];
+    
+    navController = [[LandscapeOnlyViewController alloc] initWithRootViewController:director];
+    window.rootViewController = navController;
+    navController.navigationBarHidden = YES;
+    [window makeKeyAndVisible];
 }
 
 -(id) alternateView

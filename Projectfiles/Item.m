@@ -77,3 +77,37 @@
 }
 
 @end
+
+@implementation PopTart
+
+-(id) init
+{
+	self = [super initWithFile:@"poptart.png"];
+	if (self)
+	{
+		// add init code here (note: self.parent is still nil here!)
+		
+		// uncomment if you want the update method to be executed every frame
+		//[self scheduleUpdate];
+	}
+	return self;
+}
+
+@end
+
+@implementation Rupee
+
+-(id) init
+{
+	self = [super initWithFile:@"rupee.png"];
+	if (self)
+	{
+		// add init code here (note: self.parent is still nil here!)
+		
+		// uncomment if you want the update method to be executed every frame
+		//[self scheduleUpdate];
+	}
+	return self;
+}
+
+@end

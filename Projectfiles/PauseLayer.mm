@@ -10,13 +10,13 @@
 
 #import "GameLayer.h"
 #import "HUDLayer.h"
+#import "GameOverLayer.h"
+#import "GameState.h"
+#import "LocalScoreLayer.h"
 
 #import "SimpleAudioEngine.h"
 
-CCSprite *resume;
-CCSprite *restart;
-CCSprite *mutemusic;
-CCSprite *mutesound;
+
 
 #define FONT_SIZE 20.0f
 
@@ -25,14 +25,16 @@ CCSprite *mutesound;
 @end
 
 @implementation PauseLayer
-
 +(id) scene
 {
 	// 'scene' is an autorelease object.
 	CCScene *scene = [CCScene node];
 	PauseLayer *layer = [[PauseLayer alloc] init];
+    LocalScoreLayer *scoreLayer = [[LocalScoreLayer alloc] init];
+    
 	// add layer as a child to scene
 	[scene addChild: layer z:0];
+    [scene addChild:scoreLayer z:1];
 	// return the scene
 	return scene;
 }
@@ -42,13 +44,13 @@ CCSprite *mutesound;
 	self = [super init];
 	if (self)
 	{
-        [[CCSpriteFrameCache sharedSpriteFrameCache] addSpriteFramesWithFile:@"buttons.plist"];
+        [[CCSpriteFrameCache sharedSpriteFrameCache] addSpriteFramesWithFile:@"buttonsword.plist"];
                
         CGSize winSize = [CCDirector sharedDirector].winSize;
-        CGPoint pos = ccp(winSize.width* 0.1, winSize.height/2);
+        //CGPoint pos = ccp(winSize.width* 0.1, winSize.height/2);
+        CGPoint pos = ccp(winSize.width* 0.8, winSize.height-60);
         
-        
-        // Makes texture tiled background
+        // Makes sky background
         CCTexture2D *texture = [[CCTextureCache sharedTextureCache] addImage:@"sky.png"];
         ccTexParams params = {GL_LINEAR, GL_LINEAR, GL_REPEAT, GL_REPEAT};
         [texture setTexParameters:&params];
@@ -57,10 +59,7 @@ CCSprite *mutesound;
         bg.position = ccp(winSize.width*.7, winSize.height*.2);
         [self addChild:bg z:-10];
         
-        
-        CCSpriteFrame *buttonFrame
-        
-        = [[CCSpriteFrameCache sharedSpriteFrameCache] spriteFrameByName:@"play.png"];
+        CCSpriteFrame *buttonFrame = [[CCSpriteFrameCache sharedSpriteFrameCache] spriteFrameByName:@"resume.png"];
         resume = [[CCSprite alloc] initWithSpriteFrame:buttonFrame];
         resume.position = pos;
         [resume setScale:1.5f];
@@ -74,22 +73,32 @@ CCSprite *mutesound;
         [self addChild:restart];
         pos = [self incrementPos:pos];
         
+        buttonFrame = [[CCSpriteFrameCache sharedSpriteFrameCache] spriteFrameByName:@"quit.png"];
+        quit = [[CCSprite alloc] initWithSpriteFrame:buttonFrame];
+        quit.position = pos;
+        [quit setScale:1.5f];
+        [self addChild:quit];
+        pos = [self incrementPos:pos];
+
+        //Slightly different handling of circular buttons
+        pos = ccpSub(pos, ccp(restart.textureRect.size.width/2.0f-5,10));
         buttonFrame = [[CCSpriteFrameCache sharedSpriteFrameCache] spriteFrameByName:@"music.png"];
         mutemusic = [[CCSprite alloc] initWithSpriteFrame:buttonFrame];
         mutemusic.position = pos;
         [mutemusic setScale:1.5f];
+        
         if (![[SimpleAudioEngine sharedEngine] isBackgroundMusicPlaying]) {
             buttonFrame = [[CCSpriteFrameCache sharedSpriteFrameCache] spriteFrameByName:@"mutemusic.png"];
             [mutemusic setDisplayFrame:buttonFrame];
         }
         [self addChild:mutemusic];
-        pos = [self incrementPos:pos];
+        pos = ccpAdd(pos,ccp(restart.textureRect.size.width/2.0f-5+mutemusic.textureRect.size.width,0));
     
         buttonFrame = [[CCSpriteFrameCache sharedSpriteFrameCache] spriteFrameByName:@"sound.png"];
         mutesound = [[CCSprite alloc] initWithSpriteFrame:buttonFrame];
         mutesound.position = pos;
          [mutesound setScale:1.5f];
-        if ([SimpleAudioEngine sharedEngine].effectsVolume == 0) {
+        if ([SimpleAudioEngine sharedEngine].effectsVolume == 0.0f) {
             buttonFrame = [[CCSpriteFrameCache sharedSpriteFrameCache] spriteFrameByName:@"mutesound.png"];
             [mutesound setDisplayFrame:buttonFrame];
         }
@@ -97,15 +106,29 @@ CCSprite *mutesound;
         [self addChild:mutesound];
         pos = [self incrementPos:pos];
         
+        
+        LocalScoreLayer *scoreLayer = [[LocalScoreLayer alloc] init];
+        scoreLayer.position = ccp(0,0);
+        [self addChild:scoreLayer z:1];
+        
         self.isTouchEnabled = YES;
 	}
 	return self;
 }
 
+-(id) initWithScore:(int)scorePoints
+{
+    self = [self init];
+    score = scorePoints;
+    return self;
+}
+
 -(CGPoint) incrementPos:(CGPoint)pos
 {
-    CGSize winSize = [CCDirector sharedDirector].winSize;
-    return ccpAdd(pos, ccp(winSize.width*.25,0));
+    //CGSize winSize = [CCDirector sharedDirector].winSize;
+    //return ccpAdd(pos, ccp(winSize.width*.25,0));
+    //return ccpSub(pos, ccp(0,winSize.height*.2f));
+    return ccpSub(pos, ccp(0, resume.textureRect.size.height+25));
 }
 
 
@@ -138,6 +161,15 @@ CCSprite *mutesound;
         [[CCDirector sharedDirector] replaceScene: (CCScene*)[[GameLayer alloc] initWithHUD:hud]];
 
     }
+    else if (fabsf(quit.boundingBoxCenter.x - touch.x) <= quit.boundingBox.size.width/2 +10 &&
+             fabsf(quit.boundingBoxCenter.y - touch.y) <= quit.boundingBox.size.height/2 +10 )
+    {
+        //[[CCDirector sharedDirector] popScene];
+        
+        [[CCDirector sharedDirector] popToRootScene];
+        [[CCDirector sharedDirector] replaceScene: (CCScene*)[[GameOverLayer alloc] initWithScore:score]];
+        
+    }
     else if (fabsf(mutemusic.boundingBoxCenter.x - touch.x) <= mutemusic.boundingBox.size.width/2 +10 &&
         fabsf(mutemusic.boundingBoxCenter.y - touch.y) <= mutemusic.boundingBox.size.height/2 +10 )
     {
@@ -146,11 +178,13 @@ CCSprite *mutesound;
             [audio pauseBackgroundMusic];
             CCSpriteFrame *buttonFrame = [[CCSpriteFrameCache sharedSpriteFrameCache] spriteFrameByName:@"mutemusic.png"];
             [mutemusic setDisplayFrame:buttonFrame];
+            [GameState sharedInstance].muteMusic = TRUE;
             
         } else {
             [audio resumeBackgroundMusic];
             CCSpriteFrame *buttonFrame = [[CCSpriteFrameCache sharedSpriteFrameCache] spriteFrameByName:@"music.png"];
             [mutemusic setDisplayFrame:buttonFrame];
+            [GameState sharedInstance].muteMusic = FALSE;
         }
         
 
@@ -164,12 +198,14 @@ CCSprite *mutesound;
             [audio setEffectsVolume:0.0f];
             CCSpriteFrame *buttonFrame = [[CCSpriteFrameCache sharedSpriteFrameCache] spriteFrameByName:@"mutesound.png"];
             [mutesound setDisplayFrame:buttonFrame];
-            
+            [GameState sharedInstance].muteSound = TRUE;
+            CCLOG(@"muted music %s",[GameState sharedInstance].muteSound?"true":"false");
         } else {
             
             [audio setEffectsVolume:1.0f];
             CCSpriteFrame *buttonFrame = [[CCSpriteFrameCache sharedSpriteFrameCache] spriteFrameByName:@"sound.png"];
-             [mutesound setDisplayFrame:buttonFrame];
+            [mutesound setDisplayFrame:buttonFrame];
+            [GameState sharedInstance].muteSound = FALSE;
           
         }
 
@@ -177,7 +213,7 @@ CCSprite *mutesound;
 
 }
 
-
+/*
 - (void) resume: (CCMenuItem  *) menuItem
 {
 	NSLog(@"The first menu was called RESUME");
@@ -199,7 +235,7 @@ CCSprite *mutesound;
 {
 	NSLog(@"The fifth menu was called MUTESOUND");
 }
-
+*/
 
 -(void) onEnter
 {

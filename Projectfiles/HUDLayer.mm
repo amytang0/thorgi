@@ -12,20 +12,18 @@
 #import "PauseLayer.h"
 #import "GameOverLayer.h"
 
+
 #define PADDING_TOP 20.0f
 #define HEIGHT 25.0f
 
-CCLabelTTF *scoreString;
-CCSprite *pauseButton;
-  NSMutableArray *lives;
 
 @interface HUDLayer (PrivateMethods)
 // declare private methods here
+
 @end
 
 
 @implementation HUDLayer
-
 
 -(id) init
 {
@@ -34,6 +32,7 @@ CCSprite *pauseButton;
 	{
         CCLOG(@"HUDLAYER INIT");
         lives = [[NSMutableArray alloc] init];
+        score = 0;
         
         CGSize winSize = [CCDirector sharedDirector].winSize;
         [self setContentSize:CGSizeMake(winSize.width,HEIGHT*2)];
@@ -82,7 +81,8 @@ CCSprite *pauseButton;
     if (fabsf(pauseButton.boundingBoxCenter.x - touch.x) <= rect.size.width/2 +10 &&
         fabsf(pauseButton.boundingBoxCenter.y - touch.y) <= rect.size.height/2 +10 )
     {
-           [[CCDirector sharedDirector] pushScene: (CCScene*)[[PauseLayer alloc] init]];
+        [[CCDirector sharedDirector] pushScene: (CCScene*)[[PauseLayer alloc] initWithScore:score]];
+       // [[CCDirector sharedDirector] replaceScene: (CCScene*)[[LocalScoreLayer alloc] init]]; //remove later
     }
 }
 
@@ -90,8 +90,9 @@ CCSprite *pauseButton;
     scoreString.string = string;
 }
 
--(void)setScore:(int) score {
-    scoreString.string = [NSString stringWithFormat:@"%d", score];
+-(void)setScore:(int) scoreP {
+    scoreString.string = [NSString stringWithFormat:@"%d", scoreP];
+    score = scoreP;
 }
 
 -(void) initLives:(int)health {
@@ -104,6 +105,7 @@ CCSprite *pauseButton;
     for (int i = 0; i < health; i++){
         CCSprite *heart = [CCSprite spriteWithFile:@"heart.png"];
         heart.position = position;
+        heart.scale = 1.25f;
         [lives addObject:heart];
         [self addChild:heart z:100];
         position = ccpAdd(position,ccp(20,0));
@@ -112,8 +114,8 @@ CCSprite *pauseButton;
 }
 
 -(void) setLives:(int) health {
-    if (abs([lives count]) == health)
-        return;
+    //if (abs([lives count]) == health)
+    //    return;
    
     for (int i = 0; i < abs([lives count]); i++) {
         CCSprite *heart = [lives objectAtIndex:i];

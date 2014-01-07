@@ -58,9 +58,14 @@
 #define kHardLeaderboardID @"com.appledts.HardTapList"
 #define kAwesomeLeaderboardID @"com.appledts.AwesomeTapList"
 
+#define kLeaderboardScore @"scores"
+
 
 //Achievement IDs
 #define kAchievementGotOneTap @"com.appletest.one_tap"
 #define kAchievementHidden20Taps @"com.appledts.twenty_taps"
 #define kAchievementBigOneHundred @"com.appledts.one_hundred_taps"
-
+#define kAchievementKillTen @"kill_ten_enemies"
+#define kAchievementKillTwenty @"kill_twenty_enemies"
+#define kAchievementKillFifty @"kill_fifty_enemies"
+#define kAchievementKillHundred @"kill_hundred_enemies"

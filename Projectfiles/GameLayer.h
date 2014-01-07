@@ -18,7 +18,9 @@ enum {
     SpriteStateHit,
     SpriteStateInvincible,
     SpriteStateRemove,
-    SpriteStateEnemyBullet
+    SpriteStateEnemyBullet,
+    SpriteStateNyan,
+    SpriteStateRupee
 };
 typedef NSInteger SpriteState;
 
@@ -44,6 +46,14 @@ typedef NSInteger SpriteState;
     CCMenuItem *scoreItem;
     int score;
     
+    @private
+    ccTime elapsedTime;
+    CCSpriteBatchNode *bullets;
+    CCSpriteBatchNode *cats;
+    CCSpriteBatchNode *hearts;
+    
+    Boolean hasLokitty;
+    Boolean hasBiggerBullets;
 }
 +(id) scene;
 - (id)initWithHUD:(HUDLayer *)hudLayer;

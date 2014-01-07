@@ -23,3 +23,18 @@
 }
 
 @end
+
+@interface PopTart : Item
+{
+@protected
+@private
+}
+@end
+
+@interface Rupee : Item
+{
+@protected
+@private
+}
+
+@end

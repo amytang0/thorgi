@@ -27,9 +27,10 @@ static GCHelper *sharedHelper = nil;
         if (!sharedHelper) {
             sharedHelper = loadData(@"GameCenterData");
             if (!sharedHelper) {
-                [[self alloc]
-                 initWithScoresToReport:[NSMutableArray array]
-                 achievementsToReport:[NSMutableArray array]];
+                CCLOG(@"no pre-existing helper");
+                sharedHelper = [[self alloc]
+                initWithScoresToReport:[NSMutableArray array]
+                achievementsToReport:[NSMutableArray array]];
             } }
         return sharedHelper;
     }
@@ -48,19 +49,24 @@ static GCHelper *sharedHelper = nil;
     NSString *currSysVer = [[UIDevice currentDevice] systemVersion];
     BOOL osVersionSupported = ([currSysVer compare:reqSysVer
                                            options:NSNumericSearch] != NSOrderedAscending);
-    
     return (gcClass && osVersionSupported);
 }
--  (id)initWithScoresToReport:(NSMutableArray *)theScoresToReport achievementsToReport:(NSMutableArray *)theAchievementsToReport { if ((self = [super init])) {
-    self.scoresToReport = theScoresToReport; self.achievementsToReport = theAchievementsToReport; gameCenterAvailable = [self isGameCenterAvailable]; if (gameCenterAvailable) {
-    } }
-    NSNotificationCenter *nc =
-    [NSNotificationCenter defaultCenter];
-    [nc addObserver:self
-           selector:@selector(authenticationChanged)
-               name:GKPlayerAuthenticationDidChangeNotificationName
-             object:nil];
-    return self;
+
+-  (id)initWithScoresToReport:(NSMutableArray *)theScoresToReport achievementsToReport:(NSMutableArray *)theAchievementsToReport {
+    if ((self = [super init])) {
+        self.scoresToReport = theScoresToReport;
+        self.achievementsToReport = theAchievementsToReport;
+        gameCenterAvailable = [self isGameCenterAvailable];
+        if (gameCenterAvailable) {
+            NSNotificationCenter *nc =
+            [NSNotificationCenter defaultCenter];
+            [nc addObserver:self
+                   selector:@selector(authenticationChanged)
+                       name:GKPlayerAuthenticationDidChangeNotificationName
+                     object:nil];
+        }
+    }
+       return self;
 }
 
 - (void)authenticationChanged {
@@ -73,10 +79,24 @@ static GCHelper *sharedHelper = nil;
         NSLog(@"Authentication changed: player not authenticated");
         userAuthenticated = FALSE;
     }
-    
+}
+
+- (void)sendScore:(GKScore *)score {
+    [score reportScoreWithCompletionHandler:^(NSError *error) {
+        dispatch_async(dispatch_get_main_queue(), ^(void)
+           {
+               if (error == NULL) {
+                   NSLog(@"Successfully sent score!");
+                   [scoresToReport removeObject:score];
+               } else {
+                   NSLog(@"Score failed to send... will try again later.Reason: %@", error.localizedDescription);
+               }
+           });
+    }];
 }
 
 - (void)sendAchievement:(GKAchievement *)achievement {
+    CCLOG(@"Sending achievement");
     [achievement reportAchievementWithCompletionHandler: ^(NSError *error) {
          dispatch_async(dispatch_get_main_queue(), ^(void)
         {
@@ -95,6 +115,9 @@ static GCHelper *sharedHelper = nil;
     for (GKAchievement *achievement in achievementsToReport) {
         [self sendAchievement:achievement];
     }
+    for (GKScore *score in scoresToReport) {
+        [self sendScore:score];
+    }
 }
 
 #pragma mark User functions
@@ -112,19 +135,66 @@ static GCHelper *sharedHelper = nil;
 }
 
 - (void)reportScore:(NSString *)identifier score:(int)rawScore {
-    // TODO...
-    return;
-}
-
-- (void)reportAchievement:(NSString *)identifier
-          percentComplete:(double)percentComplete {
-    GKAchievement* achievement = [[GKAchievement alloc]
-                                  initWithIdentifier:identifier];
-    achievement.percentComplete = percentComplete;
-    [achievementsToReport addObject:achievement];
+    GKScore *score = [[GKScore alloc]
+                       initWithCategory:identifier];
+    score.value = rawScore;
+    [scoresToReport addObject:score];
     [self save];
     if (!gameCenterAvailable || !userAuthenticated) return;
-    [self sendAchievement:achievement];
+    [self sendScore:score];
+    CCLOG(@"Finished reportScore");
+}
+
+- (Boolean)reportAchievement:(NSString *)identifier
+          percentComplete:(double)percentComplete {
+    __block Boolean sentAchievement=FALSE;
+    [GKAchievement loadAchievementsWithCompletionHandler:^(NSArray *achievements, NSError *error) {
+        if (error) NSLog(@"Error retrieving old achievements");
+        if (achievements != nil) {
+            CCLOG(@"achievements: %@", achievements);
+            for (GKAchievement *ach in achievements) {
+                CCLOG(@"ach: %@",ach);
+                if([ach.identifier isEqualToString:identifier]) { //already submitted
+                    NSLog(@"Already submitted %@", identifier);
+                    sentAchievement = FALSE;
+                    return;
+                }
+            }
+        }
+    
+        GKAchievement* achievement = [[GKAchievement alloc]
+                                      initWithIdentifier:identifier];
+        achievement.percentComplete = percentComplete;
+        [achievementsToReport addObject:achievement];
+        [self save];
+        if (!gameCenterAvailable || !userAuthenticated) {
+            CCLOG(@"Game center not available or user not auth");
+            sentAchievement = FALSE;
+            return;
+        }
+        achievement.showsCompletionBanner = YES;
+        //[self sendAchievement:achievement];
+            sentAchievement = TRUE;
+        return;
+    }];
+    return sentAchievement;
+}
+
+
+
+- (void) resetAchievements
+{
+    //TODO: MAKE ACHIEVEMNTSDICTIONARY!
+    // Clear all locally saved achievement objects.
+    //achievementsDictionary = [[NSMutableDictionary alloc] init];
+    // Clear all progress saved on Game Center.
+    [GKAchievement resetAchievementsWithCompletionHandler:^(NSError *error)
+     {
+         if (error != nil){
+             // handle the error.
+             CCLOG(@"bleh");
+         }
+     }];
 }
 
 #pragma mark NSCoding

@@ -12,6 +12,14 @@
 {
 @protected
 @private
+    CCSprite *resume;
+    CCSprite *restart;
+    CCSprite *quit;
+    CCSprite *mutemusic;
+    CCSprite *mutesound;
+    int score;
 }
 +(id) scene;
+-(id) initWithScore:(int)scorePoints;
+
 @end

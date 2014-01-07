@@ -15,6 +15,9 @@
 }
 @property int health;
 @property NSString *status;
+@property NSString *dogDirection;
+@property CCAction *dogMoveAction;
 -(id) initWithDogImage;
-
+-(void) setMoveDirection: (NSString*)d;
+-(void) stopAction;
 @end

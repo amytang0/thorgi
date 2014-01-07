@@ -15,7 +15,8 @@
 }
 
 @property int health;
-@property int points, speed, numFrames;
+@property int points, numFrames;
+@property float speed;
 @property NSString *direction, *name;
 @property CCAction *moveAction;
 @property b2Vec2 velocity;
@@ -44,6 +45,13 @@
 }
 @property int countdown;
 -(void) resetCountDown;
+@end
+
+@interface Lokitty : WizardCat
+{
+    
+}
+@property float teleportTime;
 @end
 
 

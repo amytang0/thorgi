@@ -8,11 +8,7 @@
 
 #import <Foundation/Foundation.h>
 @interface GameState : NSObject <NSCoding> {
-    BOOL completedLevel1;
-    BOOL completedLevel2;
-    BOOL completedLevel3;
-    BOOL completedLevel4;
-    BOOL completedLevel5;
+    
     int timesFell;
 }
 + (GameState *) sharedInstance;
@@ -20,6 +16,9 @@
 -(int)getTotalCatsKilledThisGame;
 -(int)getTotalCatsKilledTotal;
 -(void) newGame;
+-(Boolean) addNewScore:(int) score username:(NSString *)username;
+-(NSMutableArray *) getTopTenScores ;
+
 @property (assign) int scorePoints;
 @property (assign) int basicCatsKilledTotal;
 @property (assign) int dashCatsKilledTotal;
@@ -30,4 +29,12 @@
 @property (assign) int dashCatsKilledThisGame;
 @property (assign) int wizardCatsKilledThisGame;
 @property (assign) int nyanCatsKilledThisGame;
+
+@property (assign) Boolean muteMusic;
+@property (assign) Boolean muteSound;
+
+@property (nonatomic, retain) NSMutableArray *topTenScores;
+@property (nonatomic, retain) NSMutableArray *topTenScoresLocal;
+
+
 @end

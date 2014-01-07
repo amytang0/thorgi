@@ -10,6 +10,8 @@
 #import "GameLayer.h"
 #import "GameOverLayer.h"
 
+#import "GameState.h"
+
 @interface StartMenuLayer (PrivateMethods)
 // declare private methods here
 @end
@@ -38,22 +40,26 @@
 	{
         CGRect appframe= [[UIScreen mainScreen] applicationFrame];
         
+        glClearColor(.001f, .581f, .823f, 1.0f);
+        
         CCSprite *sprite = [CCSprite spriteWithFile:@"thorgitext.png"];
         CGSize size = sprite.textureRect.size;
         int padding = 30;
         sprite.scale = (1.0f*appframe.size.height-padding)/(1.0f*MAX(size.width, size.height));
-        sprite.position = ccp(padding/2, appframe.size.width/2.0f);
+        sprite.position = ccp(padding/2, appframe.size.width-120);
         sprite.anchorPoint = CGPointZero;
         [self addChild:sprite z:-1];
         
         sprite = [CCSprite spriteWithFile:@"dogofthundertext.png"];
         sprite.scale = (1.0f*appframe.size.height-padding)/(1.0f*MAX(size.width, size.height));
-        sprite.position = ccp(sprite.scale*padding/2, appframe.size.width/2.0f - size.height + 10);
+        sprite.position = ccp(sprite.scale*padding/2, appframe.size.width -120 - size.height + 10);
         sprite.anchorPoint = CGPointZero;
+        //sprite.color = ccWHITE;
         [self addChild:sprite z:-1];
         
-        
-        CCMenuItemImage *menuPlayButton = [CCMenuItemImage itemWithNormalImage:@"thorgi-med.png" selectedImage:@"button.png" target:self selector:@selector(playGame:)];
+        CCMenuItemImage *menuPlayButton = [CCMenuItemImage itemWithNormalImage:@"thorgipose.png" selectedImage:@"thorgipose.png"  target:self selector:@selector(playGame:)];
+        menuPlayButton.scale = 1.75f;
+       // menuPlayButton.position = ccp(appframe.size.height/2, appframe.size.width*2/3);
         menuPlayButton.tag = 1; 
         
         // Create a menu and add your menu items to it
@@ -61,19 +67,55 @@
         
         // Arrange the menu items vertically
         [myMenu alignItemsHorizontally];
-        myMenu.position = ccp(appframe.size.height/2, 65);
+        myMenu.position = ccp(appframe.size.height/2, 105);
         
         // add the menu to your scene
         [self addChild:myMenu];
         
         self.isTouchEnabled = YES;
         
+        [self initGameState];
         
        		
         // uncomment if you want the update method to be executed every frame
 		//[self scheduleUpdate];
 	}
 	return self;
+}
+
+-(void) initGameState
+{
+   // Retrieving top scores
+       // CCLOG(@"retrieving top scores");
+        GKLeaderboard *leaderboardRequest = [[GKLeaderboard alloc] init];
+        if (leaderboardRequest != nil)
+        {
+            leaderboardRequest.playerScope = GKLeaderboardPlayerScopeGlobal;
+            leaderboardRequest.timeScope = GKLeaderboardTimeScopeToday;
+            //leaderboardRequest.category = @"com.amytang.thorgi.leaderboard.scores";
+            leaderboardRequest.category = @"1";
+           // CCLOG(@"groupIdent %@",leaderboardRequest.debugDescription);
+            leaderboardRequest.range = NSMakeRange(1,10);
+            [leaderboardRequest loadScoresWithCompletionHandler: ^(NSArray *scores, NSError *error) {
+                if (error != nil)
+                {
+                    // Handle the error.]
+                    CCLOG(@"Error occurred while retrieving leaderboard. %@",error);
+                }
+                if (scores != nil)
+                {
+                   // CCLOG(@"Scores not null retrieved!, %@", scores.mutableCopy);
+                    [GameState sharedInstance].topTenScores = scores.mutableCopy;
+                    [[GameState sharedInstance] save];
+                  //  CCLOG(@"Scores retrieved1!, %@", [GameState sharedInstance].topTenScores  ) ;
+                 //   CCLOG(@"Scores retrieved!, %@", [[GameState sharedInstance]getTopTenScores ] );
+                } else {
+                    CCLOG(@"scores is nil!");
+                    
+                }
+            }];
+        }
+    
 }
 
 

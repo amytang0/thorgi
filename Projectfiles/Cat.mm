@@ -30,13 +30,15 @@
 
 -(id) initWithAnimatedCat
 {
+   self = [super initWithSpriteFrameName:@"frontcat1.png"];
    // CCLOG(@"BasicCat initWithAnimatedCat called");
-    if ((self = [super initWithSpriteFrameName:@"frontcat1.png"])) {
+    if (self) {
         health = 1;
         points = 2;
         speed = 1.5f;
         numFrames = 3;
         self.name = @"";
+        self.scale = 1.05f;
     }
     return self;
 }
@@ -108,10 +110,13 @@ CGFloat timeElapsed;
 {
    // CCLOG(@"DASHCAT INIT CALLED");
     if (self = [super initWithAnimatedCat]){
-        self.speed = 5;
+        self.speed = 5.0f;
         self.points = 5;
+           self.scale = 1;
         self.name=@"";
         timeElapsed = 0;
+        
+        self.color = ccGREEN;
         [self schedule:@selector(dash) interval:5.0f];
         [self schedule:@selector(stop) interval:5.0f repeat:kCCRepeatForever  delay:1.0f];
     }
@@ -120,7 +125,7 @@ CGFloat timeElapsed;
 -(void) dash
 {
     if (self.speed == 0){
-         self.speed = 6;
+         self.speed = 8.0f;
          self.color = ccGREEN;
     }    
 }
@@ -140,12 +145,12 @@ CGFloat timeElapsed;
 @synthesize countdown;
 -(id) initWithAnimatedCat
 {
-    
-    if ((self = [super initWithSpriteFrameName:@"frontwizardcat1.png"])) {
+    self = [super initWithSpriteFrameName:@"frontwizardcat1.png"];
+    if (self) {
         self.health = 1;
         self.points = 5;
-        self.speed = 1;
-        self.countdown = 3;
+        self.speed = 1.0f;
+        self.countdown = 2;
         //self.direction = @"";
          self.name = @"wizard";
         self.numFrames = 3;
@@ -172,13 +177,13 @@ CGFloat timeElapsed;
 @implementation NyanCat
 -(id) initWithAnimatedNyanCat
 {
-    self = [super initWithSpriteFrame:[[CCSpriteFrameCache sharedSpriteFrameCache] spriteFrameByName:@"leftnyancat1.png"]];
+    self = [super initWithSpriteFrameName:@"leftnyancat1.png"];
     CCLOG(@"HEY NYAN INIT");
     
     if (self) {
-        self.health = 3;
+        self.health = 1;
         self.points = 10;
-        self.speed = 6;
+        self.speed = 8.0f;
         self.name = @"nyan";
         self.numFrames = 6;
         
@@ -193,6 +198,59 @@ CGFloat timeElapsed;
     return self;
     
 }
+@end
 
+@implementation Lokitty
+@synthesize teleportTime;
+-(id) initWithAnimatedCat
+{
+    self = [super initWithSpriteFrameName:@"frontlokicat1.png"];
+
+    if (self) {
+        self.health = 3;
+        self.points = 25;
+        self.speed = 12.0f;
+        self.countdown = 1;
+        self.teleportTime = 3.0f;
+        //self.direction = @"";
+        self.name = @"loki";
+        self.numFrames = 3;
+        
+        [self setScale:1.3f];
+        
+        [self schedule:@selector(countDown) interval:0.5f];
+        
+        [self schedule:@selector(dash) interval:4.0f];
+        [self schedule:@selector(stop) interval:4.0f repeat:kCCRepeatForever  delay:0.5f];
+
+    }
+    return self;
+}
+
+-(void) dash
+{
+    if (self.speed == 0){
+        self.speed = 12.0f;
+        self.color = ccGREEN;
+    }
+}
+
+-(void) stop
+{
+    if (self.speed != 0) {
+        self.color= ccWHITE;
+        self.speed = 0;
+        self.velocity = b2Vec2(0,0);
+    }
+    
+}
+
+
+// Shoots every 1 second
+-(void) resetCountDown
+{
+    self.countdown = 1;
+}
 
 @end
+

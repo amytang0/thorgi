@@ -20,6 +20,7 @@ const float PTM_RATIO = 32.0f;
 
 @implementation Dog
 @synthesize health, status;
+@synthesize dogDirection, dogMoveAction;
 
 -(id) init
 {
@@ -38,17 +39,49 @@ const float PTM_RATIO = 32.0f;
 -(id) initWithDogImage
 {
     // This calls CCSprite's init. Basically this init method does everything CCSprite's init method does and then more
-    if ((self = [super initWithFile:@"valthorgi.png"]))
+    if ((self = [super initWithSpriteFrameName:@"frontthorgi2.png"]))
     //if ((self = [super initWithFile:@"ship.png"]))
     {
         health = HEALTH;
         status = @"normal";
+        //[self setScale:1.25f];
         
         
         
         //properties work internally just like normal instance variables
     }
     return self;
+}
+
+-(void) stopAction
+{
+    [self stopAction:self.dogMoveAction];
+}
+
+
+-(void) setMoveDirection: (NSString*)d
+{
+   // if ([self.dogDirection isEqualToString:d] && ![self.dogMoveAction isDone] ) {
+   //     return;
+   // }
+    
+    [self stopAction:self.dogMoveAction];
+    
+    NSMutableArray *walkAnimFrames = [NSMutableArray array];
+    
+    for (int i = 1; i <= 3; i++){
+        NSString *fileName = [NSString stringWithFormat:@"%@thorgi%d.png",d,i];
+        [walkAnimFrames addObject:
+         [[CCSpriteFrameCache sharedSpriteFrameCache] spriteFrameByName:
+          fileName]];
+        
+    }
+    CCAnimation *walkAnim = [CCAnimation
+                             animationWithSpriteFrames:walkAnimFrames delay:0.1f];
+    self.dogMoveAction = [CCRepeatForever actionWithAction:
+                       [CCAnimate actionWithAnimation:walkAnim]];
+    [self runAction:self.dogMoveAction];
+    self.dogDirection = d;
 }
 
 

@@ -38,24 +38,61 @@ void ContactListener::BeginContact(b2Contact* contact)
         if ([spriteA isKindOfClass:[Heart class]]) {
             //set dog.health
             CCLOG(@"hit over heart");
-            ((Dog*)spriteB).health++;
+            if (((Dog*)spriteB).health != 5) {
+              ((Dog*)spriteB).health++;
+            }
             spriteA.tag=SpriteStateRemove;
             return;
-        }
-        else if ([spriteB isKindOfClass:[Heart class]]) {
+        } else if ([spriteB isKindOfClass:[Heart class]]) {
             //set dog.health
             CCLOG(@"hit over heart");
-            ((Dog*)spriteA).health++;
+            if (((Dog*)spriteA).health != 5) {
+                ((Dog*)spriteA).health++;
+            }
             spriteB.tag=SpriteStateRemove;
+            return;
+        }
+        
+        else if ([spriteA isKindOfClass:[PopTart class]]) {
+            CCLOG(@"hit over poptart");
+             spriteA.tag=SpriteStateRemove;
+            spriteB.tag=SpriteStateNyan;
+            return;
+            
+        } else if ([spriteB isKindOfClass:[PopTart class]]) {
+            CCLOG(@"hit over poptart");
+            spriteB.tag=SpriteStateRemove;
+            spriteA.tag=SpriteStateNyan;
             return;
             
         }
+        
+        else if ([spriteA isKindOfClass:[Rupee class]]) {
+            CCLOG(@"hit over rupee");
+            spriteA.tag=SpriteStateRemove;
+            spriteB.tag=SpriteStateRupee;
+            return;
+            
+        } else if ([spriteB isKindOfClass:[Rupee class]]) {
+            CCLOG(@"hit over rupee");
+            spriteB.tag=SpriteStateRemove;
+            spriteA.tag=SpriteStateRupee;
+            return;
+            
+        }
+        
     }
     // If shooting at enemy bullets, remove both
     if (([spriteA isKindOfClass:[WizardBullet class]] && [spriteB isKindOfClass:[Bullet class]]) ||
         ([spriteB isKindOfClass:[WizardBullet class]] && [spriteA isKindOfClass:[Bullet class]])) {
         spriteA.tag=SpriteStateRemove;
         spriteB.tag=SpriteStateRemove;
+        return;
+    }
+    
+    // When dog is invincible.
+    if (spriteA.tag == SpriteStateInvincible || spriteB.tag == SpriteStateInvincible) {
+        //CCLOG(@"begincontact invinc");
         return;
     }
     
@@ -85,11 +122,7 @@ void ContactListener::BeginContact(b2Contact* contact)
                 spriteB.color = ccRED;
         }
         
-        // When dog is invincible.
-        if (spriteA.tag == SpriteStateInvincible || spriteB.tag == SpriteStateInvincible) {
-            //CCLOG(@"begincontact invinc");
-            return;
-        }
+
 
         // When cats run into dogs.
         if (([spriteA isKindOfClass:[Cat class]] && [spriteB isKindOfClass:[Dog class]]) ) {

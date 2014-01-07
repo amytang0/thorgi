@@ -12,6 +12,7 @@
 {
 @protected
 @private
+    CCMenuItemImage *menuPlayButton;
 }
 +(id) scene;
 -(id) initWithScore:(int)scorePoints;

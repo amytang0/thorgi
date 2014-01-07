@@ -12,6 +12,10 @@
 {
 @protected
 @private
+    int score;
+    CCLabelTTF *scoreString;
+    CCSprite *pauseButton;
+    NSMutableArray *lives;
 }
 -(void) setScoreString:(NSString *)string;
 -(void) setScore:(int) score;
