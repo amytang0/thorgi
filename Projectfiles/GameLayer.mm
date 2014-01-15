@@ -378,16 +378,19 @@ const float PTM_RATIO = 32.0f;
         hasLokitty = YES;
     } else if (score >= 30 && arc4random()%100 < 30) {
         sprite = [[NyanCat alloc] initWithAnimatedNyanCat];
+        CCLOG(@"Nyancat spawned.");
     }
     else if (score >= 5  && arc4random()%10 < 4 ) {
         sprite =[[WizardCat alloc] initWithAnimatedCat];
+        CCLOG(@"Wizard cat spawned.");
     } else {
    //Create the sprite.
         if (score > 15 && random%10 >= 3 && cats.children.count <= score%50 * 30) {
           sprite = [[DashCat alloc] initWithAnimatedCat];
+          CCLOG(@"Dash cat spawned.");
         } else {
-            
-            sprite =[[Cat alloc] initWithAnimatedCat];
+          CCLOG(@"Normal cat spawned.");
+          sprite =[[Cat alloc] initWithAnimatedCat];
         }
     }
     [cats addChild:sprite z:1];

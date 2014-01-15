@@ -66,6 +66,7 @@
                       [CCAnimate actionWithAnimation:walkAnim]];
     [self runAction:self.moveAction];
     self.direction = d;
+     
 }
 
 -(void) onEnter
