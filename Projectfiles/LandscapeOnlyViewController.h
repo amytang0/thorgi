@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface LandscapeOnlyViewController : UINavigationController
+@interface LandscapeOnlyViewController : KKNavigationController
 {
 @protected
 @private
