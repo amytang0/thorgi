@@ -152,6 +152,7 @@
         fabsf(resume.boundingBoxCenter.y - touch.y) <= resume.boundingBox.size.height/2 +10 )
     {
            [[CCDirector sharedDirector] popScene];
+        [MGWU logEvent:@"resume_from_pause" withParams:nil];
     }
     else if (fabsf(restart.boundingBoxCenter.x - touch.x) <= restart.boundingBox.size.width/2 +10 &&
         fabsf(restart.boundingBoxCenter.y - touch.y) <= restart.boundingBox.size.height/2 +10 )
@@ -159,6 +160,8 @@
         [[CCDirector sharedDirector] popScene];
         HUDLayer *hud = [HUDLayer node];
         [[CCDirector sharedDirector] replaceScene: (CCScene*)[[GameLayer alloc] initWithHUD:hud]];
+        NSDictionary *params = [[NSDictionary alloc] initWithObjectsAndKeys: [NSNumber numberWithInt:score], @"score",  nil];
+        [MGWU logEvent:@"restart_from_pause" withParams:params];
 
     }
     else if (fabsf(quit.boundingBoxCenter.x - touch.x) <= quit.boundingBox.size.width/2 +10 &&
@@ -168,6 +171,9 @@
         
         [[CCDirector sharedDirector] popToRootScene];
         [[CCDirector sharedDirector] replaceScene: (CCScene*)[[GameOverLayer alloc] initWithScore:score]];
+            
+        NSDictionary *params = [[NSDictionary alloc] initWithObjectsAndKeys: [NSNumber numberWithInt:score], @"score",  nil];
+        [MGWU logEvent:@"quit_from_pause" withParams:params];
         
     }
     else if (fabsf(mutemusic.boundingBoxCenter.x - touch.x) <= mutemusic.boundingBox.size.width/2 +10 &&
@@ -180,11 +186,15 @@
             [mutemusic setDisplayFrame:buttonFrame];
             [GameState sharedInstance].muteMusic = TRUE;
             
+            [MGWU logEvent:@"muted_music" withParams:nil];
+            
         } else {
             [audio resumeBackgroundMusic];
             CCSpriteFrame *buttonFrame = [[CCSpriteFrameCache sharedSpriteFrameCache] spriteFrameByName:@"music.png"];
             [mutemusic setDisplayFrame:buttonFrame];
             [GameState sharedInstance].muteMusic = FALSE;
+            
+            [MGWU logEvent:@"unmuted_music" withParams:nil];
         }
         
 
@@ -199,13 +209,16 @@
             CCSpriteFrame *buttonFrame = [[CCSpriteFrameCache sharedSpriteFrameCache] spriteFrameByName:@"mutesound.png"];
             [mutesound setDisplayFrame:buttonFrame];
             [GameState sharedInstance].muteSound = TRUE;
-            CCLOG(@"muted music %s",[GameState sharedInstance].muteSound?"true":"false");
+            CCLOG(@"muted sound %s",[GameState sharedInstance].muteSound?"true":"false");
+            
+            [MGWU logEvent:@"muted_sound" withParams:nil];
         } else {
             
             [audio setEffectsVolume:1.0f];
             CCSpriteFrame *buttonFrame = [[CCSpriteFrameCache sharedSpriteFrameCache] spriteFrameByName:@"sound.png"];
             [mutesound setDisplayFrame:buttonFrame];
             [GameState sharedInstance].muteSound = FALSE;
+            [MGWU logEvent:@"unmuted_sound" withParams:nil];
           
         }
 
