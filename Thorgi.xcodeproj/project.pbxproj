@@ -61,6 +61,7 @@
 		F309371A18519C970064BC4C /* StarshipThorgi2.wav in Resources */ = {isa = PBXBuildFile; fileRef = F309371818519C970064BC4C /* StarshipThorgi2.wav */; };
 		F309371B18519C970064BC4C /* StarshipThorgi3.wav in Resources */ = {isa = PBXBuildFile; fileRef = F309371918519C970064BC4C /* StarshipThorgi3.wav */; };
 		F30FABD71833168D00E5FD00 /* Animal.m in Sources */ = {isa = PBXBuildFile; fileRef = F30FABD61833168D00E5FD00 /* Animal.m */; };
+		F313FC94189B5CBB00F3F1A8 /* mgwuSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F313FC93189B5CBB00F3F1A8 /* mgwuSDK.framework */; };
 		F3142F5D183B45EC00AA9ED9 /* LandscapeOnlyViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = F3142F5C183B45EC00AA9ED9 /* LandscapeOnlyViewController.mm */; };
 		F3142F5F183B469200AA9ED9 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F3142F5E183B469100AA9ED9 /* UIKit.framework */; };
 		F31C943618309D8B0088677D /* sky.png in Resources */ = {isa = PBXBuildFile; fileRef = F31C943518309D8B0088677D /* sky.png */; };
@@ -90,6 +91,17 @@
 		F36C5409184711310080CB2D /* LocalScoreLayer.mm in Sources */ = {isa = PBXBuildFile; fileRef = F36C5408184711310080CB2D /* LocalScoreLayer.mm */; };
 		F36C540C184719700080CB2D /* LocalScore.mm in Sources */ = {isa = PBXBuildFile; fileRef = F36C540B184719700080CB2D /* LocalScore.mm */; };
 		F385F45518452160009AF495 /* ScoreLayer.mm in Sources */ = {isa = PBXBuildFile; fileRef = F385F45418452160009AF495 /* ScoreLayer.mm */; };
+		F3934ACC189B5D80008B2707 /* Accounts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F3934ACB189B5D80008B2707 /* Accounts.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		F3934ACE189B5D87008B2707 /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F3934ACD189B5D87008B2707 /* AdSupport.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		F3934AD0189B5D8D008B2707 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F3934ACF189B5D8D008B2707 /* CFNetwork.framework */; };
+		F3934AD2189B5D96008B2707 /* CoreTelephony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F3934AD1189B5D96008B2707 /* CoreTelephony.framework */; };
+		F3934AD4189B5DA0008B2707 /* libicucore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F3934AD3189B5DA0008B2707 /* libicucore.dylib */; };
+		F3934AD6189B5DA6008B2707 /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F3934AD5189B5DA6008B2707 /* MessageUI.framework */; };
+		F3934AD8189B5DAB008B2707 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F3934AD7189B5DAB008B2707 /* Security.framework */; };
+		F3934ADA189B5DB1008B2707 /* Social.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F3934AD9189B5DB1008B2707 /* Social.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		F3934ADC189B5DB6008B2707 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F3934ADB189B5DB6008B2707 /* StoreKit.framework */; };
+		F3934ADE189B5DBB008B2707 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F3934ADD189B5DBB008B2707 /* SystemConfiguration.framework */; };
+		F3934AE0189B5DC0008B2707 /* Twitter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F3934ADF189B5DC0008B2707 /* Twitter.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		F3B238BE184D123800FE125C /* thorgisprite.plist in Resources */ = {isa = PBXBuildFile; fileRef = F3B238BC184D123800FE125C /* thorgisprite.plist */; };
 		F3B238BF184D123800FE125C /* thorgisprite.png in Resources */ = {isa = PBXBuildFile; fileRef = F3B238BD184D123800FE125C /* thorgisprite.png */; };
 		F3C94D501823734800D34960 /* Cat.mm in Sources */ = {isa = PBXBuildFile; fileRef = F3C94D4F1823734800D34960 /* Cat.mm */; };
@@ -193,6 +205,7 @@
 		F309371918519C970064BC4C /* StarshipThorgi3.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = StarshipThorgi3.wav; sourceTree = "<group>"; };
 		F30FABD51833168D00E5FD00 /* Animal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Animal.h; sourceTree = "<group>"; };
 		F30FABD61833168D00E5FD00 /* Animal.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Animal.m; sourceTree = "<group>"; };
+		F313FC93189B5CBB00F3F1A8 /* mgwuSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = mgwuSDK.framework; path = mgwuSDK.embeddedframework/mgwuSDK.framework; sourceTree = "<group>"; };
 		F3142F5B183B45EC00AA9ED9 /* LandscapeOnlyViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LandscapeOnlyViewController.h; sourceTree = "<group>"; };
 		F3142F5C183B45EC00AA9ED9 /* LandscapeOnlyViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = LandscapeOnlyViewController.mm; sourceTree = "<group>"; };
 		F3142F5E183B469100AA9ED9 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS6.1.sdk/System/Library/Frameworks/UIKit.framework; sourceTree = DEVELOPER_DIR; };
@@ -238,6 +251,17 @@
 		F36C540B184719700080CB2D /* LocalScore.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = LocalScore.mm; sourceTree = "<group>"; };
 		F385F45318452160009AF495 /* ScoreLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScoreLayer.h; sourceTree = "<group>"; };
 		F385F45418452160009AF495 /* ScoreLayer.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ScoreLayer.mm; sourceTree = "<group>"; };
+		F3934ACB189B5D80008B2707 /* Accounts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accounts.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS6.1.sdk/System/Library/Frameworks/Accounts.framework; sourceTree = DEVELOPER_DIR; };
+		F3934ACD189B5D87008B2707 /* AdSupport.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AdSupport.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS6.1.sdk/System/Library/Frameworks/AdSupport.framework; sourceTree = DEVELOPER_DIR; };
+		F3934ACF189B5D8D008B2707 /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS6.1.sdk/System/Library/Frameworks/CFNetwork.framework; sourceTree = DEVELOPER_DIR; };
+		F3934AD1189B5D96008B2707 /* CoreTelephony.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreTelephony.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS6.1.sdk/System/Library/Frameworks/CoreTelephony.framework; sourceTree = DEVELOPER_DIR; };
+		F3934AD3189B5DA0008B2707 /* libicucore.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libicucore.dylib; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS6.1.sdk/usr/lib/libicucore.dylib; sourceTree = DEVELOPER_DIR; };
+		F3934AD5189B5DA6008B2707 /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS6.1.sdk/System/Library/Frameworks/MessageUI.framework; sourceTree = DEVELOPER_DIR; };
+		F3934AD7189B5DAB008B2707 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS6.1.sdk/System/Library/Frameworks/Security.framework; sourceTree = DEVELOPER_DIR; };
+		F3934AD9189B5DB1008B2707 /* Social.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Social.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS6.1.sdk/System/Library/Frameworks/Social.framework; sourceTree = DEVELOPER_DIR; };
+		F3934ADB189B5DB6008B2707 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS6.1.sdk/System/Library/Frameworks/StoreKit.framework; sourceTree = DEVELOPER_DIR; };
+		F3934ADD189B5DBB008B2707 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS6.1.sdk/System/Library/Frameworks/SystemConfiguration.framework; sourceTree = DEVELOPER_DIR; };
+		F3934ADF189B5DC0008B2707 /* Twitter.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Twitter.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS6.1.sdk/System/Library/Frameworks/Twitter.framework; sourceTree = DEVELOPER_DIR; };
 		F3B238BC184D123800FE125C /* thorgisprite.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = thorgisprite.plist; sourceTree = "<group>"; };
 		F3B238BD184D123800FE125C /* thorgisprite.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = thorgisprite.png; sourceTree = "<group>"; };
 		F3C94D4E1823734800D34960 /* Cat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Cat.h; sourceTree = "<group>"; };
@@ -289,6 +313,17 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F3934AE0189B5DC0008B2707 /* Twitter.framework in Frameworks */,
+				F3934ADE189B5DBB008B2707 /* SystemConfiguration.framework in Frameworks */,
+				F3934ADC189B5DB6008B2707 /* StoreKit.framework in Frameworks */,
+				F3934ADA189B5DB1008B2707 /* Social.framework in Frameworks */,
+				F3934AD8189B5DAB008B2707 /* Security.framework in Frameworks */,
+				F3934AD6189B5DA6008B2707 /* MessageUI.framework in Frameworks */,
+				F3934AD4189B5DA0008B2707 /* libicucore.dylib in Frameworks */,
+				F3934AD2189B5D96008B2707 /* CoreTelephony.framework in Frameworks */,
+				F3934AD0189B5D8D008B2707 /* CFNetwork.framework in Frameworks */,
+				F3934ACE189B5D87008B2707 /* AdSupport.framework in Frameworks */,
+				F3934ACC189B5D80008B2707 /* Accounts.framework in Frameworks */,
 				F3142F5F183B469200AA9ED9 /* UIKit.framework in Frameworks */,
 				F3532D0F182F435E00955679 /* GameKit.framework in Frameworks */,
 				DC65615C13A969B600A7AC53 /* libbox2d-ios.a in Frameworks */,
@@ -301,6 +336,7 @@
 				DC65616413A969B600A7AC53 /* libkobold2d-ios.a in Frameworks */,
 				DC65616513A969B600A7AC53 /* libobjectal-ios.a in Frameworks */,
 				DC65616613A969B600A7AC53 /* libsneakyinput-ios.a in Frameworks */,
+				F313FC94189B5CBB00F3F1A8 /* mgwuSDK.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -324,6 +360,17 @@
 		DCC1A0D613A94EC0005BD75D = {
 			isa = PBXGroup;
 			children = (
+				F3934ADF189B5DC0008B2707 /* Twitter.framework */,
+				F3934ADD189B5DBB008B2707 /* SystemConfiguration.framework */,
+				F3934ADB189B5DB6008B2707 /* StoreKit.framework */,
+				F3934AD9189B5DB1008B2707 /* Social.framework */,
+				F3934AD7189B5DAB008B2707 /* Security.framework */,
+				F3934AD5189B5DA6008B2707 /* MessageUI.framework */,
+				F3934AD3189B5DA0008B2707 /* libicucore.dylib */,
+				F3934AD1189B5D96008B2707 /* CoreTelephony.framework */,
+				F3934ACF189B5D8D008B2707 /* CFNetwork.framework */,
+				F3934ACD189B5D87008B2707 /* AdSupport.framework */,
+				F3934ACB189B5D80008B2707 /* Accounts.framework */,
 				F3142F5E183B469100AA9ED9 /* UIKit.framework */,
 				F3532D0E182F435E00955679 /* GameKit.framework */,
 				DCC1A38C13A94F1A005BD75D /* Projectfiles */,
@@ -347,6 +394,7 @@
 		DCC1A0E613A94ED5005BD75D /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				F313FC93189B5CBB00F3F1A8 /* mgwuSDK.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -887,10 +935,19 @@
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "iPhone Developer: Amy Tang (8Y5Y6AMRP8)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Amy Tang (8Y5Y6AMRP8)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/mgwuSDK.embeddedframework\"",
+				);
 				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/../__Kobold2D__/libs/GoogleAdMobAdsSDK\"",
+				);
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"$(KKFRAMEWORKS_IOS)",
+					"-lsqlite3.0",
 				);
 				PRODUCT_NAME = "Thorgi-iOS";
 				PROVISIONING_PROFILE = "44315468-8324-4FE2-8F3A-C9AB5AFE2E67";
@@ -903,10 +960,19 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = DCFA90F013B4F811009DD35A /* BuildSettings-Release-iOS.xcconfig */;
 			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/mgwuSDK.embeddedframework\"",
+				);
 				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/../__Kobold2D__/libs/GoogleAdMobAdsSDK\"",
+				);
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"$(KKFRAMEWORKS_IOS)",
+					"-lsqlite3.0",
 				);
 				PRODUCT_NAME = "Thorgi-iOS";
 				TARGETED_DEVICE_FAMILY = "1,2";
