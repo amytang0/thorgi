@@ -60,10 +60,12 @@
         CCMenuItemImage *menuPlayButton = [CCMenuItemImage itemWithNormalImage:@"thorgipose.png" selectedImage:@"thorgipose.png"  target:self selector:@selector(playGame:)];
         menuPlayButton.scale = 1.75f;
        // menuPlayButton.position = ccp(appframe.size.height/2, appframe.size.width*2/3);
-        menuPlayButton.tag = 1; 
+        menuPlayButton.tag = 1;
+        
+        CCMenuItemImage *menuMoreGamesButton = [CCMenuItemImage itemWithNormalImage:@"deadthorgi.png" selectedImage:@"deadthorgi.png"  target:self selector:@selector(moreGames:)];
         
         // Create a menu and add your menu items to it
-        CCMenu *myMenu = [CCMenu menuWithItems:menuPlayButton, nil];
+        CCMenu *myMenu = [CCMenu menuWithItems:menuPlayButton,menuMoreGamesButton, nil];
         
         // Arrange the menu items vertically
         [myMenu alignItemsHorizontally];
@@ -123,6 +125,11 @@
 {
     HUDLayer *hud = [HUDLayer node];
     [[CCDirector sharedDirector] replaceScene: (CCScene*)[[GameLayer alloc] initWithHUD:hud]];
+}
+
+-(void) moreGames:(CCMenuItem *)sender
+{
+   [MGWU displayCrossPromo];
 }
 
 -(void) onEnter

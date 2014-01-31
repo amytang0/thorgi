@@ -189,7 +189,7 @@
         }
      
         
-        
+        // Touch hack.
         KKInput* input = [KKInput sharedInput];
         
         input.userInteractionEnabled = YES;
@@ -198,6 +198,17 @@
         tapGestureRecognizer = input.tapGestureRecognizer;
         tapGestureRecognizer.cancelsTouchesInView = NO;
 
+        NSNumber* levelnumber = [NSNumber numberWithInt:1];
+        NSDictionary *parameters = [[NSDictionary alloc] initWithObjectsAndKeys:
+                [NSNumber numberWithInt:scorePoints], @"score",
+                [NSNumber numberWithInt:[[GameState sharedInstance] basicCatsKilledThisGame]], @"basic_cats_killed",
+                [NSNumber numberWithInt:[[GameState sharedInstance] dashCatsKilledThisGame]], @"dash_cats_killed",
+                [NSNumber numberWithInt:[[GameState sharedInstance] wizardCatsKilledThisGame]], @"wizard_cats_killed",
+                [NSNumber numberWithInt:[[GameState sharedInstance] nyanCatsKilledThisGame]], @"nyan_cats_killed",
+                [NSNumber numberWithInt:[[GameState sharedInstance] lokiCatsKilledThisGame]], @"loki_cats_killed",
+                nil];
+        [MGWU logEvent:@"dog_died" withParams:parameters];
+        
         
 	}
 	return self;

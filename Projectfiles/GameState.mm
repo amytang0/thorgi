@@ -18,11 +18,13 @@
 @synthesize dashCatsKilledTotal;
 @synthesize wizardCatsKilledTotal;
 @synthesize nyanCatsKilledTotal;
+@synthesize lokiCatsKilledTotal;
 
 @synthesize basicCatsKilledThisGame;
 @synthesize dashCatsKilledThisGame;
 @synthesize wizardCatsKilledThisGame;
 @synthesize nyanCatsKilledThisGame;
+@synthesize lokiCatsKilledThisGame;
 
 @synthesize muteMusic;
 @synthesize muteSound;
@@ -106,13 +108,17 @@ static GameState *sharedInstance = nil;
 -(int)getTotalCatsKilledThisGame {
     return basicCatsKilledThisGame +
            dashCatsKilledThisGame +
-           wizardCatsKilledThisGame;
+           wizardCatsKilledThisGame +
+           nyanCatsKilledThisGame +
+           lokiCatsKilledThisGame ;
 }
 
 -(int)getTotalCatsKilledTotal {
     return basicCatsKilledTotal +
            dashCatsKilledTotal +
-           wizardCatsKilledTotal;
+           wizardCatsKilledTotal +
+           nyanCatsKilledTotal +
+           lokiCatsKilledTotal ;
 }
 
 // Returns true if score was added to top ten.

@@ -24,11 +24,13 @@
 @property (assign) int dashCatsKilledTotal;
 @property (assign) int wizardCatsKilledTotal;
 @property (assign) int nyanCatsKilledTotal;
+@property (assign) int lokiCatsKilledTotal;
 
 @property (assign) int basicCatsKilledThisGame;
 @property (assign) int dashCatsKilledThisGame;
 @property (assign) int wizardCatsKilledThisGame;
 @property (assign) int nyanCatsKilledThisGame;
+@property (assign) int lokiCatsKilledThisGame;
 
 @property (assign) Boolean muteMusic;
 @property (assign) Boolean muteSound;
