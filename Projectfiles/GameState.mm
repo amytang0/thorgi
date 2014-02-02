@@ -13,6 +13,7 @@
 
 @implementation GameState
 @synthesize scorePoints;
+@synthesize username;
 
 @synthesize basicCatsKilledTotal;
 @synthesize dashCatsKilledTotal;
@@ -60,6 +61,8 @@ static GameState *sharedInstance = nil;
 }
 - (void)encodeWithCoder:(NSCoder *)encoder {
     [encoder encodeInt:scorePoints forKey:@"scorePoints"];
+    [encoder encodeObject:username forKey:@"username"];
+    
     [encoder encodeInt:basicCatsKilledTotal forKey:@"basicCatsKilledTotal"];
     [encoder encodeInt:dashCatsKilledTotal forKey:@"dashCatsKilledTotal"];
     [encoder encodeInt:wizardCatsKilledTotal forKey:@"wizardCatsKilledTotal"];
@@ -79,6 +82,7 @@ static GameState *sharedInstance = nil;
 - (id)initWithCoder:(NSCoder *)decoder {
     if ((self = [super init])) {
         scorePoints = [decoder decodeIntForKey:@"scorePoints"];
+        username = [decoder decodeObjectForKey:@"username"];
         basicCatsKilledTotal = [decoder decodeIntForKey:@"basicCatsKilledTotal"];
         dashCatsKilledTotal = [decoder decodeIntForKey:@"dashCatsKilledTotal"];
         wizardCatsKilledTotal = [decoder decodeIntForKey:@"wizardCatsKilledTotal"];

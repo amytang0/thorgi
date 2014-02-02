@@ -19,6 +19,8 @@
 -(Boolean) addNewScore:(int) score username:(NSString *)username;
 -(NSMutableArray *) getTopTenScores ;
 
+@property (assign) NSString* username;
+
 @property (assign) int scorePoints;
 @property (assign) int basicCatsKilledTotal;
 @property (assign) int dashCatsKilledTotal;

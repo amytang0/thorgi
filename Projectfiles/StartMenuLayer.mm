@@ -88,26 +88,35 @@
 	return self;
 }
 
+// This shows the alert asking for username input.
 - (IBAction)showUsernameInputBox:(id)sender {
+    if ([GameState sharedInstance].username == nil) {
     UIAlertView * alert = [[UIAlertView alloc] initWithTitle:@"New User" message:@"Please enter your username" delegate:self cancelButtonTitle:nil otherButtonTitles:@"Confirm",nil];
     alert.alertViewStyle = UIAlertViewStylePlainTextInput;
     [alert show];
+    }
 }
 
+// This should handle what happens to the username
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
+    if ([GameState sharedInstance].username == nil) {
     NSString *title = [alertView buttonTitleAtIndex:buttonIndex];
     if([title isEqualToString:@"Confirm"])
     {
         UITextField *username = [alertView textFieldAtIndex:0];
+        [GameState sharedInstance].username = username.text;
+         [[GameState sharedInstance] save];
         NSLog(@"Username: %@", username.text);
+    }
     }
 }
 
+// Prevents usernames longer than 10 characters.
 - (BOOL)alertViewShouldEnableFirstOtherButton:(UIAlertView *)alertView
 {
     NSString *inputText = [[alertView textFieldAtIndex:0] text];
-    if( [inputText length] <= 10 )
+    if( [inputText length] <= 10 || [inputText length] > 0)
     {
         return YES;
     }
