@@ -107,9 +107,8 @@
         if([title isEqualToString:@"Confirm"])
         {
             UITextField *username = [alertView textFieldAtIndex:0];
-            [GameState sharedInstance].username = username.text;
-             [[GameState sharedInstance] save];
             [defaults setBool:YES forKey:@"username_set"];
+            [defaults setObject:username.text forKey:@"username"];
             [defaults synchronize];
             NSLog(@"Username: %@", username.text);
         }

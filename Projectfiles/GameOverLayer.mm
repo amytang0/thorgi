@@ -189,8 +189,11 @@
         }
         
         // Send highscore.
-       // [MGWU submitHighScore:scorePoints byPlayer:[GameState sharedInstance].username forLeaderboard:@"defaultLeaderboard"];
-       // CCLOG(@"User: %@ score: %d", [GameState sharedInstance].username, scorePoints);
+        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+        NSString *user = (NSString *)[defaults objectForKey:@"username"];
+             CCLOG(@"User: %@ score: %d", user , scorePoints);
+        [MGWU submitHighScore:scorePoints byPlayer:user forLeaderboard:@"defaultLeaderboard"];
+   
         
         // Touch hack.
         KKInput* input = [KKInput sharedInput];
@@ -202,7 +205,6 @@
         tapGestureRecognizer.cancelsTouchesInView = NO;
 
         // Logging
-        NSNumber* levelnumber = [NSNumber numberWithInt:1];
         NSDictionary *parameters = [[NSDictionary alloc] initWithObjectsAndKeys:
                 [NSNumber numberWithInt:scorePoints], @"score",
                 [NSNumber numberWithInt:[[GameState sharedInstance] basicCatsKilledThisGame]], @"basic_cats_killed",
