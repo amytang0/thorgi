@@ -36,6 +36,10 @@
 	self = [super init];
 	if (self)
 	{
+        [MGWU getHighScoresForLeaderboard:@"defaultLeaderboard" withCallback:@selector(receivedScores:) onTarget:self];
+        
+        
+        
         // Set content size to be partial width of screen
         CGSize winSize = [CCDirector sharedDirector].winSize;
         [self setContentSize:CGSizeMake(winSize.width/2.0f,winSize.height)];
@@ -64,6 +68,34 @@
 	}
 	return self;
 }
+
+//If there is no connection to the internet, scoreArray will be nil.
+- (void)receivedScores:(NSDictionary*)scores {
+    //Do stuff with scores in here! Display them!
+    NSEnumerator *enumerator = [scores keyEnumerator];
+    id key = [enumerator nextObject];
+    while ((key = [enumerator nextObject])) {
+        NSDictionary *player = [scores objectForKey:key];
+        
+        NSString *name = [player objectForKey:@"name"];
+        NSNumber *s = [player objectForKey:@"score"];
+        int score = [s intValue];
+        //Do something with name and score
+        CCLOG(@"name: %@, %d",name,score);
+    }
+/*
+    for (int i = 1; i < [scoreArray count]; i++)
+    {
+        NSDictionary *player = [scoreArray objectAtIndex:i];
+        NSString *name = [player objectForKey:@"name"];
+        NSNumber *s = [player objectForKey:@"score"];
+        int score = [s intValue];
+        //Do something with name and score
+        CCLOG(@"name: %@, %d",name,score);
+    }
+ */
+}
+
 
 -(void) moveToNewLine
 {
