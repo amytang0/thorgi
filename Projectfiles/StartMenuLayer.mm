@@ -90,26 +90,31 @@
 
 // This shows the alert asking for username input.
 - (IBAction)showUsernameInputBox:(id)sender {
-    if ([GameState sharedInstance].username == nil) {
-    UIAlertView * alert = [[UIAlertView alloc] initWithTitle:@"New User" message:@"Please enter your username" delegate:self cancelButtonTitle:nil otherButtonTitles:@"Confirm",nil];
-    alert.alertViewStyle = UIAlertViewStylePlainTextInput;
-    [alert show];
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    if (![defaults boolForKey:@"username_set"]) {
+        UIAlertView * alert = [[UIAlertView alloc] initWithTitle:@"New User" message:@"Please enter your username" delegate:self cancelButtonTitle:nil otherButtonTitles:@"Confirm",nil];
+        alert.alertViewStyle = UIAlertViewStylePlainTextInput;
+        [alert show];
     }
 }
 
 // This should handle what happens to the username
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
-    if ([GameState sharedInstance].username == nil) {
-    NSString *title = [alertView buttonTitleAtIndex:buttonIndex];
-    if([title isEqualToString:@"Confirm"])
-    {
-        UITextField *username = [alertView textFieldAtIndex:0];
-        [GameState sharedInstance].username = username.text;
-         [[GameState sharedInstance] save];
-        NSLog(@"Username: %@", username.text);
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    if (![defaults boolForKey:@"username_set"]) {
+        NSString *title = [alertView buttonTitleAtIndex:buttonIndex];
+        if([title isEqualToString:@"Confirm"])
+        {
+            UITextField *username = [alertView textFieldAtIndex:0];
+            [GameState sharedInstance].username = username.text;
+             [[GameState sharedInstance] save];
+            [defaults setBool:YES forKey:@"username_set"];
+            [defaults synchronize];
+            NSLog(@"Username: %@", username.text);
+        }
     }
-    }
+    
 }
 
 // Prevents usernames longer than 10 characters.

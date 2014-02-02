@@ -187,7 +187,10 @@
             }
 
         }
-     
+        
+        // Send highscore.
+       // [MGWU submitHighScore:scorePoints byPlayer:[GameState sharedInstance].username forLeaderboard:@"defaultLeaderboard"];
+       // CCLOG(@"User: %@ score: %d", [GameState sharedInstance].username, scorePoints);
         
         // Touch hack.
         KKInput* input = [KKInput sharedInput];
@@ -198,6 +201,7 @@
         tapGestureRecognizer = input.tapGestureRecognizer;
         tapGestureRecognizer.cancelsTouchesInView = NO;
 
+        // Logging
         NSNumber* levelnumber = [NSNumber numberWithInt:1];
         NSDictionary *parameters = [[NSDictionary alloc] initWithObjectsAndKeys:
                 [NSNumber numberWithInt:scorePoints], @"score",
@@ -208,6 +212,7 @@
                 [NSNumber numberWithInt:[[GameState sharedInstance] lokiCatsKilledThisGame]], @"loki_cats_killed",
                 nil];
         [MGWU logEvent:@"dog_died" withParams:parameters];
+        
         
         
 	}
