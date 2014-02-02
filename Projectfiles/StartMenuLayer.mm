@@ -38,6 +38,9 @@
 	self = [super init];
 	if (self)
 	{
+
+        [self showUsernameInputBox:self];
+        
         CGRect appframe= [[UIScreen mainScreen] applicationFrame];
         
         glClearColor(.001f, .581f, .823f, 1.0f);
@@ -83,6 +86,35 @@
 		//[self scheduleUpdate];
 	}
 	return self;
+}
+
+- (IBAction)showUsernameInputBox:(id)sender {
+    UIAlertView * alert = [[UIAlertView alloc] initWithTitle:@"New User" message:@"Please enter your username" delegate:self cancelButtonTitle:nil otherButtonTitles:@"Confirm",nil];
+    alert.alertViewStyle = UIAlertViewStylePlainTextInput;
+    [alert show];
+}
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    NSString *title = [alertView buttonTitleAtIndex:buttonIndex];
+    if([title isEqualToString:@"Confirm"])
+    {
+        UITextField *username = [alertView textFieldAtIndex:0];
+        NSLog(@"Username: %@", username.text);
+    }
+}
+
+- (BOOL)alertViewShouldEnableFirstOtherButton:(UIAlertView *)alertView
+{
+    NSString *inputText = [[alertView textFieldAtIndex:0] text];
+    if( [inputText length] <= 10 )
+    {
+        return YES;
+    }
+    else
+    {
+        return NO;
+    }
 }
 
 -(void) initGameState

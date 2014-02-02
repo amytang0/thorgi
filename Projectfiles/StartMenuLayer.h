@@ -15,4 +15,5 @@
 }
 +(id) scene;
 -(void) playGame:(CCMenuItem *)sender;
+- (IBAction)showMessage:(id)sender;
 @end

@@ -32,6 +32,8 @@
     
     [MGWU loadMGWU:@"12QWaszxthorgi"];
     [MGWU preFacebook]; //Temporarily disables Facebook until you integrate it later
+    
+    
 }
 
 -(id) alternateView
