@@ -37,13 +37,9 @@
 	if (self)
 	{
         [MGWU getHighScoresForLeaderboard:@"defaultLeaderboard" withCallback:@selector(receivedScores:) onTarget:self];
-        
-        
-        
         // Set content size to be partial width of screen
         CGSize winSize = [CCDirector sharedDirector].winSize;
         [self setContentSize:CGSizeMake(winSize.width/2.0f,winSize.height)];
-
         
         // Set starting point of text
         pos = ccp(winSize.width*.37,winSize.height*.85);
@@ -51,19 +47,14 @@
         // First put table label on top
         [self writeHeaderRow];
         
-        NSMutableArray *scoresArray = [GameState sharedInstance].topTenScoresLocal;
-        for (int i = 0; i < (int)[scoresArray count]; i++) {
-            LocalScore *ls = scoresArray[i];
-            [self writeScoreRow:ls rank:i+1];
-        }
-        
         // Put Score Board
-          CCSpriteFrame *scoresFrame = [[CCSpriteFrameCache sharedSpriteFrameCache] spriteFrameByName:@"scores.png"];
-         CCSprite  *scores = [[CCSprite alloc] initWithSpriteFrame:scoresFrame];
-         scores.position = ccp(winSize.width/3,winSize.height/2);
-         scores.scale = 2.7f;
-         [self addChild: scores z:-1];
+        CCSpriteFrame *scoresFrame = [[CCSpriteFrameCache sharedSpriteFrameCache] spriteFrameByName:@"scores.png"];
+        CCSprite  *scores = [[CCSprite alloc] initWithSpriteFrame:scoresFrame];
+        scores.position = ccp(winSize.width/3,winSize.height/2);
+        scores.scale = 2.7f;
+        [self addChild: scores z:-1];
         self.isTouchEnabled = FALSE;
+        
 
 	}
 	return self;
@@ -74,7 +65,8 @@
     //Do stuff with scores in here! Display them!
     NSEnumerator *enumerator = [scores keyEnumerator];
     id key = [enumerator nextObject];
-    while ((key = [enumerator nextObject])) {
+    int i = 1;
+    while ((key = [enumerator nextObject]) && i <= 10) {
         NSDictionary *player = [scores objectForKey:key];
         
         NSString *name = [player objectForKey:@"name"];
@@ -82,6 +74,10 @@
         int score = [s intValue];
         //Do something with name and score
         CCLOG(@"name: %@, %d",name,score);
+        
+        // Write the scores.
+        [self writeScoreRow:name rank:i score:score];
+        i++;
     }
 /*
     for (int i = 1; i < [scoreArray count]; i++)
@@ -95,6 +91,8 @@
     }
  */
 }
+
+
 
 
 -(void) moveToNewLine
@@ -152,7 +150,44 @@
 
 }
 
--(void) writeScoreRow:(LocalScore*)ls rank:(int)rank
+
+-(void) writeScoreRow:(NSString*)user rank:(int)rank score:(int)score
+{
+    CGSize winSize = [CCDirector sharedDirector].winSize;
+    CCLabelTTF  *titleLabel =[CCLabelTTF labelWithString: [NSString stringWithFormat:@"%d", rank]
+                                              dimensions:CGSizeMake(winSize.width/2, 20)
+                                              hAlignment:kCCTextAlignmentLeft
+                                                fontName:@"Chalkduster"
+                                                fontSize:16];
+    // titleLabel.color = ccBLACK;
+    titleLabel.position = pos;
+    [self addChild:titleLabel];
+    [self moveRightPos1];
+    
+    titleLabel = titleLabel =[CCLabelTTF labelWithString:[NSString stringWithFormat:@"%@", user]
+                                              dimensions:CGSizeMake(winSize.width/2, 20)
+                                              hAlignment:kCCTextAlignmentLeft
+                                                fontName:@"Chalkduster"
+                                                fontSize:16];
+    // titleLabel.color = ccBLACK;
+    titleLabel.position = pos;
+    [self addChild:titleLabel];
+    [self moveRightPos2];
+    
+    titleLabel = titleLabel =[CCLabelTTF labelWithString:[NSString stringWithFormat:@"%d", score]
+                                              dimensions:CGSizeMake(winSize.width/2, 20)
+                                              hAlignment:kCCTextAlignmentLeft
+                                                fontName:@"Chalkduster"
+                                                fontSize:16];
+    // titleLabel.color = ccBLACK;
+    titleLabel.position = pos;
+    [self addChild:titleLabel];
+    [self moveToNewLine];
+    
+    
+}
+
+-(void) writeLocalScoreRow:(LocalScore*)ls rank:(int)rank
 {
     CGSize winSize = [CCDirector sharedDirector].winSize;
        CCLabelTTF  *titleLabel =[CCLabelTTF labelWithString: [NSString stringWithFormat:@"%d", rank]
