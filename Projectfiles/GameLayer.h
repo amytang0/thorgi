@@ -19,6 +19,7 @@ enum {
     SpriteStateInvincible,
     SpriteStateRemove,
     SpriteStateEnemyBullet,
+    SpriteStateDerp,
     SpriteStateNyan,
     SpriteStateRupee
 };
@@ -54,6 +55,10 @@ typedef NSInteger SpriteState;
     
     Boolean hasLokitty;
     Boolean hasBiggerBullets;
+    Boolean isDerped;
+    Boolean isAbnormalState;
+    
+    int numberOfCats;
 }
 +(id) scene;
 - (id)initWithHUD:(HUDLayer *)hudLayer;

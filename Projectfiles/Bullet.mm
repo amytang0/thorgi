@@ -91,3 +91,39 @@
 
 
 @end
+
+@implementation DerpBullet
+
+-(id) initWithBulletImage
+{
+    // This calls WizardBullet's init.
+    if ((self = [super initWithBulletImage]))
+    {
+        self.damage = 1;
+        self.color = ccRED;
+        //properties work internally just like normal instance variables
+    }
+    return self;
+}
+
+
+@end
+
+
+@implementation MineBullet
+
+-(id) initWithBulletImage
+{
+    // This calls CCSprite's init. Basically this init method does everything CCSprite's init method does and then more
+    if ((self = [super initWithBulletImage]))
+    {
+        self.damage = 1;
+        self.color = ccBLACK;
+        //properties work internally just like normal instance variables
+    }
+    return self;
+}
+
+
+@end
+

@@ -144,6 +144,7 @@ CGFloat timeElapsed;
 
 @implementation WizardCat
 @synthesize countdown;
+@synthesize bulletType;
 -(id) initWithAnimatedCat
 {
     self = [super initWithSpriteFrameName:@"frontwizardcat1.png"];
@@ -154,6 +155,7 @@ CGFloat timeElapsed;
         self.countdown = 2;
         //self.direction = @"";
          self.name = @"wizard";
+        self.bulletType = @"wizard";
         self.numFrames = 3;
 
         [self schedule:@selector(countDown) interval:1.0f];
@@ -252,6 +254,69 @@ CGFloat timeElapsed;
 {
     self.countdown = 1;
 }
+@end
+
+@implementation FatCat
+-(id) initWithAnimatedCat
+{
+    self = [super initWithSpriteFrameName:@"frontfatcat1.png"];
+    if (self) {
+        self.health = 5;
+        self.points = 5;
+        self.speed = 0.5f;
+        //self.direction = @"";
+        self.name = @"fat";
+        self.numFrames = 3;
+    }
+    return self;
+}
+
+@end
+
+
+@implementation DerpCat
+-(id) initWithAnimatedCat
+{
+    self = [super initWithAnimatedCat];
+    //self = [super initWithSpriteFrameName:@"frontderpcat1.png"]; //Uncomment later
+    if (self) {
+        self.health = 1;
+        self.points = 15;
+        self.speed = 1.0f;
+        self.countdown = 2;
+        
+        //self.direction = @"";
+        //self.name = @"derp"; // Uncomment later
+        //self.numFrames = 3;
+        self.bulletType = @"derp";
+        self.color = ccRED; // Comment out later
+        
+    }
+    return self;
+}
+@end
+
+@implementation MineCat
+-(id) initWithAnimatedCat
+{
+    self = [super initWithAnimatedCat];
+    //self = [super initWithSpriteFrameName:@"frontminecat1.png"]; // Uncomment later
+    if (self) {
+        self.health = 1;
+        self.points = 10;
+        self.speed = 1.0f;
+        self.countdown = 2;
+        //self.direction = @"";
+        // self.name = @"mine"; // Uncomment later
+        //self.numFrames = 3;
+        self.bulletType = @"mine";
+        self.color = ccBLUE; // Comment out later
+
+        
+    }
+    return self;
+}
+
 
 @end
 

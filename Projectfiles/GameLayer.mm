@@ -79,8 +79,11 @@ const float PTM_RATIO = 32.0f;
         // Initialize some variables.
         score = 0;
         elapsedTime = 0;
+        numberOfCats = 0;
         hasLokitty = NO;
         hasBiggerBullets = NO;
+        isDerped = NO;
+        isAbnormalState = NO;
         
         // Initialize the world with its resources.
         [self initHud: hudLayer];
@@ -209,7 +212,7 @@ const float PTM_RATIO = 32.0f;
     hearts = [CCSpriteBatchNode batchNodeWithFile:@"heart.png"];
     [self addChild:hearts];
     
-     [[CCSpriteFrameCache sharedSpriteFrameCache] addSpriteFramesWithFile:@"cats.plist"];
+    // [[CCSpriteFrameCache sharedSpriteFrameCache] addSpriteFramesWithFile:@"cats.plist"];
 }
 
 // Creates the Box2d parameters on the edges.
@@ -354,9 +357,10 @@ const float PTM_RATIO = 32.0f;
         distance = hypotf(x - dogPos.x, y - dogPos.y);
         i++;
     }
-    CCLOG(@"WAS IN WHILE LOOP FOR: %d", i);
+    // CCLOG(@"WAS IN WHILE LOOP FOR: %d", i);
     
     CGPoint p = ccp(x,y);
+   // if (numberOfCats < 2 ) //Uncomment later. This creates 1 cat only
     [self createCat:@"cat.png" atPosition:p rotation:0.0f isStatic:NO];
 }
 
@@ -370,17 +374,25 @@ const float PTM_RATIO = 32.0f;
     Cat *sprite;
     
         int random = arc4random();
+    
+  /*  if(true) {
+        sprite =[[DerpCat alloc] initWithAnimatedCat];
+      //  CCLOG(@"Derp cat spawned.");
+    } else
+  */
     if (!hasLokitty &&
-        ((score!=0 && score% 50 == 0) || (score >= 35 && arc4random()%100 <3))
+        ((score!=0 && score% 50 == 0) || (score >= 55 && arc4random()%100 <3))
         ) {
         CCLOG(@"CREATED LOKITTY");
         sprite = [[Lokitty alloc] initWithAnimatedCat];
         hasLokitty = YES;
+    } else if (score >= 70 && arc4random()%100 < 20) {
+        sprite =[[DerpCat alloc] initWithAnimatedCat];
+        //  CCLOG(@"Derp cat spawned.");
     } else if (score >= 30 && arc4random()%100 < 30) {
         sprite = [[NyanCat alloc] initWithAnimatedNyanCat];
         CCLOG(@"Nyancat spawned.");
-    }
-    else if (score >= 5  && arc4random()%10 < 4 ) {
+    } else if (score >= 5  && arc4random()%10 < 4 ) {
         sprite =[[WizardCat alloc] initWithAnimatedCat];
         CCLOG(@"Wizard cat spawned.");
     } else {
@@ -394,6 +406,7 @@ const float PTM_RATIO = 32.0f;
         }
     }
     [cats addChild:sprite z:1];
+    numberOfCats++;
     
 
     //Create the bodyDef
@@ -519,16 +532,18 @@ const float PTM_RATIO = 32.0f;
         
         CGPoint pan = [self getScreenPosition:input.gesturePanLocation];
         CGPoint eventualStop = pan;
-        eventualStop.x = .90*(pan.x - dogSprite.position.x);
-        eventualStop.y = .90*(pan.y - dogSprite.position.y);
-        b2Vec2 vector = b2Vec2( eventualStop.x, eventualStop.y );
+        eventualStop.x = .90 * (pan.x - dogSprite.position.x);
+        eventualStop.y = .90 * (pan.y - dogSprite.position.y);
+        b2Vec2 vector = b2Vec2( eventualStop.x, eventualStop.y);
         vector.Normalize();
-        vector*=(.5*speed + .5*10);
+        vector *= (.5 * speed + .5 * 10);
         
         dogBody->SetLinearVelocity( vector);
         dogBody->SetLinearDamping(3.0f);
         
-        
+        if (isDerped) {
+            dogBody->SetLinearVelocity(-1 * vector);
+        }
         [dogSprite setMoveDirection:[self getDirectionFromVelocity:vector]];
     }
 }
@@ -639,12 +654,21 @@ const float PTM_RATIO = 32.0f;
     }
 }
 
-// This handles the Wizard's bullets. I'm not sure if WizardBullet actually has anything yet?
--(void) shootBulletAtDog:(CGPoint)location isLoki:(Boolean)isLoki
+// This handles every enemies' bullets.
+-(void) shootBulletAtDog:(CGPoint)location isLoki:(Boolean)isLoki sprite:(CCSprite*)sprite
 {
-    WizardBullet *bulletSprite = [[WizardBullet alloc] initWithBulletImage];
+    
+    Bullet *bulletSprite;
+    if ([sprite isKindOfClass:[DerpCat class]] ){
+       // CCLOG(@"Created derp bullet for sprite %@", sprite);
+       bulletSprite = [[DerpBullet alloc] initWithBulletImage];
+    } else if ([sprite isKindOfClass:[MineCat class]] ){
+        bulletSprite = [[MineBullet alloc] initWithBulletImage];
+    } else {
+          bulletSprite = [[WizardBullet alloc] initWithBulletImage];
+    }
     bulletSprite.position = location;
-    bulletSprite.color = ccBLUE;//ccc3(1.0f,0,1.0f); //purple
+    //bulletSprite.color = ccBLUE;//ccc3(1.0f,0,1.0f); //purple
     if (isLoki) bulletSprite.color = ccGREEN;
     bulletSprite.tag = SpriteStateEnemyBullet;
     [bullets addChild:bulletSprite z:5];
@@ -673,8 +697,13 @@ const float PTM_RATIO = 32.0f;
     CGPoint translation = ccpSub(dogSprite.position, location);
     b2Vec2 direction = b2Vec2( translation.x, translation.y);
     direction.Normalize();
-    bullet->SetLinearVelocity( BULLET_SPEED/4*direction );
+    bullet->SetLinearVelocity( BULLET_SPEED/ 4 * direction );
     bullet->SetActive(true);
+    
+    // Make mines not move
+    if ([sprite isKindOfClass:[MineCat class]] ){
+        bullet->SetLinearVelocity(0 * direction);
+    }
     
     //[[SimpleAudioEngine sharedEngine] playEffect:@"pew.wav"];
     
@@ -694,7 +723,7 @@ const float PTM_RATIO = 32.0f;
         CCSprite* sprite = (__bridge CCSprite*)body->GetUserData();
         switch(sprite.tag) {
             case SpriteStateRemove: 
-                CCLOG(@"REMOVED A SPRITE FROM OUTSIDE BOUNDARY");
+                //CCLOG(@"REMOVED A SPRITE FROM OUTSIDE BOUNDARY");
                 if ([sprite isKindOfClass:[Lokitty class]]) { //Currently a hack, should be in cats.png bleh
                     hasLokitty = NO;
                 }
@@ -713,30 +742,47 @@ const float PTM_RATIO = 32.0f;
                 break;
             
             case SpriteStateNyan:
-                CCLOG(@"Started rainbows");
-                [self unschedule:@selector(createRainbowExplosionAtDog)];
-            
-                [self schedule:@selector(createRainbowExplosionAtDog) interval:0.2f repeat:46 delay:0.0f];
-                [self runNyanMusic];
-                sprite.tag = SpriteStateInvincible;
-                sprite.color = ccYELLOW;
-                [self unschedule:@selector(endInvincibility)];
-                [self scheduleOnce:@selector(endInvincibility) delay:10.1f];
+               // if (!isAbnormalState) {
+                    isAbnormalState = YES;
+                    CCLOG(@"Started rainbows");
+                    [self unschedule:@selector(createRainbowExplosionAtDog)];
+                
+                    [self schedule:@selector(createRainbowExplosionAtDog) interval:0.2f repeat:46 delay:0.0f];
+                    [self runNyanMusic];
+                    sprite.tag = SpriteStateInvincible;
+                    sprite.color = ccYELLOW;
+                    [self unschedule:@selector(endInvincibility)];
+                    [self scheduleOnce:@selector(endInvincibility) delay:10.1f];
+             //   }
                 break;
-            
+                
             case SpriteStateRupee:
-                CCLOG(@"Started rupee");
-                hasBiggerBullets = YES;
-                [self unschedule:@selector(createRainbowExplosionAtDog)];
-                [self schedule:@selector(createRainbowExplosionAtDog) interval:0.2f repeat:47 delay:0.0f];
-                [self runLokiMusic];
-                sprite.tag = SpriteStateInvincible;
-                sprite.color = ccGREEN;
-                [self unschedule:@selector(endInvincibility)];
-                [self scheduleOnce:@selector(endInvincibility) delay:10.1f];
+              //  if (!isAbnormalState) {
+                    CCLOG(@"Started rupee");
+                    isAbnormalState = YES;
+                    hasBiggerBullets = YES;
+                    [self unschedule:@selector(createRainbowExplosionAtDog)];
+                    [self schedule:@selector(createRainbowExplosionAtDog) interval:0.2f repeat:47 delay:0.0f];
+                    [self runLokiMusic];
+                    sprite.tag = SpriteStateInvincible;
+                    sprite.color = ccGREEN;
+                    [self unschedule:@selector(endInvincibility)];
+                    [self scheduleOnce:@selector(endInvincibility) delay:10.1f];
+              //  }
+                break;
+                
+            case SpriteStateDerp:
+                CCLOG(@"Started derp %@", isDerped? @"YES":@"NO");
+                if (!isAbnormalState) {
+                    isAbnormalState = YES;
+                    sprite.color = ccBLUE;
+                    isDerped = YES;
+                    [self scheduleOnce:@selector(endDerp) delay:13.0f];
+                    sprite.tag = SpriteStateNormal;
+                }
                 break;
         }
-            
+        
             // Bodies that aren't bullets slow down as they reach their destination
             if (![sprite isKindOfClass:[Bullet class]]){
                 body->SetLinearVelocity(0.97f*body->GetLinearVelocity());
@@ -754,8 +800,9 @@ const float PTM_RATIO = 32.0f;
             // Have wizard shoot if they're supposed to shoot.
             if ([sprite isKindOfClass:[WizardCat class]]) {
                 if (((WizardCat *)sprite).countdown == 0) {
-                    [self shootBulletAtDog:sprite.position isLoki:[sprite isKindOfClass:[Lokitty class]]];
+                    [self shootBulletAtDog:sprite.position isLoki:[sprite isKindOfClass:[Lokitty class]] sprite:sprite];
                     [(WizardCat *)sprite resetCountDown];
+                    
                 }
             }
             
@@ -770,8 +817,22 @@ const float PTM_RATIO = 32.0f;
                 sprite.position = [self toPixels:body->GetPosition()];
             }
         }
-    
 }
+
+// Runs Starship Thorgi when in Green Loki State.
+-(void) endDerp {
+    
+    //Maybe don't change velocity here. just do a boolean
+    //dogBody->SetLinearVelocity( -1*dogBody->GetLinearVelocity());
+    isDerped = NO;
+    dogSprite.color = ccWHITE;
+    dogSprite.tag = SpriteStateNormal;
+    hasBiggerBullets = NO;
+    isAbnormalState = NO;
+    CCLOG(@"ended DERP");
+   
+}
+
 
 // Runs Starship Thorgi when in Green Loki State.
 -(void) runLokiMusic {
@@ -944,6 +1005,7 @@ const float PTM_RATIO = 32.0f;
 {
     dogSprite.color = ccGRAY;
     dogSprite.tag = SpriteStateInvincible;
+    isDerped = NO;
 }
 
 // Ends all types of invincibility.
@@ -953,6 +1015,8 @@ const float PTM_RATIO = 32.0f;
     dogSprite.color= ccWHITE;
     dogSprite.tag = SpriteStateNormal;
     hasBiggerBullets = NO;
+    isAbnormalState = NO;
+    isDerped = NO;
 }
 
 -(void) stopTakingKKInput

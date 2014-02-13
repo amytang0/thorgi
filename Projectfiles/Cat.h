@@ -44,6 +44,7 @@
 
 }
 @property int countdown;
+@property NSString* bulletType;
 -(void) resetCountDown;
 @end
 
@@ -52,6 +53,24 @@
     
 }
 @property float teleportTime;
+@end
+
+@interface DerpCat : WizardCat
+{
+    
+}
+@end
+
+@interface MineCat : WizardCat
+{
+    
+}
+@end
+
+@interface FatCat : Cat
+{
+    
+}
 @end
 
 

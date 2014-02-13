@@ -90,6 +90,7 @@ void ContactListener::BeginContact(b2Contact* contact)
         return;
     }
     
+    
     // When dog is invincible.
     if (spriteA.tag == SpriteStateInvincible || spriteB.tag == SpriteStateInvincible) {
         //CCLOG(@"begincontact invinc");
@@ -100,10 +101,29 @@ void ContactListener::BeginContact(b2Contact* contact)
     if (([spriteA isKindOfClass:[Dog class]] && [spriteB isKindOfClass:[Bullet class]]) ||
         ([spriteB isKindOfClass:[Dog class]] && [spriteA isKindOfClass:[Bullet class]])) {
         if (spriteA.tag == SpriteStateEnemyBullet || spriteB.tag == SpriteStateEnemyBullet) {
+            
+            if ([spriteA isKindOfClass:[WizardBullet class]] || [spriteB isKindOfClass:[WizardBullet class]]){
+
             ((__bridge CCSprite*) contact->GetFixtureA()->GetBody()->GetUserData()).tag=SpriteStateHit;
             ((__bridge CCSprite*) contact->GetFixtureB()->GetBody()->GetUserData()).tag=SpriteStateHit;
             spriteA.color = ccRED;
             spriteB.color = ccRED;
+            }
+            
+            else if ([spriteA isKindOfClass:[DerpBullet class]] || [spriteB isKindOfClass:[DerpBullet class]]){
+                CCLOG(@"DERPBULLET");
+                 ((__bridge CCSprite*) contact->GetFixtureA()->GetBody()->GetUserData()).tag=SpriteStateDerp;
+                 ((__bridge CCSprite*) contact->GetFixtureB()->GetBody()->GetUserData()).tag=SpriteStateDerp;
+                spriteA.color = ccBLUE;
+                spriteB.color = ccBLUE;
+                if ([spriteA isKindOfClass:[DerpBullet class]]) {
+                    spriteA.tag = SpriteStateRemove;
+                } else {
+                    spriteB.tag = SpriteStateRemove;
+                }
+            }
+            
+            
         }
     }
     

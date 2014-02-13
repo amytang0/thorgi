@@ -22,3 +22,15 @@
     
 }
 @end
+
+@interface DerpBullet : Bullet
+{
+    
+}
+@end
+
+@interface MineBullet : Bullet
+{
+    
+}
+@end
