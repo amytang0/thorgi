@@ -360,7 +360,7 @@ const float PTM_RATIO = 32.0f;
     // CCLOG(@"WAS IN WHILE LOOP FOR: %d", i);
     
     CGPoint p = ccp(x,y);
-   // if (numberOfCats < 2 ) //Uncomment later. This creates 1 cat only
+    //if (numberOfCats < 1 ) //Uncomment later. This creates 1 cat only
     [self createCat:@"cat.png" atPosition:p rotation:0.0f isStatic:NO];
 }
 
@@ -372,11 +372,10 @@ const float PTM_RATIO = 32.0f;
             isStatic:(BOOL)isStatic
 {
     Cat *sprite;
-    
-        int random = arc4random();
+    int random = arc4random();
     
   /*  if(true) {
-        sprite =[[DerpCat alloc] initWithAnimatedCat];
+        sprite =[[MineCat alloc] initWithAnimatedCat];
       //  CCLOG(@"Derp cat spawned.");
     } else
   */
@@ -388,7 +387,10 @@ const float PTM_RATIO = 32.0f;
         hasLokitty = YES;
     } else if (score >= 70 && arc4random()%100 < 20) {
         sprite =[[DerpCat alloc] initWithAnimatedCat];
-        //  CCLOG(@"Derp cat spawned.");
+        CCLOG(@"Derp cat spawned.");
+    } else if (score >= 45 && arc4random()%100 < 20) {
+        sprite =[[MineCat alloc] initWithAnimatedCat];
+        CCLOG(@"Mine cat spawned.");
     } else if (score >= 30 && arc4random()%100 < 30) {
         sprite = [[NyanCat alloc] initWithAnimatedNyanCat];
         CCLOG(@"Nyancat spawned.");

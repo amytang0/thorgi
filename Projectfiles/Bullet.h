@@ -23,13 +23,14 @@
 }
 @end
 
+// Doesn't hurt. Only derps.
 @interface DerpBullet : Bullet
 {
     
 }
 @end
 
-@interface MineBullet : Bullet
+@interface MineBullet : WizardBullet
 {
     
 }

@@ -201,7 +201,11 @@ void ContactListener::PreSolve(b2Contact* contact,
         if (([spriteA isKindOfClass:[Cat class]] && [spriteB isKindOfClass:[Cat class]]) )
         {
             contact->SetEnabled(false);
+        } else if (([spriteA isKindOfClass:[Cat class]] && [spriteB isKindOfClass:[MineBullet class]]) || ([spriteB isKindOfClass:[Cat class]] && [spriteA isKindOfClass:[MineBullet class]]) )
+        {
+            contact->SetEnabled(false);
         }
+
         else if (spriteA.tag == SpriteStateInvincible || spriteB.tag == SpriteStateInvincible) {
             //CCLOG(@"presolved invincible");
             contact->SetEnabled(false);

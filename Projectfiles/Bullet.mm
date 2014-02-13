@@ -92,8 +92,9 @@
 
 @end
 
-@implementation DerpBullet
 
+// Doesn't hurt. Only derps.
+@implementation DerpBullet
 -(id) initWithBulletImage
 {
     // This calls WizardBullet's init.
@@ -118,6 +119,7 @@
     if ((self = [super initWithBulletImage]))
     {
         self.damage = 1;
+        self.scale = 1.5f;
         self.color = ccBLACK;
         //properties work internally just like normal instance variables
     }
