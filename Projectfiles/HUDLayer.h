@@ -13,11 +13,13 @@
 @protected
 @private
     int score;
+    NSNumber* gold;
     CCLabelTTF *scoreString;
+    CCLabelTTF *goldString;
     CCSprite *pauseButton;
     NSMutableArray *lives;
 }
--(void) setScoreString:(NSString *)string;
+-(void) setGold:(int) gold;
 -(void) setScore:(int) score;
 -(void) setLives:(int) health;
 

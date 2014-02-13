@@ -16,6 +16,13 @@
 
 @end
 
+@interface Coin : Item
+{
+@protected
+@private
+}
+@end
+
 @interface Heart : Item
 {
 @protected

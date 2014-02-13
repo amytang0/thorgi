@@ -51,8 +51,20 @@ void ContactListener::BeginContact(b2Contact* contact)
             }
             spriteB.tag=SpriteStateRemove;
             return;
+        }  else if ([spriteA isKindOfClass:[Coin class]] || [spriteB isKindOfClass:[Coin class]]) {
+            //set dog.health
+            CCLOG(@"hit over coin");
+            // Increment coinCount
+            NSNumber *coinCount = (NSNumber*)[MGWU objectForKey:@"coinCount"];
+            NSNumber *newCoinCount = [NSNumber numberWithInt:[coinCount intValue] + 1];
+            [MGWU setObject:newCoinCount forKey:@"coinCount"];
+            if ([spriteA isKindOfClass:[Coin class]] ) {
+                spriteA.tag = SpriteStateRemove;
+            } else {
+                spriteB.tag = SpriteStateRemove;
+            }
+            return;
         }
-        
         else if ([spriteA isKindOfClass:[PopTart class]]) {
             CCLOG(@"hit over poptart");
              spriteA.tag=SpriteStateRemove;

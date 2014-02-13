@@ -33,6 +33,7 @@
         CCLOG(@"HUDLAYER INIT");
         lives = [[NSMutableArray alloc] init];
         score = 0;
+        gold = (NSNumber*)[MGWU objectForKey:@"coinCount"];
         
         CGSize winSize = [CCDirector sharedDirector].winSize;
         [self setContentSize:CGSizeMake(winSize.width,HEIGHT*2)];
@@ -44,9 +45,20 @@
             scoreString = [CCLabelTTF labelWithString:@"WOOOP!!" fontName:@"Chalkduster" fontSize:20.0f];
             scoreString.color = ccBLACK;
         }
-        scoreString.position = ccp(winSize.width * 0.5f, HEIGHT/3.0f*2.0f);
-        
+        scoreString.position = ccp(winSize.width * 0.4f, HEIGHT/3.0f*2.0f);
         [self addChild:scoreString];
+        
+        [self setContentSize:CGSizeMake(winSize.width,HEIGHT*2)];
+        
+        if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+            goldString = [CCLabelTTF labelWithString:@"WOOOP" fontName:@"Chalkduster" fontSize:22.0f];
+            goldString.color = ccBLACK;
+        } else {
+            goldString = [CCLabelTTF labelWithString:@"WOOOP!!" fontName:@"Chalkduster" fontSize:20.0f];
+            goldString.color = ccBLACK;
+        }
+        goldString.position = ccp(winSize.width * 0.7f, HEIGHT/3.0f*2.0f);
+        [self addChild:goldString];
         
         [[CCSpriteFrameCache sharedSpriteFrameCache] addSpriteFramesWithFile:@"buttons.plist"];
         CCSpriteFrame *pauseButtonFrame = [[CCSpriteFrameCache sharedSpriteFrameCache] spriteFrameByName:@"pause.png"];
@@ -86,13 +98,15 @@
     }
 }
 
--(void)setScoreString:(NSString *)string {
-    scoreString.string = string;
+-(void)setScore:(int) scoreP {
+    scoreString.string = [NSString stringWithFormat:@"Score:%d", scoreP];
+    score = scoreP;
 }
 
--(void)setScore:(int) scoreP {
-    scoreString.string = [NSString stringWithFormat:@"%d", scoreP];
-    score = scoreP;
+-(void)setGold:(int) coinCount {
+    NSNumber *coins = [[NSNumber alloc] initWithInt:coinCount];
+    gold = coins;
+    goldString.string = [NSString stringWithFormat:@"Gold:%@", gold];
 }
 
 -(void) initLives:(int)health {

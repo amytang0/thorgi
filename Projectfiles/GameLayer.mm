@@ -585,6 +585,9 @@ const float PTM_RATIO = 32.0f;
     CGSize winSize = [CCDirector sharedDirector].winSize;
     hud.position = [self getScreenPosition:ccp(0,winSize.height-40)];
     [hud setScore:score];
+    NSNumber *coinCount = [MGWU objectForKey:@"coinCount"];
+    int gold = [coinCount intValue];
+    [hud setGold:gold];
     [hud setLives:dogSprite.health];
 }
 
@@ -948,7 +951,7 @@ const float PTM_RATIO = 32.0f;
     Item *item;
     if ([sprite isKindOfClass:[NyanCat class]] ||
         [sprite isKindOfClass:[Lokitty class]] ||
-        arc4random()%100 < 10) {//max(5,10-score/50) ) {
+        arc4random()%100 < 20) {//max(5,10-score/50) ) {
       /*
        // Good for testing lokitty and poptart
         if (YES) {
@@ -972,10 +975,14 @@ const float PTM_RATIO = 32.0f;
                 return;
             }
         }
-        else {
+        else if (arc4random()%3 == 0){
             item = [[Heart alloc]init];
             item.position = position;
             [hearts addChild:item];
+        } else {
+            item = [[Coin alloc]init];
+            item.position = position;
+            [self addChild:item];
         }
         
         //add body
