@@ -8,7 +8,7 @@
 
 #import "StartMenuLayer.h"
 #import "GameLayer.h"
-#import "GameOverLayer.h"
+#import "StoreLayer.h"
 
 #import "GameState.h"
 
@@ -65,10 +65,15 @@
        // menuPlayButton.position = ccp(appframe.size.height/2, appframe.size.width*2/3);
         menuPlayButton.tag = 1;
         
+        
+        CCMenuItemImage *menuStoreButton = [CCMenuItemImage itemWithNormalImage:@"thorgitext.png" selectedImage:@"thorgitext.png"  target:self selector:@selector(showStore:)];
+        
         CCMenuItemImage *menuMoreGamesButton = [CCMenuItemImage itemWithNormalImage:@"deadthorgi.png" selectedImage:@"deadthorgi.png"  target:self selector:@selector(moreGames:)];
         
+        
+        
         // Create a menu and add your menu items to it
-        CCMenu *myMenu = [CCMenu menuWithItems:menuPlayButton,menuMoreGamesButton, nil];
+        CCMenu *myMenu = [CCMenu menuWithItems:menuPlayButton, menuStoreButton, menuMoreGamesButton, nil];
         
         // Arrange the menu items vertically
         [myMenu alignItemsHorizontally];
@@ -170,6 +175,11 @@
 {
     HUDLayer *hud = [HUDLayer node];
     [[CCDirector sharedDirector] replaceScene: (CCScene*)[[GameLayer alloc] initWithHUD:hud]];
+}
+
+-(void) showStore:(CCMenuItem *)sender
+{
+    [[CCDirector sharedDirector] replaceScene: (CCScene*)[[StoreLayer alloc] init]];
 }
 
 -(void) moreGames:(CCMenuItem *)sender

@@ -75,6 +75,7 @@
 		F3356737182B860E001E9A7A /* Item.m in Sources */ = {isa = PBXBuildFile; fileRef = F3356736182B860E001E9A7A /* Item.m */; };
 		F335673B182B86B5001E9A7A /* pew.wav in Resources */ = {isa = PBXBuildFile; fileRef = F335673A182B86B5001E9A7A /* pew.wav */; };
 		F33BBE4518ACFDEB0007F1FE /* coin.png in Resources */ = {isa = PBXBuildFile; fileRef = F33BBE4418ACFDEB0007F1FE /* coin.png */; };
+		F33BBE4818AD071B0007F1FE /* StoreLayer.mm in Sources */ = {isa = PBXBuildFile; fileRef = F33BBE4718AD071A0007F1FE /* StoreLayer.mm */; };
 		F3532CE8182EC5CB00955679 /* buttons.plist in Resources */ = {isa = PBXBuildFile; fileRef = F3532CE6182EC5CB00955679 /* buttons.plist */; };
 		F3532CE9182EC5CB00955679 /* buttons.png in Resources */ = {isa = PBXBuildFile; fileRef = F3532CE7182EC5CB00955679 /* buttons.png */; };
 		F3532CEB182EC5D300955679 /* buttons.tps in Resources */ = {isa = PBXBuildFile; fileRef = F3532CEA182EC5D300955679 /* buttons.tps */; };
@@ -225,6 +226,8 @@
 		F3356736182B860E001E9A7A /* Item.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Item.m; sourceTree = "<group>"; };
 		F335673A182B86B5001E9A7A /* pew.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = pew.wav; sourceTree = "<group>"; };
 		F33BBE4418ACFDEB0007F1FE /* coin.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = coin.png; sourceTree = "<group>"; };
+		F33BBE4618AD071A0007F1FE /* StoreLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StoreLayer.h; sourceTree = "<group>"; };
+		F33BBE4718AD071A0007F1FE /* StoreLayer.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = StoreLayer.mm; sourceTree = "<group>"; };
 		F3532CE6182EC5CB00955679 /* buttons.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = buttons.plist; path = ../../buttons.plist; sourceTree = "<group>"; };
 		F3532CE7182EC5CB00955679 /* buttons.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = buttons.png; path = ../../buttons.png; sourceTree = "<group>"; };
 		F3532CEA182EC5D300955679 /* buttons.tps */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = buttons.tps; path = ../../buttons.tps; sourceTree = "<group>"; };
@@ -552,6 +555,8 @@
 				F32D33B518299B7800F1B4BF /* HUDLayer.mm */,
 				F3F5FCD8182662A1009910F9 /* GameLayer.h */,
 				F3F5FCD9182662A1009910F9 /* GameLayer.mm */,
+				F33BBE4618AD071A0007F1FE /* StoreLayer.h */,
+				F33BBE4718AD071A0007F1FE /* StoreLayer.mm */,
 			);
 			name = Scenes;
 			sourceTree = "<group>";
@@ -886,6 +891,7 @@
 				F385F45518452160009AF495 /* ScoreLayer.mm in Sources */,
 				F36C5409184711310080CB2D /* LocalScoreLayer.mm in Sources */,
 				F36C540C184719700080CB2D /* LocalScore.mm in Sources */,
+				F33BBE4818AD071B0007F1FE /* StoreLayer.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
