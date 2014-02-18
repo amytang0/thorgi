@@ -66,7 +66,8 @@
         pauseButton.position =  ccp(winSize.width -30, HEIGHT/2.0f);
         [self addChild:pauseButton];
 
-        [self initLives:5];
+        int hearts = [(NSNumber *)[MGWU objectForKey:@"hearts"] intValue] + BASE_HEALTH;
+        [self initLives:hearts];
         
         self.isTouchEnabled = YES;
     }

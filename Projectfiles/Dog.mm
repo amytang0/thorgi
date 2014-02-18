@@ -16,7 +16,6 @@ const float PTM_RATIO = 32.0f;
 // declare private methods here
 @end
 
-#define HEALTH 5
 
 @implementation Dog
 @synthesize health, status;
@@ -42,7 +41,9 @@ const float PTM_RATIO = 32.0f;
     if ((self = [super initWithSpriteFrameName:@"frontthorgi2.png"]))
     //if ((self = [super initWithFile:@"ship.png"]))
     {
-        health = HEALTH;
+        // Lives are stored as extra hearts in MGWU.
+        health = [(NSNumber *)[MGWU objectForKey:@"hearts"] intValue] + BASE_HEALTH;
+        CCLOG(@"HEALTH: %d", health);
         status = @"normal";
         //[self setScale:1.25f];
         

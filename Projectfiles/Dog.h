@@ -20,4 +20,6 @@
 -(id) initWithDogImage;
 -(void) setMoveDirection: (NSString*)d;
 -(void) stopAction;
+
+extern const int BASE_HEALTH = 3;
 @end

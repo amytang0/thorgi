@@ -179,7 +179,7 @@
 
 -(void) showStore:(CCMenuItem *)sender
 {
-    [[CCDirector sharedDirector] replaceScene: (CCScene*)[[StoreLayer alloc] init]];
+    [[CCDirector sharedDirector] pushScene: (CCScene*)[[StoreLayer alloc] init]];
 }
 
 -(void) moreGames:(CCMenuItem *)sender

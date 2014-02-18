@@ -7,6 +7,7 @@
 //
 
 #import "StoreLayer.h"
+#import "StartMenuLayer.h"
 
 @interface StoreLayer (PrivateMethods)
 // declare private methods here
@@ -54,8 +55,11 @@
          CCMenuItemImage *button3 = [CCMenuItemImage itemWithNormalImage:@"thorgipose.png" selectedImage:@"thorgipose.png"  target:self selector:@selector(showPurchaseAlert:)];
          button3.tag = 3;
         
+        CCMenuItemFont *backButton = [CCMenuItemFont itemWithString:@"Back" target:self selector:@selector(goBack:)];
+        backButton.tag = 4;
+        
         // Create a menu and add your menu items to it
-        CCMenu *myMenu = [CCMenu menuWithItems:button1, button2, button3, nil];
+        CCMenu *myMenu = [CCMenu menuWithItems:button1, button2, button3, backButton, nil];
         
         // Arrange the menu items vertically
         [myMenu alignItemsHorizontally];
@@ -64,23 +68,41 @@
 	}
 	return self;
 }
+-(void) goBack:(CCMenuItem *)sender
+{
+    //[[CCDirector sharedDirector] replaceScene: (CCScene*)[[StartMenuLayer alloc] init]];
+    [[CCDirector sharedDirector] popScene];
+
+}
 
 -(void) showPurchaseAlert:(CCMenuItem *)sender
 {
     CCLOG(@"SENDER WAS: %@", sender);
     switch(sender.tag) {
-        case 1:
-            [self showPurchaseBox:sender name:@"Heart" description:@"It's purty cool." price:20];
+        case 1: {
+            int price = [(NSNumber *)[MGWU objectForKey:@"hearts"] intValue];
+            price *= 5;
+            [self showPurchaseBox:sender name:@"Heart" description:@"It's purty cool." price:1+price];
             break;
-        case 2:
-            [self showPurchaseBox:sender name:@"Increase heart drop rate" description:@"It's purty cool2." price:200];
+        }
+        case 2: {
+            int price = [(NSNumber *)[MGWU objectForKey:@"heartDropRate"] intValue];
+            price *= 10;
+            [self showPurchaseBox:sender name:@"Increase heart drop rate" description:@"It's purty cool2." price:10+price];
             break;
-        case 3:
-            [self showPurchaseBox:sender name:@"Increase coin drop rate" description:@"It's purty cool3." price:500];
+        }
+        case 3: {
+            int price = [(NSNumber *)[MGWU objectForKey:@"coinDropRate"] intValue];
+            price *= 20;
+            [self showPurchaseBox:sender name:@"Increase coin drop rate" description:@"It's purty cool3." price:20+price];
             break;
-        case 4:
-            [self showPurchaseBox:sender name:@"Increase big bullets drop rate" description:@"It's purty cool4." price:500];
+        }
+        case 4: {
+            int price = [(NSNumber *)[MGWU objectForKey:@"bigBulletsDropRate"] intValue];
+            price *= 50;
+            [self showPurchaseBox:sender name:@"Increase big bullets drop rate" description:@"It's purty cool4." price:50+price];
             break;
+        }
     }
 }
 
@@ -89,16 +111,18 @@
     
     NSNumber *coins = (NSNumber *)[MGWU objectForKey:@"coinCount"];
     int coinsInt = [coins intValue];
-    if(price > coinsInt) {
+ /*   if(price > coinsInt) {
         NSLog(@"YOU TOO POOR! %d %d", price, coinsInt);
         UIAlertView * alert = [[UIAlertView alloc] initWithTitle:name message:description delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:nil];
         alert.tag = price;
         [alert show];
     } else {
+  */
         UIAlertView * alert = [[UIAlertView alloc] initWithTitle:name message:description delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:[NSString stringWithFormat:@"Buy for %d coins", price], nil];
         alert.tag = price;
+    
         [alert show];
-    }
+   // }
 }
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
@@ -108,19 +132,28 @@
     NSString *title = [alertView buttonTitleAtIndex:buttonIndex];
     if([title isEqualToString:@"Cancel"])
     {
-        NSLog(@"Button 1 was selected.");
+        NSLog(@"Button 1 was selected. %@", alertView.title);
     }
     else 
     {
         NSNumber *coins = (NSNumber *)[MGWU objectForKey:@"coinCount"];
         int coinsInt = [coins intValue];
         if(price > coinsInt) {
-          NSLog(@"YOU TOO POOR! %d %d", price, coinsInt);
+          NSLog(@"YOU TOO POOR! %d %d, %@", price, coinsInt, alertView.title);
         } else {
-            CCLOG(@"Yay, you bought %d, %d", price, coinsInt);
-            coinsInt -= price;
-            NSNumber *newCoins = [NSNumber numberWithInt:coinsInt];
-            [MGWU setObject:newCoins forKey:@"coinCount"];
+            CCLOG(@"Yay, you bought %d, %d, %@", price, coinsInt, alertView.title);
+            int hearts = [(NSNumber*)[MGWU objectForKey:@"hearts"] intValue];
+            if (hearts < 3 ) { // 3 is the limit of extra hearts
+                coinsInt -= price;
+                NSNumber *newCoins = [NSNumber numberWithInt:coinsInt];
+                [MGWU setObject:newCoins forKey:@"coinCount"];
+                
+                if ([alertView.title isEqualToString:@"Heart"]) {
+                    hearts++;
+                    NSNumber *newHearts = [NSNumber numberWithInt:hearts];
+                    [MGWU setObject:newHearts forKey:@"hearts"];
+                }
+            }
         }
     }
 }
