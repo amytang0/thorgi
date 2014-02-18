@@ -73,18 +73,56 @@
             [self showPurchaseBox:sender name:@"Heart" description:@"It's purty cool." price:20];
             break;
         case 2:
-            [self showPurchaseBox:sender name:@"Freeze" description:@"It's purty cool2." price:200];
+            [self showPurchaseBox:sender name:@"Increase heart drop rate" description:@"It's purty cool2." price:200];
             break;
         case 3:
-            [self showPurchaseBox:sender name:@"Nuke" description:@"It's purty cool3." price:500];
+            [self showPurchaseBox:sender name:@"Increase coin drop rate" description:@"It's purty cool3." price:500];
+            break;
+        case 4:
+            [self showPurchaseBox:sender name:@"Increase big bullets drop rate" description:@"It's purty cool4." price:500];
             break;
     }
 }
 
 // This shows the alert asking for username input.
 - (IBAction)showPurchaseBox:(id)sender name:(NSString*)name description:(NSString*)description price:(int)price {
-          UIAlertView * alert = [[UIAlertView alloc] initWithTitle:name message:description delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Buy", nil];
+    
+    NSNumber *coins = (NSNumber *)[MGWU objectForKey:@"coinCount"];
+    int coinsInt = [coins intValue];
+    if(price > coinsInt) {
+        NSLog(@"YOU TOO POOR! %d %d", price, coinsInt);
+        UIAlertView * alert = [[UIAlertView alloc] initWithTitle:name message:description delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:nil];
+        alert.tag = price;
         [alert show];
+    } else {
+        UIAlertView * alert = [[UIAlertView alloc] initWithTitle:name message:description delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:[NSString stringWithFormat:@"Buy for %d coins", price], nil];
+        alert.tag = price;
+        [alert show];
+    }
+}
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    CCLOG(@"BLEH %d price:%d", buttonIndex, alertView.tag);
+    NSInteger price = alertView.tag;
+    NSString *title = [alertView buttonTitleAtIndex:buttonIndex];
+    if([title isEqualToString:@"Cancel"])
+    {
+        NSLog(@"Button 1 was selected.");
+    }
+    else 
+    {
+        NSNumber *coins = (NSNumber *)[MGWU objectForKey:@"coinCount"];
+        int coinsInt = [coins intValue];
+        if(price > coinsInt) {
+          NSLog(@"YOU TOO POOR! %d %d", price, coinsInt);
+        } else {
+            CCLOG(@"Yay, you bought %d, %d", price, coinsInt);
+            coinsInt -= price;
+            NSNumber *newCoins = [NSNumber numberWithInt:coinsInt];
+            [MGWU setObject:newCoins forKey:@"coinCount"];
+        }
+    }
 }
 
 -(void) onEnter
