@@ -949,9 +949,6 @@ const float PTM_RATIO = 32.0f;
 -(void) createItem:(CGPoint)position sprite:(CCSprite *)sprite
 {
     Item *item;
-    if ([sprite isKindOfClass:[NyanCat class]] ||
-        [sprite isKindOfClass:[Lokitty class]] ||
-        arc4random()%100 < 20) {//max(5,10-score/50) ) {
       /*
        // Good for testing lokitty and poptart
         if (YES) {
@@ -975,14 +972,16 @@ const float PTM_RATIO = 32.0f;
                 return;
             }
         }
-        else if (arc4random()%3 == 0){
+        else if (arc4random()%10 == 0){
             item = [[Heart alloc]init];
             item.position = position;
             [hearts addChild:item];
-        } else {
+        } else if (arc4random()%10 == 0) {
             item = [[Coin alloc]init];
             item.position = position;
             [self addChild:item];
+        } else {
+            return;
         }
         
         //add body
@@ -1006,7 +1005,7 @@ const float PTM_RATIO = 32.0f;
         ballShapeDef.isSensor = true;
         //try changing these and see what happens!
         itemBody->CreateFixture(&ballShapeDef);
-    }
+    
 }
 
 // Begin invincibility (that happens after dog is hit).

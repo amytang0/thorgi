@@ -96,7 +96,10 @@ void ContactListener::BeginContact(b2Contact* contact)
     }
     // If shooting at enemy bullets, remove both
     if (([spriteA isKindOfClass:[WizardBullet class]] && [spriteB isKindOfClass:[Bullet class]]) ||
-        ([spriteB isKindOfClass:[WizardBullet class]] && [spriteA isKindOfClass:[Bullet class]])) {
+        ([spriteB isKindOfClass:[WizardBullet class]] && [spriteA isKindOfClass:[Bullet class]]) ||
+        ([spriteA isKindOfClass:[DerpBullet class]] && [spriteB isKindOfClass:[Bullet class]]) ||
+        ([spriteB isKindOfClass:[DerpBullet class]] && [spriteA isKindOfClass:[Bullet class]])
+        ) {
         spriteA.tag=SpriteStateRemove;
         spriteB.tag=SpriteStateRemove;
         return;
