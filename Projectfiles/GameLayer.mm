@@ -958,6 +958,8 @@ const float PTM_RATIO = 32.0f;
         }
        else
         */
+    int heartDropRate = 5 + [[MGWU objectForKey:@"heartDropRate"] intValue];
+    int coinDropRate = 5 + [[MGWU objectForKey:@"coinDropRate"] intValue];
          if ([sprite isKindOfClass:[Lokitty class]]) {
             item = [[Rupee alloc] init];
             item.position = position;
@@ -972,11 +974,11 @@ const float PTM_RATIO = 32.0f;
                 return;
             }
         }
-        else if (arc4random()%10 == 0){
+        else if (abs(arc4random()%100) < heartDropRate){
             item = [[Heart alloc]init];
             item.position = position;
             [hearts addChild:item];
-        } else if (arc4random()%10 == 0) {
+        } else if (abs(arc4random()%100) < coinDropRate) {
             item = [[Coin alloc]init];
             item.position = position;
             [self addChild:item];

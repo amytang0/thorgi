@@ -143,17 +143,41 @@
         } else {
             CCLOG(@"Yay, you bought %d, %d, %@", price, coinsInt, alertView.title);
             int hearts = [(NSNumber*)[MGWU objectForKey:@"hearts"] intValue];
-            if (hearts < 3 ) { // 3 is the limit of extra hearts
+            int heartDropRate = [[MGWU objectForKey:@"heartDropRate"] intValue];
+            int coinDropRate = [[MGWU objectForKey:@"coinDropRate"] intValue];
+            Boolean purchaseIsValid = NO;
+            if([alertView.title isEqualToString:@"Heart"] &&
+                hearts <= 3 ) { // 3 is the limit of extra hearts
+                hearts++;
+                NSNumber *newHearts = [NSNumber numberWithInt:hearts];
+                [MGWU setObject:newHearts forKey:@"hearts"];
+                purchaseIsValid = YES;
+                
+            } else if ([alertView.title isEqualToString:@"Heart Drop Rate"] &&
+                heartDropRate <= 10 ) { // 10 is the limit of extra droprate
+                    purchaseIsValid = YES;
+                    heartDropRate++;
+                    NSNumber *newHeartDropRate = [NSNumber numberWithInt:heartDropRate];
+                    [MGWU setObject:newHeartDropRate forKey:@"heartDropRate"];
+            } else if ([alertView.title isEqualToString:@"Coing Drop Rate"] &&
+                       coinDropRate <= 10 ) { // 10 is the limit of extra droprate
+                purchaseIsValid = YES;
+                coinDropRate++;
+                NSNumber *newHeartDropRate = [NSNumber numberWithInt:coinDropRate];
+                [MGWU setObject:newHeartDropRate forKey:@"coinDropRate"];
+            }
+
+
+            
+            if(purchaseIsValid) {
                 coinsInt -= price;
                 NSNumber *newCoins = [NSNumber numberWithInt:coinsInt];
                 [MGWU setObject:newCoins forKey:@"coinCount"];
-                
-                if ([alertView.title isEqualToString:@"Heart"]) {
-                    hearts++;
-                    NSNumber *newHearts = [NSNumber numberWithInt:hearts];
-                    [MGWU setObject:newHearts forKey:@"hearts"];
-                }
+            } else {
+                // TODO: Show an alert to user that their purchase didn't go though
             }
+            
+            
         }
     }
 }
