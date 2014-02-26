@@ -104,6 +104,7 @@
 		F3934ADC189B5DB6008B2707 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F3934ADB189B5DB6008B2707 /* StoreKit.framework */; };
 		F3934ADE189B5DBB008B2707 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F3934ADD189B5DBB008B2707 /* SystemConfiguration.framework */; };
 		F3934AE0189B5DC0008B2707 /* Twitter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F3934ADF189B5DC0008B2707 /* Twitter.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		F3A5886418BAF34200149EB7 /* GoldLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = F3A5886318BAF34200149EB7 /* GoldLayer.m */; };
 		F3B238BE184D123800FE125C /* thorgisprite.plist in Resources */ = {isa = PBXBuildFile; fileRef = F3B238BC184D123800FE125C /* thorgisprite.plist */; };
 		F3B238BF184D123800FE125C /* thorgisprite.png in Resources */ = {isa = PBXBuildFile; fileRef = F3B238BD184D123800FE125C /* thorgisprite.png */; };
 		F3C94D501823734800D34960 /* Cat.mm in Sources */ = {isa = PBXBuildFile; fileRef = F3C94D4F1823734800D34960 /* Cat.mm */; };
@@ -267,6 +268,8 @@
 		F3934ADB189B5DB6008B2707 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS6.1.sdk/System/Library/Frameworks/StoreKit.framework; sourceTree = DEVELOPER_DIR; };
 		F3934ADD189B5DBB008B2707 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS6.1.sdk/System/Library/Frameworks/SystemConfiguration.framework; sourceTree = DEVELOPER_DIR; };
 		F3934ADF189B5DC0008B2707 /* Twitter.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Twitter.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS6.1.sdk/System/Library/Frameworks/Twitter.framework; sourceTree = DEVELOPER_DIR; };
+		F3A5886218BAF34200149EB7 /* GoldLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GoldLayer.h; sourceTree = "<group>"; };
+		F3A5886318BAF34200149EB7 /* GoldLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GoldLayer.m; sourceTree = "<group>"; };
 		F3B238BC184D123800FE125C /* thorgisprite.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = thorgisprite.plist; sourceTree = "<group>"; };
 		F3B238BD184D123800FE125C /* thorgisprite.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = thorgisprite.png; sourceTree = "<group>"; };
 		F3C94D4E1823734800D34960 /* Cat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Cat.h; sourceTree = "<group>"; };
@@ -557,6 +560,8 @@
 				F3F5FCD9182662A1009910F9 /* GameLayer.mm */,
 				F33BBE4618AD071A0007F1FE /* StoreLayer.h */,
 				F33BBE4718AD071A0007F1FE /* StoreLayer.mm */,
+				F3A5886218BAF34200149EB7 /* GoldLayer.h */,
+				F3A5886318BAF34200149EB7 /* GoldLayer.m */,
 			);
 			name = Scenes;
 			sourceTree = "<group>";
@@ -892,6 +897,7 @@
 				F36C5409184711310080CB2D /* LocalScoreLayer.mm in Sources */,
 				F36C540C184719700080CB2D /* LocalScore.mm in Sources */,
 				F33BBE4818AD071B0007F1FE /* StoreLayer.mm in Sources */,
+				F3A5886418BAF34200149EB7 /* GoldLayer.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

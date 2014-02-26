@@ -8,6 +8,7 @@
 
 #import "StoreLayer.h"
 #import "StartMenuLayer.h"
+#import "GoldLayer.h"
 
 @interface StoreLayer (PrivateMethods)
 // declare private methods here
@@ -59,12 +60,20 @@
         backButton.tag = 4;
         
         // Create a menu and add your menu items to it
-        CCMenu *myMenu = [CCMenu menuWithItems:button1, button2, button3, backButton, nil];
+        CCMenu *firstRowMenu = [CCMenu menuWithItems:button1, button2, button3, backButton, nil];
+        
+        CCMenuItemFont *buyGoldButton = [CCMenuItemFont itemWithString:@"Buy Gold" target:self selector:@selector(buyGold:)];
+        backButton.tag = 5;
+        
+        CCMenu *secondRowMenu = [CCMenu menuWithItems:buyGoldButton, nil];
+        secondRowMenu.position = ccp(appframe.size.height/2, 50);
+        
         
         // Arrange the menu items vertically
-        [myMenu alignItemsHorizontally];
-        
-        [self addChild:myMenu];
+        [firstRowMenu alignItemsHorizontally];
+        [self addChild:firstRowMenu];
+        [secondRowMenu alignItemsHorizontally];
+        [self addChild:secondRowMenu];
 	}
 	return self;
 }
@@ -72,6 +81,12 @@
 {
     //[[CCDirector sharedDirector] replaceScene: (CCScene*)[[StartMenuLayer alloc] init]];
     [[CCDirector sharedDirector] popScene];
+
+}
+
+-(void) buyGold:(CCMenuItem *)sender
+{
+    [[CCDirector sharedDirector] pushScene: (CCScene*)[[GoldLayer alloc] init]];
 
 }
 
